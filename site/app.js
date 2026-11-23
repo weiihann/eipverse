@@ -1,5 +1,6 @@
 // eipverse page: one data.json, four views, all state in the URL.
 import { CHAINS as CHAIN_LIST } from './chains.js';
+import { parseCols, serializeCols, toggleCol, rowState, MIN_COLS, MAX_COLS } from './compare.js';
 import { sortNewestFirst, upgradesByChain, statusBucket, statedTime, targetsUpgrade, isUpgrade, sourceLabel, sourceList } from './derive.js';
 
 const $ = (id) => document.getElementById(id);
@@ -60,7 +61,7 @@ const shortTarget = (s) => forkName(s.split('; ')[0]).replace(/ \((Scheduled|Con
 
 // ---------- state <-> URL ----------
 const VIEWS = ['proposals', 'layers', 'upgrades', 'diff', 'sources'];
-const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '', dg: '', dq: '', cell: '' };
+const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '', dg: '', dq: '', cell: '', c: '' };
 const state = { ...DEFAULTS };
 function readUrl() {
   const p = new URLSearchParams(location.search);
@@ -386,12 +387,14 @@ const dq = $('dq');
 let dqTimer;
 dq.addEventListener('input', () => { clearTimeout(dqTimer); dqTimer = setTimeout(() => set({ dq: dq.value.trim() }), 80); });
 
-function diffRows() {
+const diffIds = () => DIFF.chains.map((c) => c.id);
+const shownCols = () => { const ids = parseCols(state.c, diffIds()); return DIFF.chains.filter((c) => ids.includes(c.id)); };
+function diffRows(cols) {
   const words = state.dq.toLowerCase().split(/\s+/).filter(Boolean);
   return DIFF.dimensions.filter(([id, g, label]) => {
     if (state.dg && g !== state.dg) return false;
     if (!words.length) return true;
-    const text = [id, label, ...DIFF.chains.flatMap((c) => (c.facts[id] ? [c.label, c.facts[id].value, c.facts[id].note] : []))].join(' ').toLowerCase();
+    const text = [id, label, ...cols.flatMap((c) => (c.facts[id] ? [c.label, c.facts[id].value, c.facts[id].note] : []))].join(' ').toLowerCase();
     return words.every((w) => text.includes(w));
   });
 }
@@ -402,24 +405,37 @@ function renderDiff() {
     $('difft').innerHTML = `<tbody><tr><td class="d-load">${diffErr ? `<span class="b-error">Could not load diffs.json: ${esc(diffErr)}</span>` : 'Loading chain diff…'}</td></tr></tbody>`;
     return;
   }
+  const cols = shownCols(), all = cols.length > MAX_COLS, ids = diffIds();
+  const chip = (c) => {
+    const on = !all && cols.includes(c), dis = !all && !on && cols.length >= MAX_COLS;
+    return `<button class="cchip" data-col="${esc(c.id)}" aria-pressed="${on}"${dis ? ' disabled title="Up to 4 chains: remove one first"' : ''} style="--c:${cc(c.chain)}">${logo(c.chain)}<span>${esc(c.label)}</span></button>`;
+  };
   $('diff-head').innerHTML = `<div class="side-h"><h3>How each chain differs</h3></div>
+    <div class="cmp-pick" role="group" aria-label="Chains to compare">${DIFF.chains.map(chip).join('')}<button class="cchip cchip-all" data-col="all" aria-pressed="${all}">All chains</button></div>
+    <p class="cmp-hint">${all ? `All ${ids.length} chains. Pick a chain to start a side-by-side compare.` : `Comparing ${cols.length} chains · pick ${MIN_COLS} to ${MAX_COLS}. Rows where they differ are marked with a bar; rows that read the same are dimmed.`}</p>
     <div class="legend">${['base', '+', '-', '~', '='].map((m) => `<span>${markPill(m)}${MARK[m][0]}</span>`).join('')}<span><span class="mk mk-none">·</span>unverified</span><span><span class="obs">obs</span>read from a live RPC</span></div>`;
-
+  for (const b of $('diff-head').querySelectorAll('[data-col]')) b.onclick = () => {
+    const next = b.dataset.col === 'all' ? ids : toggleCol(cols.map((c) => c.id), b.dataset.col, ids);
+    set({ c: serializeCols(next, ids), cell: '' });
+  };
 
   if (document.activeElement !== dq) dq.value = state.dq;
-  const rows = diffRows();
+  const rows = diffRows(cols);
   const dgB = document.querySelector('[data-pop="dg"]');
   dgB.classList.toggle('set', !!state.dg);
   dgB.innerHTML = `<span class="k">Dimensions</span><span class="v">${state.dg ? esc(DIFF.groups.find(([g]) => g === state.dg)[1]) : 'All'}</span>${caretSvg}`;
   renderPop();
 
-  const cols = DIFF.chains;
   shownCells = [];
+  const n = cols.length;
   let lastG = '';
   const body = rows.map(([id, g, label]) => {
-    const head = g !== lastG ? `<tr class="d-grp"><th>${esc(DIFF.groups.find(([x]) => x === g)[1])}</th><td colspan="${cols.length}"></td></tr>` : '';
+    const gl = esc(DIFF.groups.find(([x]) => x === g)[1]);
+    const head = g !== lastG ? `<tr class="d-grp"><th>${gl}</th><td colspan="${n}"></td></tr><tr class="d-grp d-grp-m"><th colspan="${n}">${gl}</th></tr>` : '';
     lastG = g;
-    return head + `<tr><th class="d-dim" title="${esc(id)}">${esc(label)}</th>${cols.map((c) => {
+    const rs = rowState(cols.map((c) => c.facts[id]));
+    const tag = rs === 'same' ? '<span class="r-tag">same</span>' : '';
+    return head + `<tr class="d-lab r-${rs}"><th colspan="${n}">${esc(label)}${tag}</th></tr><tr class="r-${rs}"><th class="d-dim" title="${esc(id)}">${esc(label)}${tag}</th>${cols.map((c) => {
       const f = c.facts[id];
       const key = `${c.id}|${id}`;
       if (!f) return `<td class="t-blank"><button class="d-cell blank" data-cell="${esc(key)}" title="${esc(c.label)}: unverified, no spec, code or RPC read states this yet"><span class="mk mk-none">·</span><span class="d-v">unverified</span></button></td>`;
@@ -427,10 +443,11 @@ function renderDiff() {
       return `<td class="t-${MARK[f.mark][1]}"><button class="d-cell m-${MARK[f.mark][1]}${state.cell === key ? ' sel' : ''}" data-cell="${esc(key)}" title="${esc(c.label)} · ${esc(label)}: ${esc(MARK[f.mark][0])}">${markPill(f.mark)}<span class="d-v">${esc(f.value)}</span>${f.kind === 'observed' ? '<span class="obs">obs</span>' : ''}</button></td>`;
     }).join('')}</tr>`;
   }).join('');
+  $('difft').className = `diff${all ? '' : ` cmp cmp-${n}`}`;
   $('difft').innerHTML = `<thead><tr><th class="d-corner">Dimension</th>${cols.map((c) => `<th style="--c:${cc(c.chain)}"><span class="d-ch">${logo(c.chain)}<span><b>${esc(c.label)}</b><small>${esc(c.role)}</small></span></span></th>`).join('')}</tr></thead>
     <tbody>${body || `<tr><td class="d-load" colspan="${cols.length + 1}">No dimension matches these filters.</td></tr>`}</tbody>`;
   for (const b of $('difft').querySelectorAll('[data-cell]')) b.onclick = () => set({ cell: b.dataset.cell });
-  $('diff-foot').textContent = `Showing ${rows.length} of ${DIFF.dimensions.length} dimensions. Ethereum's column is the baseline; other columns show only how a chain departs from it. Every non-blank cell links to the spec, code (pinned to a commit) or docs page it came from, plus an as-of date; "obs" cells were read from a public RPC at the block named in the source. Click any cell for the full note.`;
+  $('diff-foot').textContent = `Showing ${rows.length} of ${DIFF.dimensions.length} dimensions across ${n} chains. Marks always read against Ethereum; "differs" and "same" compare the chains on screen. Every non-blank cell links to the spec, code (pinned to a commit) or docs page it came from, plus an as-of date; "obs" cells were read from a public RPC at the block named in the source. Click any cell for the full note.`;
 }
 
 function srcList(sources) {

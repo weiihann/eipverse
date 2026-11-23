@@ -386,3 +386,48 @@ main { padding-bottom: 32px; }
 .it-src a { display: inline-flex; align-items: center; gap: 4px; color: var(--i3); }
 .it-src a:hover { color: var(--accent); }
 .it-src svg { width: 11px; height: 11px; }
+
+/* chain diff compare: pick 2-4 chains (or all), rows that differ stand out, identical rows are dimmed */
+.cmp-pick { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+.cchip { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px 0 6px; border: 1px solid var(--line2); border-radius: 999px; background: var(--s1); color: var(--i3); font-size: 12px; white-space: nowrap; }
+.cchip .logo { width: 18px; height: 18px; }
+.cchip:hover:not(:disabled) { color: var(--i1); border-color: var(--i4); }
+.cchip[aria-pressed="true"] { color: var(--i1); border-color: color-mix(in srgb, var(--c, var(--accent)) 70%, transparent); background: color-mix(in srgb, var(--c, var(--accent)) 14%, var(--s1)); }
+.cchip:disabled { opacity: .4; cursor: not-allowed; }
+.cchip-all { padding: 0 12px; }
+.cmp-hint { margin: 0 0 10px; color: var(--i3); font-size: 12px; }
+.diff tr.d-lab, .diff tr.d-grp-m { display: none; }
+.r-tag { display: inline-block; margin-left: 8px; padding: 1px 6px; border-radius: 999px; font-size: 10px; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; vertical-align: 1px; color: var(--i4); border: 1px solid var(--line2); }
+.diff tr.r-diff > th.d-dim { box-shadow: inset 3px 0 0 var(--accent); color: var(--i1); }
+.diff tr.r-same > th.d-dim { color: var(--i3); font-weight: 400; }
+.diff tr.r-same > td { background: none; }
+.diff tr.r-same .d-cell .d-v { color: var(--i3); }
+.diff tr.r-same .d-cell .mk { opacity: .55; }
+.diff.cmp { width: 100%; table-layout: fixed; }
+.diff.cmp .d-corner, .diff.cmp .d-dim { width: 210px; }
+.diff.cmp .d-cell { min-width: 0; max-width: none; font-size: 12.5px; }
+.diff.cmp .d-v { -webkit-line-clamp: 5; }
+.diff.cmp thead th { padding: 14px 12px; }
+.diff.cmp .d-ch .logo { width: 28px; height: 28px; }
+.diff.cmp .d-ch { white-space: normal; }
+.diff.cmp .d-ch b { font-size: 14px; }
+@media (max-width: 640px) {
+  .cmp-pick { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; margin-right: -16px; scrollbar-width: none; }
+  .diff.cmp .d-corner, .diff.cmp .d-dim, .diff.cmp tr.d-grp:not(.d-grp-m) { display: none; }
+  .diff.cmp tr.d-grp-m { display: table-row; }
+  .diff.cmp tr.d-grp-m th { position: static; border-right: 0; }
+  .diff.cmp tr.d-lab { display: table-row; }
+  .diff.cmp tr.d-lab th { padding: 10px 10px 4px; text-align: left; font-size: 12.5px; font-weight: 600; color: var(--i1); border-bottom: 0; background: var(--s1); }
+  .diff.cmp tr.d-lab.r-diff th { box-shadow: inset 3px 0 0 var(--accent); }
+  .diff.cmp tr.d-lab.r-same th { color: var(--i3); font-weight: 500; }
+  .diff.cmp tr.d-lab + tr > td:first-of-type { border-left: 0; }
+  .diff.cmp thead th { padding: 10px 8px; }
+  .diff.cmp thead th:nth-child(2) { border-left: 0; }
+  .diff.cmp .d-ch { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .diff.cmp .d-ch .logo { width: 24px; height: 24px; }
+  .diff.cmp .d-ch b { font-size: 12.5px; }
+  .diff.cmp .d-cell { padding: 6px 8px 10px; font-size: 12px; gap: 5px; }
+  .diff.cmp .d-v { -webkit-line-clamp: 6; flex: 1 1 calc(100% - 24px); }
+  .diff.cmp .d-cell { flex-wrap: wrap; }
+  .diff.cmp .d-cell .obs { margin-left: 21px; margin-top: 0; }
+}
