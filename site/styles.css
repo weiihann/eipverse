@@ -271,16 +271,6 @@ main { padding-bottom: 32px; }
 .obs { font: 10px var(--mono); color: var(--i3); border: 1px solid var(--line2); border-radius: 4px; padding: 0 4px; }
 .db h2 .mk { width: 22px; height: 22px; font-size: 14px; vertical-align: 2px; margin-right: 4px; }
 
-.lineage { display: grid; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--s1); margin-bottom: 12px; }
-.lin-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 14px; }
-.lin-row > .label { margin: 0; width: 118px; flex: none; }
-.lin-g { display: inline-flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-.lin-p { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; color: var(--i1); font-size: 12.5px; }
-.lin-a { color: var(--i4); font-family: var(--mono); margin: 0 2px; }
-.lin-k { display: inline-flex; align-items: center; gap: 5px; height: 24px; padding: 0 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--i2); font-size: 12px; }
-.lin-k:hover { border-color: var(--accent); color: var(--i1); }
-.lin-g + .lin-g { padding-left: 14px; border-left: 1px solid var(--line); }
-
 .diff-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
 .diff-wrap { overflow: auto; max-height: calc(100vh - 120px); border: 1px solid var(--line); border-radius: 12px; background: var(--s1); }
 .diff { border-collapse: separate; border-spacing: 0; min-width: 100%; }
@@ -305,8 +295,7 @@ main { padding-bottom: 32px; }
 .diff td.t-add { background: color-mix(in srgb, var(--ok) 6%, transparent); }
 .diff td.t-miss { background: color-mix(in srgb, var(--err) 6%, transparent); }
 .diff td.t-chg { background: color-mix(in srgb, var(--warn) 6%, transparent); }
-.d-cell.m-same .d-v, .d-cell.dim .d-v { color: var(--i3); }
-.d-cell.dim { opacity: .55; }
+.d-cell.m-same .d-v { color: var(--i3); }
 .d-cell.blank { color: var(--i4); font-style: italic; }
 .d-cell.blank .d-v { color: var(--i4); }
 .d-load { padding: 24px; color: var(--i3); }
@@ -314,8 +303,6 @@ main { padding-bottom: 32px; }
   .diff .d-dim { width: 118px; min-width: 118px; max-width: 118px; padding: 9px 8px 9px 10px; font-size: 12px; }
   .d-cell { min-width: 140px; max-width: 170px; }
   .d-ch small { display: none; }
-  .lin-row > .label { width: 100%; }
-  .lin-g + .lin-g { padding-left: 0; border-left: 0; }
   .diff-wrap { max-height: 78vh; }
 }
 .diff td { border-left: 1px solid var(--line); }
@@ -335,11 +322,6 @@ main { padding-bottom: 32px; }
 .ctl.set .v { color: var(--i1); }
 .ctl .cv { width: 12px; height: 12px; color: var(--i4); transition: transform .12s; }
 .ctl[aria-expanded="true"] .cv { transform: rotate(180deg); }
-.ctl.toggle { padding: 0 10px; gap: 8px; }
-.ctl.toggle .sw { width: 24px; height: 14px; border-radius: 999px; background: var(--s3); position: relative; flex: none; transition: background .12s; }
-.ctl.toggle .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--i3); transition: transform .12s, background .12s; }
-.ctl.toggle[aria-pressed="true"] .sw { background: var(--accent); }
-.ctl.toggle[aria-pressed="true"] .sw::after { transform: translateX(10px); background: var(--accent-ink); }
 .seg-sm { height: 30px; align-items: center; }
 .seg-sm button { padding: 3px 9px; font-size: 12px; }
 .summary .count { margin-right: 4px; }
@@ -395,3 +377,14 @@ main { padding-bottom: 32px; }
 }
 .filters[hidden] + main { padding-top: 20px; }
 .s-t { white-space: nowrap; text-align: right; }
+
+.items { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.items li { padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--s2); }
+.it-h { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.it-h b { font-weight: 600; font-family: var(--mono); font-size: 12.5px; }
+.it-s { font-size: 11px; color: var(--i3); border: 1px solid var(--line2); border-radius: 999px; padding: 0 7px; }
+.items p { margin: 4px 0 0; color: var(--i2); font-size: 12.5px; line-height: 1.5; }
+.it-src { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; font-size: 11.5px; }
+.it-src a { display: inline-flex; align-items: center; gap: 4px; color: var(--i3); }
+.it-src a:hover { color: var(--accent); }
+.it-src svg { width: 11px; height: 11px; }

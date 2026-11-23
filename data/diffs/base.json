@@ -223,13 +223,52 @@
   "clients.execution": {
    "mark": "~",
    "value": "base-reth-node only",
-   "note": "Azul made base-reth-node the sole execution client.",
+   "note": "Only base-reth-node (EL) and base-consensus (CL) support Azul; op-geth and Nethermind are no longer supported.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
-     "label": "Base blog: Introducing Base Azul",
-     "url": "https://www.base.org/blog/introducing-base-azul"
+     "label": "Base docs: Azul node upgrade",
+     "url": "https://docs.base.org/upgrades/azul/node-upgrade"
+    }
+   ],
+   "items": [
+    {
+     "name": "base-reth-node",
+     "sources": [
+      {
+       "label": "Base docs: Azul node upgrade",
+       "url": "https://docs.base.org/upgrades/azul/node-upgrade"
+      },
+      {
+       "label": "Base docs: Beryl Reth V2",
+       "url": "https://docs.base.org/upgrades/beryl/reth-v2"
+      }
+     ],
+     "status": "production",
+     "note": "Reth V2 reference client since Beryl."
+    },
+    {
+     "name": "op-geth",
+     "sources": [
+      {
+       "label": "Base docs: Azul node upgrade",
+       "url": "https://docs.base.org/upgrades/azul/node-upgrade"
+      }
+     ],
+     "status": "deprecated",
+     "note": "No Azul support."
+    },
+    {
+     "name": "Nethermind",
+     "sources": [
+      {
+       "label": "Base docs: Azul node upgrade",
+       "url": "https://docs.base.org/upgrades/azul/node-upgrade"
+      }
+     ],
+     "status": "deprecated",
+     "note": "No Azul support."
     }
    ]
   },
@@ -251,6 +290,105 @@
     {
      "label": "Base blog: Introducing Base Denim",
      "url": "https://www.base.org/blog/denim"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Single sequencer; TEE + permissionless ZK proofs",
+   "note": "Proposals are backed by Nitro-Enclave TEE proofs; the ZK prover gives permissionless proposal and dispute paths. Withdrawals: 5-day window, or 1 day with TEE+ZK.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base spec: Proofs overview",
+     "url": "https://docs.base.org/specifications/base-protocol/proofs/overview"
+    },
+    {
+     "label": "Base spec: Withdrawals",
+     "url": "https://docs.base.org/specifications/base-protocol/bridging/withdrawals"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Kept in BaseFeeVault (not burned)",
+   "note": "Base fees add up in the Base Fee Vault predeploy.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base spec: L2 execution engine",
+     "url": "https://docs.base.org/specifications/base-protocol/execution/l2-execution-engine"
+    }
+   ]
+  },
+  "fees.extra": {
+   "mark": "+",
+   "value": "L1 data fee + operator fee",
+   "note": "L1-cost fee goes to the L1 Fee Vault; the operator fee (Isthmus/Jovian) is read via GasPriceOracle.getOperatorFee.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base spec: L2 execution engine",
+     "url": "https://docs.base.org/specifications/base-protocol/execution/l2-execution-engine"
+    },
+    {
+     "label": "Base docs: Network fees",
+     "url": "https://docs.base.org/specifications/transactions/network-fees"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "No",
+   "note": "Ecotone disabled type-3 blob transactions; an L2 block with one is invalid.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base spec: L2 execution engine",
+     "url": "https://docs.base.org/specifications/base-protocol/execution/l2-execution-engine"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "=",
+   "value": "Yes (Isthmus, 2025-05-09)",
+   "note": "Isthmus brought the Pectra EIPs, incl. EIP-7702.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base docs: Isthmus overview",
+     "url": "https://docs.base.org/upgrades/isthmus/overview"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "=",
+   "value": "None; standard Ethereum set",
+   "note": "Base has the standard Ethereum precompiles; Azul applied the Osaka MODEXP changes (EIP-7823/7883).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base spec: Precompiles",
+     "url": "https://docs.base.org/specifications/base-protocol/execution/precompiles"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "~",
+   "value": "Ethereum",
+   "note": "Base Stack (OP Stack-derived) rollup.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base spec: Proofs overview",
+     "url": "https://docs.base.org/specifications/base-protocol/proofs/overview"
     }
    ]
   }

@@ -41,14 +41,22 @@
   },
   "consensus.validators": {
    "mark": "~",
-   "value": "21 (as used in BEP-619)",
-   "note": "BEP-619 computes natural finality with ValidatorSize = 21 and TurnLength = 16. Not a live count.",
-   "kind": "doc",
+   "value": "21 producing / 45 elected / 56 registered",
+   "note": "Each epoch 21 \"cabinet\" validators produce blocks (3 working candidates rotate in); StakeHub elects up to 45 and 56 are registered. Live eth_call read.",
+   "kind": "observed",
    "as_of": "2026-11-23",
    "sources": [
     {
-     "label": "BEP-619",
-     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-619.md"
+     "label": "BSC RPC eth_call ValidatorSet 0x1000 / StakeHub 0x2002 @ block 135,261,139",
+     "url": "https://bsc-rpc.publicnode.com"
+    },
+    {
+     "label": "BSCValidatorSet.sol @8464181 (21 cabinets)",
+     "url": "https://github.com/bnb-chain/bsc-genesis-contract/blob/84641812a013eda1593e058aeed4dc116c7746eb/contracts/BSCValidatorSet.sol"
+    },
+    {
+     "label": "StakeHub.sol @8464181 (maxElectedValidators)",
+     "url": "https://github.com/bnb-chain/bsc-genesis-contract/blob/84641812a013eda1593e058aeed4dc116c7746eb/contracts/BC_fusion/StakeHub.sol"
     }
    ]
   },
@@ -174,7 +182,7 @@
   "evm.baseline": {
    "mark": "~",
    "value": "Osaka, partial (7 of 13 Fusaka EIPs)",
-   "note": "Osaka/Mendel activated 2026-04-28. Rejected: EIP-7642, 7594, 7892, 7917, 7918, 7935. Pasteur (2026-08-25) added BSC-only changes.",
+   "note": "Osaka/Mendel activated 2026-04-28. Rejected: EIP-7642, 7594, 7892, 7917, 7918, 7935. Pasteur (2026-08-25) added BSC-only changes. Next: Jenner (BEP-718) scheduled 2026-12-08 02:30 UTC.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
@@ -189,6 +197,10 @@
     {
      "label": "bsc params/config.go (fork times)",
      "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/params/config.go"
+    },
+    {
+     "label": "bsc v1.8.2 release (Jenner, BEP-718, 2026-12-08)",
+     "url": "https://github.com/bnb-chain/bsc/releases/tag/v1.8.2"
     }
    ]
   },
@@ -314,14 +326,65 @@
   },
   "clients.execution": {
    "mark": "~",
-   "value": "bsc (go-ethereum fork)",
-   "note": "\"A BNB Smart Chain client based on the go-ethereum fork.\"",
+   "value": "bsc (geth fork); reth-bsc (not validator-ready)",
+   "note": "Conflict resolved: Erigon for BSC (node-real/bsc-erigon) reached end of life after 2025-12-31 and is archived; upstream Erigon has no BSC chainspec.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "bnb-chain/bsc repository description",
      "url": "https://github.com/bnb-chain/bsc"
+    },
+    {
+     "label": "bnb-chain/reth-bsc README",
+     "url": "https://github.com/bnb-chain/reth-bsc"
+    },
+    {
+     "label": "node-real/bsc-erigon README (archived)",
+     "url": "https://github.com/node-real/bsc-erigon"
+    }
+   ],
+   "items": [
+    {
+     "name": "bsc",
+     "sources": [
+      {
+       "label": "bnb-chain/bsc repository description",
+       "url": "https://github.com/bnb-chain/bsc"
+      }
+     ],
+     "status": "production",
+     "note": "go-ethereum fork; validator-capable."
+    },
+    {
+     "name": "reth-bsc",
+     "sources": [
+      {
+       "label": "bnb-chain/reth-bsc README",
+       "url": "https://github.com/bnb-chain/reth-bsc"
+      },
+      {
+       "label": "reth-bsc release v0.1.4-hotfix (2026-11-06)",
+       "url": "https://github.com/bnb-chain/reth-bsc/releases"
+      }
+     ],
+     "status": "beta",
+     "note": "Reth NodeBuilder extension. Syncs mainnet (historical + live); \"Run as validator: soon\"."
+    },
+    {
+     "name": "bsc-erigon",
+     "sources": [
+      {
+       "label": "node-real/bsc-erigon README (archived)",
+       "url": "https://github.com/node-real/bsc-erigon"
+      },
+      {
+       "label": "erigontech/erigon chainspecs (no BSC)",
+       "url": "https://github.com/erigontech/erigon/tree/main/execution/chain/spec/chainspecs"
+      }
+     ],
+     "status": "deprecated",
+     "note": "Archived; EOL after 2025-12-31, docs say migrate to reth-bsc."
     }
    ]
   },
@@ -335,6 +398,19 @@
     {
      "label": "BEP-673",
      "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-673.md"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "=",
+   "value": "L1",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: BSC overview",
+     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
     }
    ]
   }

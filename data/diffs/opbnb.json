@@ -145,13 +145,73 @@
   "clients.execution": {
    "mark": "~",
    "value": "op-geth (bnb-chain)",
-   "note": "Upgrades ship bnb-chain op-node and op-geth releases.",
+   "note": "Only client in the docs and upgrade notices.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "BNB docs: Volta upgrade of opBNB",
      "url": "https://docs.bnbchain.org/announce/volta-opbnb/"
+    },
+    {
+     "label": "bnb-chain/op-geth release v0.5.11 (2026-08-26)",
+     "url": "https://github.com/bnb-chain/op-geth/releases/tag/v0.5.11"
+    }
+   ],
+   "items": [
+    {
+     "name": "op-geth (bnb-chain)",
+     "sources": [
+      {
+       "label": "BNB docs: Volta upgrade of opBNB",
+       "url": "https://docs.bnbchain.org/announce/volta-opbnb/"
+      },
+      {
+       "label": "bnb-chain/op-geth release v0.5.11 (2026-08-26)",
+       "url": "https://github.com/bnb-chain/op-geth/releases/tag/v0.5.11"
+      }
+     ],
+     "status": "production",
+     "note": "Latest release v0.5.11, 2026-08-26."
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Single sequencer (opBNB team); no user validators",
+   "note": "FAQ: users cannot run validator or aggregator nodes; the team operates the sequencer.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: opBNB protocol FAQs",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/faq/protocol-faqs/"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Final when its batch is in a finalized BSC block; 7-day challenge window",
+   "note": "finalized = committed to BSC and that BSC block finalized (fast or natural finality). Withdrawals wait the 7-day challenge window.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: opBNB protocol FAQs",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/faq/protocol-faqs/"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "~",
+   "value": "BSC",
+   "note": "OP Stack (Bedrock) rollup posting to BSC.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/opbnb README",
+     "url": "https://github.com/bnb-chain/opbnb/blob/426567ebb32455b2bfb9c736ae8908f84a462ddf/README.md"
     }
    ]
   }

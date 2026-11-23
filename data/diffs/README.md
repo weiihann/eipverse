@@ -1,6 +1,6 @@
 # Chain diff data
 
-One file per column (`<id>.json`) plus `_lineage.json`, read by `lib/diffs.js` and written to `site/diffs.json` at build time.
+One file per column (`<id>.json`), read by `lib/diffs.js` and written to `site/diffs.json` at build time.
 
 - `facts[dimension]` = `{ mark, value, note, kind, as_of, sources: [{ label, url }] }`.
 - `mark`: `base` (Ethereum only), `+` adds, `-` missing, `~` changed, `=` same as Ethereum.

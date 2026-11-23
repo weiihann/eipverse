@@ -174,14 +174,39 @@
   },
   "clients.execution": {
    "mark": "~",
-   "value": "AvalancheGo Continuous Execution VM",
-   "note": "Replaced Coreth at Helicon (mainnet 2026-09-22).",
+   "value": "AvalancheGo (Continuous Execution VM)",
+   "note": "Single client. Coreth was removed in Helicon.2 (v1.15.2).",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "Avalanche docs: Coreth architecture",
      "url": "https://build.avax.network/docs/primary-network/coreth-architecture"
+    },
+    {
+     "label": "avalanchego v1.15.0 release (Helicon)",
+     "url": "https://github.com/ava-labs/avalanchego/releases/tag/v1.15.0"
+    }
+   ],
+   "items": [
+    {
+     "name": "AvalancheGo",
+     "sources": [
+      {
+       "label": "Avalanche docs: Coreth architecture",
+       "url": "https://build.avax.network/docs/primary-network/coreth-architecture"
+      },
+      {
+       "label": "avalanchego v1.15.0 release (Helicon)",
+       "url": "https://github.com/ava-labs/avalanchego/releases/tag/v1.15.0"
+      },
+      {
+       "label": "ava-labs/avalanchego release v1.15.3 (2026-11-05)",
+       "url": "https://github.com/ava-labs/avalanchego/releases/tag/v1.15.3"
+      }
+     ],
+     "status": "production",
+     "note": "C-Chain runs on the Continuous Execution (SAE) VM since Helicon, 2026-09-22."
     }
    ]
   },
@@ -199,6 +224,49 @@
     {
      "label": "Avalanche docs: Continuous Execution",
      "url": "https://build.avax.network/docs/primary-network/continuous-execution"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "615 Primary Network validators",
+   "note": "Permissionless with 2,000 AVAX stake, 48 h to 365 days. Count from the live P-Chain.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Avalanche P-Chain platform.getCurrentValidators @ P-Chain block 25,933,682",
+     "url": "https://api.avax.network/ext/bc/P"
+    },
+    {
+     "label": "Avalanche docs: Nodes and validators (2,000 AVAX)",
+     "url": "https://build.avax.network/docs/nodes"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Sub-second, probabilistic (Snowman)",
+   "note": "Docs: \"sub-second, immutable finality\"; ~1 s acceptance latency.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Avalanche docs: Snowman consensus",
+     "url": "https://build.avax.network/docs/primary-network/avalanche-consensus"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "=",
+   "value": "L1",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Avalanche docs: Snowman consensus",
+     "url": "https://build.avax.network/docs/primary-network/avalanche-consensus"
     }
    ]
   }

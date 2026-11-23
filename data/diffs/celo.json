@@ -239,7 +239,7 @@
   "clients.execution": {
    "mark": "~",
    "value": "celo-org/op-geth (op-geth fork)",
-   "note": "GitHub fork of ethereum-optimism/op-geth.",
+   "note": "Single client.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
@@ -250,6 +250,23 @@
     {
      "label": "Celo docs: Celo for Ethereum developers",
      "url": "https://docs.celo.org/build/tools/overview/migrate/from-ethereum"
+    }
+   ],
+   "items": [
+    {
+     "name": "celo-org/op-geth",
+     "sources": [
+      {
+       "label": "celo-org/op-geth (GitHub fork of ethereum-optimism/op-geth)",
+       "url": "https://github.com/celo-org/op-geth"
+      },
+      {
+       "label": "celo-org/op-geth release celo-v2.2.5 (2026-08-18)",
+       "url": "https://github.com/celo-org/op-geth/releases/tag/celo-v2.2.5"
+      }
+     ],
+     "status": "production",
+     "note": "celo-v2.2.5 on 2026-08-18."
     }
    ]
   },
@@ -271,6 +288,40 @@
     {
      "label": "Celo docs: Jello upgrade",
      "url": "https://docs.celo.org/operate/specification/upgrades/jello"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Single sequencer; 49 elected RPC providers (cap 110)",
+   "note": "After the L2 move, \"validators\" are community RPC providers: 49 elected (min 22, max 110), 121 registered. Blocks come from the sequencer.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Celo RPC eth_call Election / EpochManager @ block 83,531,980",
+     "url": "https://forno.celo.org"
+    },
+    {
+     "label": "Celo docs: Community RPC elections (how it works)",
+     "url": "https://docs.celo.org/contribute/community-rpc-nodes/how-it-works"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "~",
+   "value": "Ethereum",
+   "note": "OP Stack L2 with EigenDA.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Celo docs: Celo L2 specification",
+     "url": "https://docs.celo.org/operate/specification/index"
+    },
+    {
+     "label": "superchain-registry celo.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/celo.toml"
     }
    ]
   }

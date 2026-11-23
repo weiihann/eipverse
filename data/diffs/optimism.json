@@ -296,6 +296,90 @@
      "url": "https://docs.optimism.io/stack/differences"
     }
    ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Single sequencer; permissionless fault proofs",
+   "note": "Fault proofs live on OP Mainnet since 2024-06-10: anyone can propose and challenge output roots.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP docs: Fault proofs explainer",
+     "url": "https://docs.optimism.io/op-stack/fault-proofs/explainer"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "op-reth (primary), Nethermind",
+   "note": "Was blank in v1. op-geth support ends 2026-05-31 and it cannot follow Karst; op-erigon is deprecated.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP docs: Choose your node stack",
+     "url": "https://docs.optimism.io/use-cases/choose-your-node-stack"
+    }
+   ],
+   "items": [
+    {
+     "name": "op-reth",
+     "sources": [
+      {
+       "label": "OP docs: Choose your node stack",
+       "url": "https://docs.optimism.io/use-cases/choose-your-node-stack"
+      }
+     ],
+     "status": "production",
+     "note": "Primary supported client."
+    },
+    {
+     "name": "Nethermind",
+     "sources": [
+      {
+       "label": "OP docs: Choose your node stack",
+       "url": "https://docs.optimism.io/use-cases/choose-your-node-stack"
+      }
+     ],
+     "status": "production",
+     "note": "Third-party client."
+    },
+    {
+     "name": "op-geth",
+     "sources": [
+      {
+       "label": "OP docs: Choose your node stack",
+       "url": "https://docs.optimism.io/use-cases/choose-your-node-stack"
+      }
+     ],
+     "status": "deprecated",
+     "note": "End of support 2026-05-31; cannot follow Karst."
+    },
+    {
+     "name": "op-erigon",
+     "sources": [
+      {
+       "label": "OP docs: Choose your node stack",
+       "url": "https://docs.optimism.io/use-cases/choose-your-node-stack"
+      }
+     ],
+     "status": "deprecated"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "~",
+   "value": "Ethereum",
+   "note": "OP Stack rollup.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "superchain-registry op.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
+    }
+   ]
   }
  },
  "as_of": "2026-11-23"

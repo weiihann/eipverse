@@ -33,14 +33,6 @@ test('observed facts name the RPC block they were read at', () => {
   for (const c of diffs.chains) for (const [dim, f] of Object.entries(c.facts)) if (f.kind === 'observed') assert.ok(f.sources.some((s) => /block/i.test(s.label)), `${c.id}.${dim}`);
 });
 
-test('lineage edges are sourced and point at known columns', () => {
-  assert.ok(diffs.lineage.edges.length > 0);
-  for (const e of diffs.lineage.edges) {
-    assert.ok(COLUMNS.includes(e.to), e.to);
-    assert.ok(e.sources.length > 0 && e.sources.every((s) => s.url.startsWith('https://')), `${e.from}->${e.to}`);
-  }
-});
-
 test('validator rejects an unsourced or undated fact', () => {
   const bad = structuredClone(diffs);
   const c = bad.chains.find((x) => x.id === 'base');

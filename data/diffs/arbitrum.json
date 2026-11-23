@@ -312,7 +312,7 @@
   "clients.execution": {
    "mark": "~",
    "value": "Nitro (Geth core)",
-   "note": "Nitro compiles the core of Geth into Arbitrum.",
+   "note": "Single client.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
@@ -323,6 +323,23 @@
     {
      "label": "Arbitrum docs: RPC methods",
      "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/rpc-methods"
+    }
+   ],
+   "items": [
+    {
+     "name": "Nitro",
+     "sources": [
+      {
+       "label": "OffchainLabs/nitro README",
+       "url": "https://github.com/OffchainLabs/nitro/blob/ccc5c828d9ea22f161efc784bac4d4a6559b7e59/README.md"
+      },
+      {
+       "label": "OffchainLabs/nitro (GitHub)",
+       "url": "https://github.com/OffchainLabs/nitro"
+      }
+     ],
+     "status": "production",
+     "note": "Compiles the core of Geth; v3.12.4 on 2026-11-19."
     }
    ]
   },
@@ -340,6 +357,53 @@
     {
      "label": "Arbitrum docs: RPC methods",
      "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/rpc-methods"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Permissionless validation (BoLD) + one sequencer",
+   "note": "BoLD is live on Arbitrum One: anyone can bond and defend the correct state. Ordering is still done by the sequencer.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Overview of BoLD",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Soft from sequencer; L1-final with batch; 6.4-day challenge",
+   "note": "Withdrawals to Ethereum wait the ~6.4-day challenge period; BoLD bounds disputes to a fixed window.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Withdraw tokens (6.4-day challenge period)",
+     "url": "https://docs.arbitrum.io/arbitrum-essentials/bridging/withdraw/tokens"
+    },
+    {
+     "label": "Arbitrum docs: Overview of BoLD",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "~",
+   "value": "Ethereum",
+   "note": "Nitro optimistic rollup.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Block gas limit, numbers and time",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/block-numbers-and-time"
+    },
+    {
+     "label": "Arbitrum docs: Overview of BoLD",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/bold/gentle-introduction"
     }
    ]
   }

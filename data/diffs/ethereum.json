@@ -41,14 +41,18 @@
   },
   "consensus.validators": {
    "mark": "base",
-   "value": "Permissionless, 32 ETH deposit",
-   "note": "Anyone can become a validator by depositing 32 ETH and running execution, consensus and validator clients.",
+   "value": "Permissionless, 32 ETH min (2,048 ETH max effective)",
+   "note": "Deposit at least 32 ETH; EIP-7251 (Pectra) raised the max effective balance to 2,048 ETH. Live active count: no source (beaconcha.in API needs a key).",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "ethereum.org: Proof-of-stake",
      "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    },
+    {
+     "label": "EIP-7251",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7251.md"
     }
    ]
   },
@@ -349,14 +353,76 @@
   },
   "clients.execution": {
    "mark": "base",
-   "value": "Geth, Nethermind, Besu, Erigon, Reth",
-   "note": "Multiple independent execution clients.",
+   "value": "Geth, Nethermind, Besu, Erigon, Reth, ethrex",
+   "note": "ethereum.org lists six production execution clients; ethrex (LambdaClass) is the newest.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
-     "label": "ethereum.org: Nodes and clients",
-     "url": "https://ethereum.org/en/developers/docs/nodes-and-clients/"
+     "label": "ethereum.org nodes-and-clients (source @6afa24d)",
+     "url": "https://github.com/ethereum/ethereum-org-website/blob/6afa24df1cdb410818ea693ba9cf9801daacf537/public/content/developers/docs/nodes-and-clients/index.md"
+    }
+   ],
+   "items": [
+    {
+     "name": "Geth",
+     "sources": [
+      {
+       "label": "ethereum.org nodes-and-clients (source @6afa24d)",
+       "url": "https://github.com/ethereum/ethereum-org-website/blob/6afa24df1cdb410818ea693ba9cf9801daacf537/public/content/developers/docs/nodes-and-clients/index.md"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "Nethermind",
+     "sources": [
+      {
+       "label": "ethereum.org nodes-and-clients (source @6afa24d)",
+       "url": "https://github.com/ethereum/ethereum-org-website/blob/6afa24df1cdb410818ea693ba9cf9801daacf537/public/content/developers/docs/nodes-and-clients/index.md"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "Besu",
+     "sources": [
+      {
+       "label": "ethereum.org nodes-and-clients (source @6afa24d)",
+       "url": "https://github.com/ethereum/ethereum-org-website/blob/6afa24df1cdb410818ea693ba9cf9801daacf537/public/content/developers/docs/nodes-and-clients/index.md"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "Erigon",
+     "sources": [
+      {
+       "label": "ethereum.org nodes-and-clients (source @6afa24d)",
+       "url": "https://github.com/ethereum/ethereum-org-website/blob/6afa24df1cdb410818ea693ba9cf9801daacf537/public/content/developers/docs/nodes-and-clients/index.md"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "Reth",
+     "sources": [
+      {
+       "label": "ethereum.org nodes-and-clients (source @6afa24d)",
+       "url": "https://github.com/ethereum/ethereum-org-website/blob/6afa24df1cdb410818ea693ba9cf9801daacf537/public/content/developers/docs/nodes-and-clients/index.md"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "ethrex",
+     "sources": [
+      {
+       "label": "ethereum.org nodes-and-clients (source @6afa24d)",
+       "url": "https://github.com/ethereum/ethereum-org-website/blob/6afa24df1cdb410818ea693ba9cf9801daacf537/public/content/developers/docs/nodes-and-clients/index.md"
+      }
+     ],
+     "status": "production"
     }
    ]
   },
@@ -370,6 +436,19 @@
     {
      "label": "EIP-7702",
      "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7702.md"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "base",
+   "value": "L1 (settles itself)",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ethereum.org: Proof-of-stake",
+     "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
     }
    ]
   }

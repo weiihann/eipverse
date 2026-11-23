@@ -24,11 +24,15 @@
   },
   "consensus.finality": {
    "mark": "~",
-   "value": "Deterministic via milestones",
-   "note": "Milestones give deterministic finality with an execution-layer fork-choice rule.",
+   "value": "Deterministic via milestones, 2-5 s",
+   "note": "Heimdall v2 milestones finalize Bor blocks in 2-5 s; checkpoints to Ethereum matter only for bridging.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
+    {
+     "label": "Polygon docs: Polygon Chain overview",
+     "url": "https://docs.polygon.technology/pos/overview"
+    },
     {
      "label": "PIP-11",
      "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-11.md"
@@ -132,7 +136,7 @@
   "evm.baseline": {
    "mark": "~",
    "value": "Prague + selected Osaka EIPs",
-   "note": "Prague at block 73,440,256; EIP-7823/7825/7883 in Madhugiri, CLZ in Lisovo.",
+   "note": "Prague at block 73,440,256; EIP-7823/7825/7883 in Madhugiri, CLZ in Lisovo. Latest fork: Uburu (block 96,787,900; state-sync change, no EVM change).",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
@@ -147,6 +151,10 @@
     {
      "label": "PIP-81",
      "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-81.md"
+    },
+    {
+     "label": "bor v2.11.0 release (Uburu hardfork @ 96,787,900)",
+     "url": "https://github.com/0xPolygon/bor/releases/tag/v2.11.0"
     }
    ]
   },
@@ -212,14 +220,50 @@
   },
   "clients.execution": {
    "mark": "~",
-   "value": "Bor (geth fork) + Heimdall",
-   "note": "\"Bor ... is a fork of geth.\"",
+   "value": "Bor (geth fork); Erigon also supported",
+   "note": "Docs: \"Bor is based on Go Ethereum (Geth), with Erigon also supported.\" Heimdall-v2 is the consensus client.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
+     "label": "Polygon docs: Polygon Chain overview",
+     "url": "https://docs.polygon.technology/pos/overview"
+    },
+    {
      "label": "0xPolygon/bor README",
      "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/README.md"
+    }
+   ],
+   "items": [
+    {
+     "name": "Bor",
+     "sources": [
+      {
+       "label": "0xPolygon/bor README",
+       "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/README.md"
+      },
+      {
+       "label": "Polygon docs: Polygon Chain overview",
+       "url": "https://docs.polygon.technology/pos/overview"
+      },
+      {
+       "label": "bor v2.11.0 release (Uburu hardfork @ 96,787,900)",
+       "url": "https://github.com/0xPolygon/bor/releases/tag/v2.11.0"
+      }
+     ],
+     "status": "production",
+     "note": "v2.11.2 on 2026-11-19."
+    },
+    {
+     "name": "Erigon",
+     "sources": [
+      {
+       "label": "Polygon docs: Polygon Chain overview",
+       "url": "https://docs.polygon.technology/pos/overview"
+      }
+     ],
+     "status": "production",
+     "note": "Supported per Polygon docs."
     }
    ]
   },
@@ -233,6 +277,40 @@
     {
      "label": "PIP-76",
      "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-76.md"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "100 active (cap 105)",
+   "note": "Heimdall reports 100 validators; PIP-4 caps the active set at 105. Minimum stake 10,000 POL.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Heimdall API /stake/validators-set @ Heimdall block 58,541,758",
+     "url": "https://heimdall-api.polygon.technology/stake/validators-set"
+    },
+    {
+     "label": "Polygon docs: Becoming a validator (PIP-4, max 105)",
+     "url": "https://docs.polygon.technology/pos/get-started/becoming-a-validator"
+    },
+    {
+     "label": "Polygon docs: Polygon Chain overview",
+     "url": "https://docs.polygon.technology/pos/overview"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "~",
+   "value": "L1; checkpoints to Ethereum",
+   "note": "Checkpoints go to Ethereum for bridging; not a rollup.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Polygon docs: Polygon Chain overview",
+     "url": "https://docs.polygon.technology/pos/overview"
     }
    ]
   }

@@ -37,18 +37,22 @@
   },
   "consensus.validators": {
    "mark": "~",
-   "value": "Permissioned set",
-   "note": "",
-   "kind": "doc",
+   "value": "Permissioned: 19 active (28 entries on-chain)",
+   "note": "getActiveValidators() returns 19; validatorCount() = 28 includes rotated and deactivated entries.",
+   "kind": "observed",
    "as_of": "2026-11-23",
    "sources": [
     {
-     "label": "Tempo docs: Consensus and finality (Simplex BFT)",
-     "url": "https://tempo.com/developers/docs/protocol/blockspace/consensus"
+     "label": "Tempo RPC eth_call ValidatorConfigV2 0xCCCC…0001 @ block 50,421,612",
+     "url": "https://rpc.tempo.xyz"
     },
     {
-     "label": "Tempo docs: EVM differences",
-     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+     "label": "tempo precompiles/validator_config_v2.rs @9d65489",
+     "url": "https://github.com/tempoxyz/tempo/blob/9d65489fe82917bead5c84004e830f8b3828dfbf/crates/contracts/src/precompiles/validator_config_v2.rs"
+    },
+    {
+     "label": "Tempo docs: Consensus and finality (Simplex BFT)",
+     "url": "https://tempo.com/developers/docs/protocol/blockspace/consensus"
     }
    ]
   },
@@ -248,13 +252,34 @@
   "clients.execution": {
    "mark": "~",
    "value": "tempo (Reth SDK)",
-   "note": "",
+   "note": "Single client.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "tempoxyz/tempo README",
      "url": "https://github.com/tempoxyz/tempo/blob/15b1da2f34d5c581399206e6f916337deef2b2c7/README.md"
+    },
+    {
+     "label": "tempoxyz/tempo release v1.19.0 (2026-11-19)",
+     "url": "https://github.com/tempoxyz/tempo/releases"
+    }
+   ],
+   "items": [
+    {
+     "name": "tempo",
+     "sources": [
+      {
+       "label": "tempoxyz/tempo README",
+       "url": "https://github.com/tempoxyz/tempo/blob/15b1da2f34d5c581399206e6f916337deef2b2c7/README.md"
+      },
+      {
+       "label": "tempoxyz/tempo release v1.19.0 (2026-11-19)",
+       "url": "https://github.com/tempoxyz/tempo/releases"
+      }
+     ],
+     "status": "production",
+     "note": "Built on the Reth SDK; v1.19.0 on 2026-11-19."
     }
    ]
   },
@@ -276,6 +301,19 @@
     {
      "label": "Tempo docs: Predeployed contracts",
      "url": "https://tempo.com/developers/docs/quickstart/predeployed-contracts"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "=",
+   "value": "L1",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Consensus and finality (Simplex BFT)",
+     "url": "https://tempo.com/developers/docs/protocol/blockspace/consensus"
     }
    ]
   }

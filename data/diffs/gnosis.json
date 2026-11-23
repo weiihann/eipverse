@@ -42,7 +42,7 @@
   "consensus.validators": {
    "mark": "~",
    "value": "Permissionless, 1 GNO",
-   "note": "Validators need 1 GNO instead of 32 ETH. An upcoming EEZ fork retires the validator set.",
+   "note": "Validators need 1 GNO instead of 32 ETH. The Gnosis EEZ fork will retire the set; no activation date yet.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
@@ -51,8 +51,8 @@
      "url": "https://docs.gnosischain.com/node/"
     },
     {
-     "label": "Gnosis docs index (llms.txt)",
-     "url": "https://docs.gnosischain.com/llms.txt"
+     "label": "Gnosis docs: Validators and the move to Gnosis EEZ",
+     "url": "https://docs.gnosischain.com/validators/eez-transition"
     }
    ]
   },
@@ -222,13 +222,55 @@
   "clients.execution": {
    "mark": "~",
    "value": "Nethermind, Erigon, Reth, Geth",
-   "note": "Ethereum clients run with a --network flag.",
+   "note": "Ethereum clients run with a --network gnosis flag.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "Gnosis docs: Run a node",
      "url": "https://docs.gnosischain.com/node/"
+    }
+   ],
+   "items": [
+    {
+     "name": "Nethermind",
+     "sources": [
+      {
+       "label": "Gnosis docs: Run execution client (Nethermind)",
+       "url": "https://docs.gnosischain.com/node/manual/execution/nethermind"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "Erigon",
+     "sources": [
+      {
+       "label": "Gnosis docs: Run execution client (Erigon)",
+       "url": "https://docs.gnosischain.com/node/manual/execution/erigon"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "Reth",
+     "sources": [
+      {
+       "label": "Gnosis docs: Run execution client (Reth)",
+       "url": "https://docs.gnosischain.com/node/manual/execution/reth"
+      }
+     ],
+     "status": "production"
+    },
+    {
+     "name": "Geth",
+     "sources": [
+      {
+       "label": "Gnosis docs: Run execution client (Geth)",
+       "url": "https://docs.gnosischain.com/node/manual/execution/geth"
+      }
+     ],
+     "status": "production"
     }
    ]
   },
@@ -246,6 +288,19 @@
     {
      "label": "gnosischain/specs Shutter",
      "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/shutter/high-level.md"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "=",
+   "value": "L1 (EEZ move to Ethereum planned)",
+   "note": "Gnosis EEZ will settle on Ethereum; no date set.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Gnosis docs: Validators and the move to Gnosis EEZ",
+     "url": "https://docs.gnosischain.com/validators/eez-transition"
     }
    ]
   }

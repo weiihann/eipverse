@@ -248,13 +248,30 @@
   "clients.execution": {
    "mark": "~",
    "value": "monad + monad-bft (Category Labs)",
-   "note": "Written from scratch in C++ and Rust.",
+   "note": "Single client, written from scratch in C++ and Rust.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "Monad docs: Monad for developers",
      "url": "https://docs.monad.xyz/introduction/monad-for-developers"
+    }
+   ],
+   "items": [
+    {
+     "name": "monad (execution) + monad-bft (consensus)",
+     "sources": [
+      {
+       "label": "Monad docs: Monad for developers",
+       "url": "https://docs.monad.xyz/introduction/monad-for-developers"
+      },
+      {
+       "label": "category-labs/monad-bft (GitHub)",
+       "url": "https://github.com/category-labs/monad-bft"
+      }
+     ],
+     "status": "production",
+     "note": "monad-bft v0.16.7 on 2026-11-18."
     }
    ]
   },
@@ -268,6 +285,53 @@
     {
      "label": "Monad docs: Differences from Ethereum",
      "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "197 active (cap 200)",
+   "note": "Live consensus set has 197 validators; ACTIVE_VALSET_SIZE caps it at 200. Joining needs 100,000 MON self-stake.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad RPC getConsensusValidatorSet (precompile 0x1000) @ block 124,704,381",
+     "url": "https://rpc.monad.xyz"
+    },
+    {
+     "label": "Monad docs: Staking (ACTIVE_VALSET_SIZE 200)",
+     "url": "https://docs.monad.xyz/monad-arch/consensus/staking"
+    },
+    {
+     "label": "Monad docs: Staking precompile API",
+     "url": "https://docs.monad.xyz/reference/staking/api"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "-",
+   "value": "0, 1, 2, 4 (no type 3)",
+   "note": "Blob transactions (EIP-4844) are not supported.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum (no type 3)",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  },
+  "consensus.settlement": {
+   "mark": "=",
+   "value": "L1",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: MonadBFT",
+     "url": "https://docs.monad.xyz/monad-arch/consensus/monad-bft"
     }
    ]
   }

@@ -71,7 +71,7 @@ const shortTarget = (s) => forkName(s.split('; ')[0]).replace(/ \((Scheduled|Con
 
 // ---------- state <-> URL ----------
 const VIEWS = ['proposals', 'layers', 'upgrades', 'diff', 'sources'];
-const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '', dg: '', dq: '', only: '', cell: '' };
+const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '', dg: '', dq: '', cell: '' };
 const state = { ...DEFAULTS };
 function readUrl() {
   const p = new URLSearchParams(location.search);
@@ -252,7 +252,7 @@ function renderFilters() {
     state.tag && ['tag', esc(layerName(state.tag))], state.tag && state.sub && ['sub', esc(subLabel(state.tag, state.sub))],
     state.status && ['status', esc(state.status)], state.scope === 'all' && ['scope', 'Incl. historical'], state.q && ['q', `“${esc(state.q)}”`],
   ].filter(Boolean);
-  const isDefault = Object.keys(DEFAULTS).every((k) => ['view', 'id', 'dg', 'dq', 'only', 'cell'].includes(k) || state[k] === DEFAULTS[k]);
+  const isDefault = Object.keys(DEFAULTS).every((k) => ['view', 'id', 'dg', 'dq', 'cell'].includes(k) || state[k] === DEFAULTS[k]);
   const kindWord = state.kind === 'protocol' ? 'protocol proposals' : state.kind === 'app standard' ? 'app standards' : 'proposals';
   $('summary').innerHTML = `<span class="count"><b data-shown="${shown.length}">${fmtN(shown.length)}</b> ${kindWord}${state.scope === 'active' && !state.status ? ', active &amp; upcoming' : ''}<span class="of"> of ${fmtN(ALL.length)}</span></span>`
     + active.map(([k, l, v]) => `<button class="fpill" data-clear="${k}"${v ? ` data-v="${esc(v)}"` : ''} aria-label="Remove filter">${l}${icon.x}</button>`).join('')
@@ -386,10 +386,7 @@ function renderSources() {
 let DIFF = null, diffLoading = false, diffErr = '', shownCells = [];
 const MARK = { base: ['Ethereum baseline', 'base', '◆'], '+': ['adds to Ethereum', 'add', '+'], '-': ['missing vs Ethereum', 'miss', '−'], '~': ['changed vs Ethereum', 'chg', '~'], '=': ['same as Ethereum', 'same', '='] };
 const markPill = (m) => `<span class="mk mk-${MARK[m][1]}" title="${MARK[m][0]}">${MARK[m][2]}</span>`;
-const ROOTS = { geth: 'go-ethereum', 'op-geth': 'op-geth', reth: 'Reth', 'eth-clients': 'Ethereum clients', independent: 'Own client' };
 const diffCol = (id) => DIFF.chains.find((c) => c.id === id);
-const diffName = (id) => diffCol(id)?.label || ROOTS[id] || id;
-const diffLogo = (id) => { const c = diffCol(id); return c ? logo(c.chain) : ''; };
 const loadDiff = () => {
   if (DIFF || diffLoading) return;
   diffLoading = true;
@@ -399,14 +396,11 @@ const loadDiff = () => {
 const dq = $('dq');
 let dqTimer;
 dq.addEventListener('input', () => { clearTimeout(dqTimer); dqTimer = setTimeout(() => set({ dq: dq.value.trim() }), 80); });
-$('donly').onclick = () => set({ only: state.only ? '' : '1' });
 
 function diffRows() {
   const words = state.dq.toLowerCase().split(/\s+/).filter(Boolean);
   return DIFF.dimensions.filter(([id, g, label]) => {
     if (state.dg && g !== state.dg) return false;
-    const facts = DIFF.chains.map((c) => c.facts[id]).filter(Boolean);
-    if (state.only && !facts.some((f) => ['+', '-', '~'].includes(f.mark))) return false;
     if (!words.length) return true;
     const text = [id, label, ...DIFF.chains.flatMap((c) => (c.facts[id] ? [c.label, c.facts[id].value, c.facts[id].note] : []))].join(' ').toLowerCase();
     return words.every((w) => text.includes(w));
@@ -421,23 +415,15 @@ function renderDiff() {
   }
   const facts = DIFF.chains.reduce((n, c) => n + Object.keys(c.facts).length, 0);
   const cellsN = DIFF.chains.length * DIFF.dimensions.length;
-  $('diff-head').innerHTML = `<div class="side-h"><h3>How each chain differs from Ethereum</h3><p>${DIFF.dimensions.length} dimensions × ${DIFF.chains.length} chains · ${fmtN(facts)} sourced facts, ${fmtN(cellsN - facts)} left blank because no source was found · as of ${esc(DIFF.lineage.as_of || '')}</p></div>
+  $('diff-head').innerHTML = `<div class="side-h"><h3>How each chain differs from Ethereum</h3><p>${DIFF.dimensions.length} dimensions × ${DIFF.chains.length} chains · ${fmtN(facts)} sourced facts, ${fmtN(cellsN - facts)} left blank because no source was found · as of ${esc(DIFF.chains.map((c) => c.as_of).sort().at(-1) || '')}</p></div>
     <div class="legend">${['base', '+', '-', '~', '='].map((m) => `<span>${markPill(m)}${MARK[m][0]}</span>`).join('')}<span><span class="mk mk-none">·</span>no source (not guessed)</span><span><span class="obs">obs</span>read from a live RPC</span></div>`;
 
-  const by = (rel) => { const g = {}; for (const e of DIFF.lineage.edges.filter((x) => x.rel === rel)) (g[e.from] ||= []).push(e); return Object.entries(g); };
-  const kid = (e) => `<button class="lin-k" data-edge="${esc(`${e.from}>${e.to}`)}" title="${esc(e.label)} · click for sources">${diffLogo(e.to)}${esc(diffName(e.to))}</button>`;
-  const group = ([from, es], arrow) => `<span class="lin-g"><span class="lin-p">${diffLogo(from)}${esc(diffName(from))}</span><span class="lin-a">${arrow}</span>${es.map(kid).join('')}</span>`;
-  $('lineage').innerHTML = `<div class="lin-row"><span class="label">Settles on</span>${by('settles').map((g) => group(g, '←')).join('')}</div>
-    <div class="lin-row"><span class="label">Execution client</span>${by('client').map((g) => group(g, '→')).join('')}</div>`;
-  for (const b of $('lineage').querySelectorAll('[data-edge]')) b.onclick = () => set({ cell: `edge:${b.dataset.edge}` });
 
   if (document.activeElement !== dq) dq.value = state.dq;
-  $('donly').setAttribute('aria-pressed', String(!!state.only));
   const rows = diffRows();
   const dgB = document.querySelector('[data-pop="dg"]');
   dgB.classList.toggle('set', !!state.dg);
   dgB.innerHTML = `<span class="k">Dimensions</span><span class="v">${state.dg ? esc(DIFF.groups.find(([g]) => g === state.dg)[1]) : 'All'}</span>${caretSvg}`;
-  $('donly').classList.toggle('set', !!state.only);
   renderPop();
 
   const cols = DIFF.chains;
@@ -451,8 +437,7 @@ function renderDiff() {
       const key = `${c.id}|${id}`;
       if (!f) return `<td class="t-blank"><button class="d-cell blank" data-cell="${esc(key)}" title="No source found for ${esc(c.label)}: left blank, not guessed"><span class="mk mk-none">·</span><span class="d-v">no source</span></button></td>`;
       shownCells.push(key);
-      const dim = state.only && f.mark === '=';
-      return `<td class="t-${MARK[f.mark][1]}"><button class="d-cell m-${MARK[f.mark][1]}${dim ? ' dim' : ''}${state.cell === key ? ' sel' : ''}" data-cell="${esc(key)}" title="${esc(c.label)} · ${esc(label)}: ${esc(MARK[f.mark][0])}">${markPill(f.mark)}<span class="d-v">${esc(f.value)}</span>${f.kind === 'observed' ? '<span class="obs">obs</span>' : ''}</button></td>`;
+      return `<td class="t-${MARK[f.mark][1]}"><button class="d-cell m-${MARK[f.mark][1]}${state.cell === key ? ' sel' : ''}" data-cell="${esc(key)}" title="${esc(c.label)} · ${esc(label)}: ${esc(MARK[f.mark][0])}">${markPill(f.mark)}<span class="d-v">${esc(f.value)}</span>${f.kind === 'observed' ? '<span class="obs">obs</span>' : ''}</button></td>`;
     }).join('')}</tr>`;
   }).join('');
   $('difft').innerHTML = `<thead><tr><th class="d-corner">Dimension</th>${cols.map((c) => `<th style="--c:${cc(c.chain)}"><span class="d-ch">${logo(c.chain)}<span><b>${esc(c.label)}</b><small>${esc(c.role)}</small></span></span></th>`).join('')}</tr></thead>
@@ -472,18 +457,6 @@ function renderDiffDrawer() {
   const bar = (title, pos = '') => `<div class="dh"><span class="rid">${title}</span><span class="sp"></span>${pos}
     ${pos ? `<button class="icon-btn" data-step="-1" aria-label="Previous (k)" title="Previous (k / ↑)">${icon.up}</button><button class="icon-btn" data-step="1" aria-label="Next (j)" title="Next (j / ↓)">${icon.down}</button>` : ''}
     <button class="icon-btn" data-close aria-label="Close (Esc)" title="Close (Esc)">${icon.x}</button></div>`;
-  if (state.cell.startsWith('edge:')) {
-    const [from, to] = state.cell.slice(5).split('>');
-    const e = DIFF.lineage.edges.find((x) => x.from === from && x.to === to);
-    if (!e) return set({ cell: '' });
-    d.innerHTML = bar(`${diffLogo(to)}<span class="rid-t">Lineage</span>`) + `<div class="db">
-      <h2>${esc(diffName(to))} ${e.rel === 'settles' ? 'settles on' : 'execution client:'} ${esc(diffName(from))}</h2>
-      <p class="abs">${esc(e.label)}</p>
-      <dl class="kv"><dt>Relation</dt><dd>${e.rel === 'settles' ? 'settlement / parent chain' : 'execution client lineage'}</dd><dt>As of</dt><dd class="mono" style="font-size:12px">${esc(DIFF.lineage.as_of)}</dd></dl>
-      <div><div class="label">Sources</div>${srcList(e.sources)}</div>
-      <p class="hint">Only edges with a source are drawn. Forks that are commonly claimed but that no canonical page states are left out.</p></div>`;
-    open(); close(); return;
-  }
   const [cid, dim] = state.cell.split('|');
   const c = diffCol(cid), meta = DIFF.dimensions.find(([id]) => id === dim);
   if (!c || !meta) return set({ cell: '' });
@@ -500,6 +473,7 @@ function renderDiffDrawer() {
         <dt>Evidence</dt><dd>${f.kind === 'observed' ? 'observed on a live public RPC (see source for endpoint and block)' : f.kind === 'code' ? 'client code, pinned to a commit' : f.kind === 'spec' ? 'specification' : 'documentation / specification'}</dd>
         <dt>As of</dt><dd class="mono" style="font-size:12px">${esc(f.as_of)}</dd>
       </dl>
+      ${f.items ? `<div><div class="label">${f.items.length} listed</div><ul class="items">${f.items.map((it) => `<li><div class="it-h"><b>${esc(it.name)}</b>${it.status ? `<span class="it-s">${esc(it.status)}</span>` : ''}</div>${it.note ? `<p>${esc(it.note)}</p>` : ''}<div class="it-src">${it.sources.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)} ${icon.ext}</a>`).join('')}</div></li>`).join('')}</ul></div>` : ''}
       <div><div class="label">Sources</div>${srcList(f.sources)}</div>`
     : `<h2><span class="none">No source</span></h2><p class="abs">No canonical spec, code or docs page found that states this for ${esc(c.label)}, so the cell is left blank instead of guessed.</p>
       ${eth ? `<dl class="kv"><dt>Ethereum</dt><dd><button class="link" data-goto-cell="ethereum|${esc(dim)}">${esc(eth.value)}</button></dd></dl>` : ''}`}
@@ -508,7 +482,7 @@ function renderDiffDrawer() {
   open(); close();
 }
 function stepCell(n) {
-  if (!shownCells.length || state.cell.startsWith('edge:')) return;
+  if (!shownCells.length) return;
   const i = shownCells.indexOf(state.cell);
   const next = shownCells[Math.max(0, Math.min(shownCells.length - 1, i < 0 ? 0 : i + n))];
   set({ cell: next });
