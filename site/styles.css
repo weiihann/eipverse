@@ -124,6 +124,8 @@ main { padding-bottom: 32px; }
 .why { display: grid; gap: 6px; }
 .why-row { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
 .why-row .terms { color: var(--i3); font: 11px var(--mono); }
+.why-row .cur { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: #34d399; border: 1px solid color-mix(in srgb, #34d399 45%, transparent); border-radius: 4px; padding: 0 5px; }
+.curated-note .terms { font-family: inherit; font-size: 12px; color: var(--i2, var(--i3)); }
 .label { color: var(--i4); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
 .cta { display: inline-flex; align-items: center; gap: 8px; justify-self: start; padding: 8px 14px; border-radius: 8px; background: var(--accent); color: var(--accent-ink); font-weight: 500; }
 .cta:hover { filter: brightness(1.08); }

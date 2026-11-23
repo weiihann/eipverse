@@ -42,9 +42,10 @@ const TAGS = {
   'execution': ['Execution', '#7dd3fc'], 'state': ['State', '#a3e635'], 'fee-market': ['Fee market', '#fbbf24'],
   'consensus': ['Consensus', '#f472b6'], 'networking': ['Networking', '#2dd4bf'], 'blobs-da': ['Blobs & DA', '#818cf8'],
   'account-abstraction': ['Account abstraction', '#fb923c'], 'crypto-precompiles': ['Crypto & precompiles', '#c084fc'],
-  'interop-crosschain': ['Interop & L2', '#22d3ee'], 'governance-meta': ['Governance', '#94a3b8'], 'app-standard': ['App standard', '#e879f9'],
+  'interop-crosschain': ['Interop & L2', '#22d3ee'], 'governance-meta': ['Governance & upgrades', '#94a3b8'],
+  'native-assets': ['Native assets & DEX', '#34d399'], 'app-standard': ['App standard', '#e879f9'],
 };
-const tagPill = (t, sub = '') => `<span class="tag" style="--t:${TAGS[t][1]}" title="${esc(TAGS[t][0])}${sub ? ` › ${esc(sub)}` : ''} (derived)"><span class="tdot"></span><span class="tname">${esc(TAGS[t][0])}</span>${sub ? `<span class="tsub">· ${esc(sub)}</span>` : ''}</span>`;
+const tagPill = (t, sub = '', how = 'derived') => `<span class="tag" style="--t:${TAGS[t][1]}" title="${esc(TAGS[t][0])}${sub ? ` › ${esc(sub)}` : ''} (${how})"><span class="tdot"></span><span class="tname">${esc(TAGS[t][0])}</span>${sub ? `<span class="tsub">· ${esc(sub)}</span>` : ''}</span>`;
 
 const statusClass = (s = '') =>
   /stagnant|stale|withdrawn|superseded|abandoned|cancel|closed|skipped|deprecated|sepolia/i.test(s) ? 'st-dead'
@@ -229,7 +230,7 @@ function rowHtml(r) {
   return `<button class="row${state.id === r._key ? ' sel' : ''}" role="listitem" data-key="${esc(r._key)}" style="--c:${cc(r.chain)}">
     <span class="rid" title="${esc(r.chain)}${r.network ? ` · ${esc(r.network)}` : ''}">${logo(r.chain)}${esc(r.id)}</span>
     <span class="rmain"><div class="rtitle">${r.title ? esc(r.title) : '<span class="none">untitled in source</span>'}${r.shared_with ? sharedPill(r) : ''}</div>${r.abstract ? `<div class="rabs">${esc(r.abstract)}</div>` : ''}</span>
-    <span class="rtags">${r.tags.map((t, i) => tagPill(t, (state.tag ? t === state.tag : i === 0) && r.subs[t] ? subLabel(t, r.subs[t].sub) : '')).join('')}</span>
+    <span class="rtags">${r.tags.map((t, i) => tagPill(t, (state.tag ? t === state.tag : i === 0) && r.subs[t] ? subLabel(t, r.subs[t].sub) : '', r.curated ? 'curated' : 'derived')).join('')}</span>
     <span class="rfork">${r.target_upgrade ? `<span class="fork" title="${esc(r.target_upgrade)}">${esc(shortTarget(r.target_upgrade))}</span>` : ''}</span>
     <span class="rstatus">${statusPill(r.status)}</span>
     <span class="rdate"><span ${nd ? `title="${esc(nd.d.label)}: ${esc(nd.d.value)}"` : ''}>${nd ? human(nd.t) : '<span class="none">—</span>'}</span><span class="rsrc">${esc(sourceLabel(r.url))}</span></span>
@@ -323,8 +324,10 @@ function renderDrawer() {
   document.querySelectorAll('.row.sel').forEach((x) => x.classList.toggle('sel', x.dataset.key === state.id));
   if (!r) { d.classList.remove('open'); d.setAttribute('aria-hidden', 'true'); $('scrim').hidden = true; return; }
   const i = shownList.indexOf(r);
-  const tagsHtml = r.tags.length ? r.tags.map((t) => `<div class="why-row">${tagPill(t)}<span class="terms">matched: ${r.why[t].map(esc).join(', ')}</span></div>`
-      + `<div class="why-row why-sub"><span class="arrow">›</span>${r.subs[t] ? `<span class="tag" style="--t:${TAGS[t][1]}">${esc(subLabel(t, r.subs[t].sub))}</span><span class="terms">matched: ${r.subs[t].why.map(esc).join(', ')}</span>` : '<span class="terms none">no subcategory matched (not guessed)</span>'}</div>`).join('')
+  const terms = (w) => (w[0] === 'curated' ? '<span class="cur">curated</span>' : `matched: ${w.map(esc).join(', ')}`);
+  const tagsHtml = r.tags.length ? (r.curated ? `<div class="why-row curated-note"><span class="cur">curated</span><span class="terms">${esc(r.curated)}</span></div>` : '')
+      + r.tags.map((t) => `<div class="why-row">${tagPill(t, '', r.curated ? 'curated' : 'derived')}<span class="terms">${terms(r.why[t])}</span></div>`
+      + `<div class="why-row why-sub"><span class="arrow">›</span>${r.subs[t] ? `<span class="tag" style="--t:${TAGS[t][1]}">${esc(subLabel(t, r.subs[t].sub))}</span><span class="terms">${terms(r.subs[t].why)}</span>` : '<span class="terms none">no subcategory matched (not guessed)</span>'}</div>`).join('')
     : '<span class="none">No rule matched, so no tag (not guessed).</span>';
   d.innerHTML = `<div class="dh" style="--c:${cc(r.chain)}"><span class="rid">${logo(r.chain)}${esc(r.id)}</span><span class="sp"></span>
     ${i >= 0 ? `<span class="pos">${i + 1} / ${fmtN(shownList.length)}</span>` : ''}
@@ -342,7 +345,7 @@ function renderDrawer() {
         ${r.dates.length ? r.dates.map((x) => `<dt>${esc(x.label)}</dt><dd class="mono" style="font-size:12px">${esc(x.value)}</dd>`).join('') : '<dt>Dates</dt><dd class="none">none stated</dd>'}
       </dl>
       ${refsHtml(r)}
-      <div><div class="label">Layer › subcategory · derived from the proposal's own text</div><div class="why">${tagsHtml}</div></div>
+      <div><div class="label">Layer › subcategory · ${r.curated ? 'curated by hand, with the reason' : "derived from the proposal's own text"}</div><div class="why">${tagsHtml}</div></div>
       <a class="cta" href="${esc(r.url)}" target="_blank" rel="noopener">Open canonical source ${icon.ext}</a>
       <div><div class="label">Sources</div><ul class="srcs">
         <li><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(sourceLabel(r.url))} ${icon.ext}</a><span class="src-k">this ${isUpgrade(r) ? 'upgrade' : 'proposal'}</span></li>
