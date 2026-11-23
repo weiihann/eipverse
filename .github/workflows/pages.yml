@@ -1,4 +1,4 @@
-name: Build and deploy forkwatch
+name: Build and deploy eipverse
 
 on:
   push:

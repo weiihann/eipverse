@@ -1,9 +1,9 @@
 {
-  "name": "forkwatch",
+  "name": "eipverse",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Static page aggregating protocol proposals and network upgrades across EVM chains.",
+  "description": "Improvement proposals across EVM chains, side by side, from each chain's canonical sources.",
   "scripts": {
     "build": "node build.js",
     "test": "node --test test/*.test.js",

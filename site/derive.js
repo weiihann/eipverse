@@ -19,7 +19,7 @@ export function sortNewestFirst(rows) {
 
 const isUpgrade = (r) => /^network upgrade/.test(r.type || '');
 const activation = (r) => r.dates.find((d) => /activation/i.test(d.label));
-const DONE = /final|withdrawn|stagnant|living|skipped|sepolia-only|activated/i;
+const DONE = /final|withdrawn|stagnant|living|skipped|sepolia[- ]only|activated/i;
 
 /** Proposals (non-upgrade rows) whose stated target names this upgrade. */
 function targeting(u, rows) {

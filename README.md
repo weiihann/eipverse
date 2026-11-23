@@ -1,6 +1,8 @@
-# forkwatch
+# eipverse
 
-One static page that tracks protocol proposals and network upgrades across EVM chains (Ethereum, BNB Chain incl. BSC/opBNB, Tempo, Monad, Arbitrum, Optimism / OP Stack, Base), in the spirit of forkcast.org. Every row comes from the chain's own canonical source (GitHub proposal repos, client chain configs, official registries, governance APIs). Nothing is inferred except "activated"/"scheduled", which compares a stated activation timestamp with the build time.
+An aggregator of improvement ideas across EVM chains: every chain's proposals (EIPs/ERCs, BEPs/BAPs, TIPs, MIPs/MRCs, AIPs, OP Stack upgrade proposals) and network upgrades side by side in one static page, so you can see what each chain is proposing and shipping. Chains: Ethereum, BNB Chain (BSC, opBNB), Tempo, Monad, Arbitrum, Optimism / OP Stack, Base.
+
+Live: https://weiihann.github.io/eipverse/ Every row comes from the chain's own canonical source (GitHub proposal repos, client chain configs, official registries, governance APIs). Nothing is inferred except "activated"/"scheduled", which compares a stated activation timestamp with the build time.
 
 ## Layout
 

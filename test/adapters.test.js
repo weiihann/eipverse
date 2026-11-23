@@ -5,7 +5,7 @@ import { parseMetaEip, parseErc } from '../adapters/ethereum.js';
 import { parseBepIndex, parseBepPreamble, parseBepMeta, parseGoForks } from '../adapters/bnb.js';
 import { parseBaseMainnet } from '../adapters/base.js';
 import { parseSpecUpgrades, parseSuperchainHardforks, forumRow } from '../adapters/optimism.js';
-import { parseArbosPage } from '../adapters/arbitrum.js';
+import { parseUpgradeTable, upgradeRow, snapshotRow, parseTableDate } from '../adapters/arbitrum.js';
 import { parseTip, parseTempoForks } from '../adapters/tempo.js';
 import { parseMip, parseMonadMainnet } from '../adapters/monad.js';
 import { runAdapter } from '../build.js';
@@ -95,15 +95,26 @@ test('OP specs upgrades list, registry hardfork times, forum rows', () => {
   assert.equal(forumRow({ id: 1, slug: 's', title: 'Upgrade Proposal #9', created_at: '2024-05-30T00:00:00Z' }).status, 'forum post');
 });
 
-test('ArbOS page: activation date only when stated', () => {
-  const stated = parseArbosPage("---\ntitle: 'ArbOS 61 Elara'\n---\nArbOS 61 activates on Arbitrum One and Nova on **Thursday, August 20, 2026 at 17:00 UTC**.", 'content/a.mdx');
-  assertRow(stated);
-  assert.equal(stated.dates[0].value, 'Thursday, August 20, 2026 at 17:00 UTC');
-  assert.equal(stated.status, null);
-  const past = parseArbosPage("---\ntitle: 'ArbOS 51 Dia'\n---\nwas [activated on January 8, 2026](/notices/x)", 'content/c.mdx');
-  assert.equal(past.dates[0].value, 'January 8, 2026');
-  const unstated = parseArbosPage("---\ntitle: 'ArbOS 11'\n---\nno date", 'content/b.mdx');
-  assert.deepEqual(unstated.dates, []);
+test('Arbitrum network-upgrades table: dates, Sepolia-only upgrades, Snapshot votes linked only by the table', () => {
+  const md = `| Upgrade | Governance Approval Status | Link | Arbitrum Sepolia (YYYY-MM-DD) | Arbitrum One (YYYY-MM-DD) | Arbitrum Nova (YYYY-MM-DD) |
+| --- | --- | --- | --- | --- | --- |
+| [ArbOS 61 Elara](https://docs.arbitrum.io/x/arbos61) | Approved & executed | [On-chain vote](https://alt.gov.arbitrum.foundation/proposal/1) | Mon, 2026-06-29 at 03:00:00 PM UTC | [Thu, 2026-08-20 at 05:08:23 PM UTC](https://etherscan.io/tx/0x1) | Thu, 2026-08-20 at 05:11:49 PM UTC |
+| ArbOS 60 Elara | Approved & executed | [Temperature Check](https://snapshot.box/#/s:arbitrumfoundation.eth/proposal/0xABC) | Tues, 2026-05-19 at 03:57:31 PM UTC | N/A | N/A |
+| ArbOS 32 Bianca | Approved & executed by the Arbitrum Security Council | N/A | Weds, 2024-09-25 at 02:06:01 UTC | Weds, 2024-09-25 at 02:37:30 UTC | Thu, 2026-01-08 5:01:13 PM UTC |`;
+  const ups = parseUpgradeTable(md);
+  assert.deepEqual(ups.map((u) => [u.name, u.one, u.sepolia]), [
+    ['ArbOS 61 Elara', '2026-08-20T17:08:23Z', '2026-06-29T15:00:00Z'], ['ArbOS 60 Elara', null, '2026-05-19T15:57:31Z'], ['ArbOS 32 Bianca', '2024-09-25T02:37:30Z', '2024-09-25T02:06:01Z']]);
+  assert.equal(ups[2].nova, '2026-01-08T17:01:13Z');
+  assert.equal(parseTableDate('N/A'), null);
+  const sixty = upgradeRow(ups[1]);
+  assertRow(sixty);
+  assert.match(sixty.status, /Sepolia only/);
+  assert.deepEqual(sixty.dates.map((d) => d.label), ['Arbitrum Sepolia (testnet)']);
+  assert.equal(upgradeRow(ups[0]).url, 'https://docs.arbitrum.io/x/arbos61');
+  const linked = new Map([['0xabc', 'ArbOS 60 Elara']]);
+  const vote = (id, title) => snapshotRow({ id, title, state: 'closed', start: 1774483200, end: 1775088000 }, linked);
+  assert.equal(vote('0xAbC', '[Constitutional] AIP: ArbOS 60 Elara').target_upgrade, 'ArbOS 60 Elara');
+  assert.equal(vote('0xdef', 'AIP: ArbOS 30 upgrade').target_upgrade, null);
 });
 
 test('TIP and MIP frontmatter rows', () => {
