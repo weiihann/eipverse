@@ -228,7 +228,7 @@ function refsHtml(r) {
 function rowHtml(r) {
   const nd = newestDate(r);
   return `<button class="row${state.id === r._key ? ' sel' : ''}" role="listitem" data-key="${esc(r._key)}" style="--c:${cc(r.chain)}">
-    <span class="rid" title="${esc(r.chain)}${r.network ? ` · ${esc(r.network)}` : ''}">${logo(r.chain)}${esc(r.id)}</span>
+    <span class="rid" title="${esc(r.id)} · ${esc(r.chain)}${r.network ? ` · ${esc(r.network)}` : ''}">${logo(r.chain)}<span class="rid-t">${esc(r.id)}</span></span>
     <span class="rmain"><div class="rtitle">${r.title ? esc(r.title) : '<span class="none">untitled in source</span>'}${r.shared_with ? sharedPill(r) : ''}</div>${r.abstract ? `<div class="rabs">${esc(r.abstract)}</div>` : ''}</span>
     <span class="rtags">${r.tags.map((t, i) => tagPill(t, (state.tag ? t === state.tag : i === 0) && r.subs[t] ? subLabel(t, r.subs[t].sub) : '', r.curated ? 'curated' : 'derived')).join('')}</span>
     <span class="rfork">${r.target_upgrade ? `<span class="fork" title="${esc(r.target_upgrade)}">${esc(shortTarget(r.target_upgrade))}</span>` : ''}</span>
@@ -286,7 +286,7 @@ function renderLayers() {
   $('side').innerHTML = `<div class="side-h"><h3>${esc(name)} across chains</h3><p>${fmtN(rows.length)} proposals · newest stated date first · tags and subcategories are derived from each proposal's own title and abstract</p></div>
     <div class="cols">${ORDER.map((c) => { const rs = rows.filter((r) => r.chain === c); return `<section class="col" data-chain="${esc(c)}" style="--c:${cc(c)}">
       <div class="col-h">${logo(c)}${esc(cs(c))}<span class="n">${rs.length}</span></div>
-      <div class="col-b">${rs.length ? rs.map((r) => `<button class="card" data-key="${esc(r._key)}"><span class="rid">${esc(r.id)}</span><span class="t">${esc(r.title || r.id)}</span>
+      <div class="col-b">${rs.length ? rs.map((r) => `<button class="card" data-key="${esc(r._key)}"><span class="rid" title="${esc(r.id)}"><span class="rid-t">${esc(r.id)}</span></span><span class="t">${esc(r.title || r.id)}</span>
         <span class="m">${statusPill(r.status)}${subOf(r)}${r.target_upgrade ? `<span class="fork" title="${esc(r.target_upgrade)}">${esc(shortTarget(r.target_upgrade))}</span>` : ''}</span></button>`).join('') : '<div class="col-empty">None in this scope</div>'}</div></section>`; }).join('')}</div>`;
   for (const b of $('side').querySelectorAll('.card')) b.onclick = () => set({ id: b.dataset.key });
 }
@@ -329,7 +329,7 @@ function renderDrawer() {
       + r.tags.map((t) => `<div class="why-row">${tagPill(t, '', r.curated ? 'curated' : 'derived')}<span class="terms">${terms(r.why[t])}</span></div>`
       + `<div class="why-row why-sub"><span class="arrow">›</span>${r.subs[t] ? `<span class="tag" style="--t:${TAGS[t][1]}">${esc(subLabel(t, r.subs[t].sub))}</span><span class="terms">${terms(r.subs[t].why)}</span>` : '<span class="terms none">no subcategory matched (not guessed)</span>'}</div>`).join('')
     : '<span class="none">No rule matched, so no tag (not guessed).</span>';
-  d.innerHTML = `<div class="dh" style="--c:${cc(r.chain)}"><span class="rid">${logo(r.chain)}${esc(r.id)}</span><span class="sp"></span>
+  d.innerHTML = `<div class="dh" style="--c:${cc(r.chain)}"><span class="rid" title="${esc(r.id)}">${logo(r.chain)}<span class="rid-t">${esc(r.id)}</span></span><span class="sp"></span>
     ${i >= 0 ? `<span class="pos">${i + 1} / ${fmtN(shownList.length)}</span>` : ''}
     <button class="icon-btn" data-step="-1" aria-label="Previous (k)" title="Previous (k / ↑)">${icon.up}</button>
     <button class="icon-btn" data-step="1" aria-label="Next (j)" title="Next (j / ↓)">${icon.down}</button>

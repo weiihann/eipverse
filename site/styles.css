@@ -231,6 +231,8 @@ main { padding-bottom: 32px; }
 [data-theme="light"] .logo.for-light { display: inline-block; }
 [data-theme="light"] .logo.for-dark { display: none; }
 .rid .logo { width: 15px; height: 15px; }
+.rid { min-width: 0; } .rid .logo, .rid .dot { flex: none; }
+.rid-t { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sig .logo { align-self: center; }
 .th-c { display: inline-flex; align-items: center; gap: 6px; }
 .chain-dd { display: flex; align-items: center; gap: 6px; }

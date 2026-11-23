@@ -215,3 +215,11 @@ test('audit: Polygon, Avalanche and Celo concepts', () => {
   assert.ok(has(cip('General Account Signer Authorization'), 'account-abstraction', 'keys-auth'));
   assert.ok(!tag('Launch Liquidity Mining program').tags.includes('consensus')); // liquidity mining is not PoW
 });
+
+test('audit: Base engineering blog posts', () => {
+  const post = (id, title, abstract = '', target_upgrade = null) => classify({ chain: 'Base', id, title, abstract, target_upgrade, type: 'engineering blog post', kind: 'protocol' });
+  assert.ok(has(post('blog:denim', 'Introducing Base Denim', 'Base’s fourth upgrade, Denim, is now live on mainnet.', 'Denim'), 'governance-meta', 'hardfork-meta'));
+  assert.ok(has(post('blog:x', 'We’re making Base 10x faster with Flashblocks'), 'consensus', 'pbs-inclusion'));
+  assert.ok(has(post('blog:y', 'Base has reached Stage 1 Decentralization'), 'interop-crosschain', 'rollups'));
+  assert.ok(!post('blog:z', 'Introducing Base Beryl', 'Beryl makes Base a first-class issuance platform', 'Beryl').tags.includes('consensus'));
+});
