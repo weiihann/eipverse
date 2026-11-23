@@ -1,0 +1,347 @@
+{
+ "id": "sei",
+ "chain": "Sei",
+ "label": "Sei",
+ "logo": "sei",
+ "role": "L1",
+ "as_of": "2026-11-23",
+ "facts": {
+  "consensus.settlement": {
+   "mark": "=",
+   "value": "L1",
+   "note": "Sei docs describe Sei as a proof-of-stake EVM Layer 1 that does not carry rollup blob data.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Sei Giga specs (chain type)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/learn/sei-giga-specs.mdx#L16"
+    }
+   ]
+  },
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Twin Turbo (tuned Tendermint BFT), DPoS",
+   "note": "Not a new algorithm: Tendermint BFT with aggressive timeouts, pipelining and parallel execution. Autobahn (SIP-6) passed as a text proposal (#129) and is not live.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Twin Turbo Consensus",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/learn/twin-turbo-consensus.mdx#L9"
+    },
+    {
+     "label": "SIP-6: Autobahn Upgrade",
+     "url": "https://github.com/sei-protocol/sips/blob/550ec95fc760704460e189348e13d4d85af7e68d/sips/sip-6.md"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Instant (~400 ms, single slot)",
+   "note": "Every committed block is final; latest, safe and finalized resolve to the same block.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Finality and block tags",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/finality.mdx#L8"
+    },
+    {
+     "label": "Sei docs: Divergence from Ethereum (Finality)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L16"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "40 bonded validators (cap 40)",
+   "note": "Staking param max_validators = 40; 40 bonded at the read. Unbonding 21 days (SIP-7 proposes 7).",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei REST /cosmos/staking/v1beta1/validators (bonded, count) @ block 244,941,197",
+     "url": "https://rest.sei-apis.com/cosmos/staking/v1beta1/validators?status=BOND_STATUS_BONDED&pagination.count_total=true"
+    },
+    {
+     "label": "Sei REST /cosmos/staking/v1beta1/params (max_validators 40) @ block 244,941,197",
+     "url": "https://rest.sei-apis.com/cosmos/staking/v1beta1/params"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "400 ms",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (Block time)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L14"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "12.5M gas; 21 MB byte cap",
+   "note": "Block max_gas 12,500,000 and max_bytes 22,020,096 (21 MiB) in consensus params.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (Gas limit)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L20"
+    },
+    {
+     "label": "Sei REST baseapp BlockParams (max_gas 12,500,000) @ block 244,941,197",
+     "url": "https://rest.sei-apis.com/cosmos/params/v1beta1/params?subspace=baseapp&key=BlockParams"
+    },
+    {
+     "label": "Sei EVM public RPC, eth_getBlockByNumber @ block 244,940,678 (gasLimit 12,500,000; baseFeePerGas 50 gwei)",
+     "url": "https://evm-rpc.sei-apis.com"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "~",
+   "value": "12.5M (the block limit)",
+   "note": "No separate per-tx cap: a tx can use up to the block gas limit.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (Per-tx gas cap)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L21"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "SEI",
+   "note": "SEI is the native gas, fee and staking asset.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Sei Giga specs (chain type)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/learn/sei-giga-specs.mdx#L16"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Target 2M gas/block; +0.75% / -0.39% max step",
+   "note": "Governance params KeyTargetGasUsedPerBlock = 2,000,000, KeyMaxDynamicBaseFeeUpwardAdjustment = 0.0075, KeyMaxDynamicBaseFeeDownwardAdjustment = 0.0039 (SIP-4 changed them). Code defaults differ (250k, 1.89%, 0.39%).",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei REST evm param KeyTargetGasUsedPerBlock @ block 244,941,196",
+     "url": "https://rest.sei-apis.com/cosmos/params/v1beta1/params?subspace=evm&key=KeyTargetGasUsedPerBlock"
+    },
+    {
+     "label": "Sei REST evm param KeyMaxDynamicBaseFeeUpwardAdjustment @ block 244,941,196",
+     "url": "https://rest.sei-apis.com/cosmos/params/v1beta1/params?subspace=evm&key=KeyMaxDynamicBaseFeeUpwardAdjustment"
+    },
+    {
+     "label": "Sei REST evm param KeyMaxDynamicBaseFeeDownwardAdjustment @ block 244,941,196",
+     "url": "https://rest.sei-apis.com/cosmos/params/v1beta1/params?subspace=evm&key=KeyMaxDynamicBaseFeeDownwardAdjustment"
+    },
+    {
+     "label": "sei-chain x/evm/types/params.go (code defaults)",
+     "url": "https://github.com/sei-protocol/sei-chain/blob/cd7137c5dea002ec1f9b853c84229703a1a0e692/x/evm/types/params.go#L33-L41"
+    },
+    {
+     "label": "SIP-4: Changing EIP-1559 parameters",
+     "url": "https://github.com/sei-protocol/sips/blob/550ec95fc760704460e189348e13d4d85af7e68d/sips/sip-4.md"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "Governance-set minimum (50 gwei now)",
+   "note": "Legacy txs must meet the governance-set minimum gas price, currently 50 gwei on mainnet; the head block showed baseFeePerGas 50 gwei.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (BASEFEE)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L71"
+    },
+    {
+     "label": "Sei docs: Gas and fees",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/gas-and-fees.mdx"
+    },
+    {
+     "label": "Sei EVM public RPC, eth_getBlockByNumber @ block 244,940,678 (gasLimit 12,500,000; baseFeePerGas 50 gwei)",
+     "url": "https://evm-rpc.sei-apis.com"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Not burned: paid to validators",
+   "note": "All transaction fees go to validators.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (Gas model & fees)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L195"
+    },
+    {
+     "label": "Sei docs: Gas and fees",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/gas-and-fees.mdx"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Pectra (Prague), no blobs",
+   "note": "Sei runs Pectra without blob transactions; Ethereum is on Fusaka.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (EVM version)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L19"
+    },
+    {
+     "label": "Sei docs: Transaction types",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/transaction-types.mdx#L41"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "PREVRANDAO, COINBASE, BLOCKHASH",
+   "note": "PREVRANDAO is derived from block time (not randomness); COINBASE is always the global fee collector; BLOCKHASH hashes the Tendermint header.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (Opcode differences)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L69-L75"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "~",
+   "value": "SSTORE set = 72,000 gas (governance param)",
+   "note": "Ethereum charges 20,000. Set by governance proposal #109 via KeySeiSstoreSetGasEIP2200.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Divergence from Ethereum (SSTORE gas cost)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L26"
+    },
+    {
+     "label": "Sei REST evm param KeySeiSstoreSetGasEIP2200 @ block 244,941,196",
+     "url": "https://rest.sei-apis.com/cosmos/params/v1beta1/params?subspace=evm&key=KeySeiSstoreSetGasEIP2200"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "Cosmos-module precompiles at 0x…1001-0x…1015",
+   "note": "Bank, CosmWasm, JSON, Addr, Staking, Gov, Distribution, Oracle (retired), IBC (disabled), Pointer view, Pointer, Solo, Auth, Authz, Evidence, P256 (0x…1011), Mint, Params, Slashing, Upgrade.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "sei-chain precompiles/setup.go GetCustomPrecompiles",
+     "url": "https://github.com/sei-protocol/sei-chain/blob/cd7137c5dea002ec1f9b853c84229703a1a0e692/precompiles/setup.go#L52-L74"
+    },
+    {
+     "label": "Sei docs: Precompile addresses",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/precompiles/example-usage.mdx#L15-L32"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "~",
+   "value": "0, 1, 2, 4 (no 3)",
+   "note": "Type 4 needs a non-empty auth list.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Transaction types",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/transaction-types.mdx#L11-L17"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "Not supported",
+   "note": "Type 3 rejected at the RPC level.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Transaction types (Not supported)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/transaction-types.mdx#L41"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "=",
+   "value": "Supported",
+   "note": "EIP-7702 set-code txs, type 4.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: Transaction types",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/transaction-types.mdx#L17"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "seid (sei-chain)",
+   "note": "Single client. EVM from a go-ethereum fork (sei-protocol/go-ethereum v1.17.10-sei-1) inside the Cosmos SDK app.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "sei-chain go.mod (go-ethereum replace)",
+     "url": "https://github.com/sei-protocol/sei-chain/blob/cd7137c5dea002ec1f9b853c84229703a1a0e692/go.mod#L274"
+    }
+   ],
+   "items": [
+    {
+     "name": "seid (sei-chain)",
+     "status": "production",
+     "note": "Validator and RPC node; EVM via the sei-protocol/go-ethereum fork.",
+     "sources": [
+      {
+       "label": "sei-chain go.mod (go-ethereum replace)",
+       "url": "https://github.com/sei-protocol/sei-chain/blob/cd7137c5dea002ec1f9b853c84229703a1a0e692/go.mod#L274"
+      }
+     ]
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Dual EVM/Cosmos accounts, pointer contracts, parallel execution",
+   "note": "One key, two addresses (0x… and sei…); pointer contracts bridge CW20/721/1155 and ERC tokens. CosmWasm/Cosmos are being deprecated (SIP-3); new CosmWasm deploys are disabled (proposal #115).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Sei docs: EVM compatibility (Sei extensions)",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/evm-parity/evm-compatibility.mdx#L100-L106"
+    },
+    {
+     "label": "Sei docs: Divergence from Ethereum",
+     "url": "https://github.com/sei-protocol/sei-docs/blob/731c9c67d3f672e3f5e5c260e924c4ad30aef85c/evm/differences-with-ethereum.mdx#L11-L37"
+    }
+   ]
+  }
+ }
+}

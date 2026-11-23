@@ -53,8 +53,8 @@ export function upgradesByChain(chains, now = Date.now()) {
 
 // Scope buckets. "active" = still moving or upcoming; "historical" = shipped, closed or abandoned.
 // The verbatim status is always what the page shows; the bucket only drives the default filter.
-const HISTORICAL = /^(final|stagnant|stale|withdrawn|superseded|abandoned|rejected|expired|living|continuous|enabled|mainnet|cancell?ed|snapshot closed|on-chain (canceled|defeated|expired|executed))\b|activated|executed|skipped|sepolia[- ]only|deprecated|final \(per title\)|later upgrades activated/i;
-const ACTIVE = /^(draft|review|last call|candidate|approved|backlog|idea|proposed|snapshot (active|pending)|on-chain (pending|active|succeeded|queued))\b|scheduled|no (op )?mainnet time (set|in genesis)|draft \(per title\)/i;
+const HISTORICAL = /^(final|stagnant|stale|withdrawn|superseded|abandoned|rejected|expired|living|continuous|enabled|mainnet|cancell?ed|snapshot closed|on-chain (canceled|defeated|expired|executed|passed|rejected|failed))\b|activated|executed|skipped|sepolia[- ]only|deprecated|final \(per title\)|later upgrades activated/i;
+const ACTIVE = /^(draft|review|last call|candidate|approved|backlog|idea|proposed|snapshot (active|pending)|on-chain (pending|active|succeeded|queued|voting period|deposit period))\b|scheduled|no (op )?mainnet time (set|in genesis)|draft \(per title\)/i;
 const RECENT_MS = 120 * 864e5;
 
 /** -> 'active' | 'historical'. Unknown statuses stay visible ('active') rather than being hidden. */
@@ -97,12 +97,15 @@ const SOURCE_LABELS = [
   [/github\.com\/0xPolygon\/bor\//, 'bor chain config'],
   [/github\.com\/avalanche-foundation\/ACPs/, 'ACPs repo'],
   [/github\.com\/ava-labs\/avalanchego\//, 'avalanchego config'],
-  [/github\.com\/celo-org\/celo-proposals/, 'CIPs repo'],
-  [/github\.com\/celo-org\/governance/, 'CGPs repo'],
   [/forum\.arbitrum\.foundation/, 'Arbitrum forum'],
   [/tally\.xyz\/gov\/[^/]+\/proposal\//, 'On-chain vote (Tally)'],
   [/docs\.arbitrum\.foundation\/deployment-addresses/, 'Arbitrum governors'],
   [/github\.com\/gnosischain\/specs/, 'Gnosis specs'],
+  [/hyperliquid\.gitbook\.io\/hyperliquid-docs\/hyperliquid-improvement-proposals-hips/, 'HIPs docs'],
+  [/github\.com\/sei-protocol\/sips/, 'SIPs repo'],
+  [/rest\.sei-apis\.com\/cosmos\/gov\/v1beta1\/proposals\/\d+/, 'On-chain proposal (Sei)'],
+  [/rest\.sei-apis\.com\/cosmos\/gov/, 'Sei governance'],
+  [/rest\.sei-apis\.com\/cosmos\/upgrade/, 'Sei upgrade module'],
 ];
 export function sourceLabel(url = '') {
   for (const [re, label] of SOURCE_LABELS) if (re.test(url)) return label;

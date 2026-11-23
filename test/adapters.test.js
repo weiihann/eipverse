@@ -10,7 +10,6 @@ import { parseTip, parseTempoForks } from '../adapters/tempo.js';
 import { parseMip, parseMonadMainnet } from '../adapters/monad.js';
 import { parsePip, parsePrc, parseBorForks, forkRow as polygonForkRow } from '../adapters/polygon.js';
 import { parseAcp, parseAvalancheMainnet, upgradeRow as avaxUpgradeRow } from '../adapters/avalanche.js';
-import { parseCip, parseL2Genesis, parseCgp } from '../adapters/celo.js';
 import { decodeProposalCreated, descTitle, linkUpgrades, onchainRow, forumRow as arbForumRow, mergeStages, titleKey } from '../adapters/arbitrum.js';
 import { statusBucket, sourceLabel } from '../site/derive.js';
 import { parseGnosisUpgrade, upgradeRow as gnosisUpgradeRow, gipRow, parseSpecDate } from '../adapters/gnosis.js';
@@ -234,13 +233,6 @@ test('Avalanche: ACP metadata table and avalanchego mainnet times', () => {
   assert.equal(i.status, 'unscheduled (per source)'); assert.deepEqual(i.dates, []);
 });
 
-test('Celo: CIP frontmatter and L2 genesis time', () => {
-  const cip = parseCip('---\ncip: 64\ntitle: "New Transaction Type: Celo Dynamic Fee v2"\nstatus: Final\ntype: Standards Track\ncategory: Ring 0\ncreated: 2023-07-10\n---\n\n## Simple Summary\n\nA new tx type.', 'CIPs/cip-0064.md');
-  assertRow(cip);
-  assert.equal(cip.id, 'CIP-64'); assert.equal(cip.title, 'New Transaction Type: Celo Dynamic Fee v2'); assert.equal(cip.type, 'CIP · Standards Track · Ring 0');
-  assert.equal(parseL2Genesis('[hardforks]\n  isthmus_time = 1\n\n[genesis]\n  l2_time = 1742957258\n'), '1742957258');
-});
-
 test('Gnosis: spec fork pages become rows that point at Ethereum EIPs; GIPs only from "GIP-<n>" votes', () => {
   assert.equal(parseSpecDate('| Mainnet | 19040000 | Nov-12-2021 09:46:20 PM +UTC  | 0x018479d3 |'), String(Date.UTC(2021, 10, 12, 21, 46, 20) / 1000));
   assert.equal(parseSpecDate('| Mainnet | 1776168380   | Apr-14-2026, 12:06:20 +UTC |'), String(Date.UTC(2026, 3, 14, 12, 6, 20) / 1000));
@@ -282,16 +274,6 @@ test('Base blog RSS: Engineering posts about the chain only; date from pubDate; 
   assert.equal(fb.target_upgrade, null);
 });
 
-test('Celo CGPs: uppercase source statuses kept verbatim and bucketed', () => {
-  const cgp = parseCgp("---\ncgp: 254\ntitle: Fund X\ndate-created: 2026-10-01\nstatus: PROPOSED \ngovernance-proposal-id: 314\ndate-executed:\n---\n\n# Proposal Description\n\nThis CGP asks Celo Governance to fund X for a year.\n", 'CGPs/cgp-0254.md');
-  assertRow(cgp);
-  assert.equal(cgp.id, 'CGP-254'); assert.equal(cgp.status, 'PROPOSED'); assert.equal(cgp.type, 'CGP · on-chain proposal 314');
-  assert.deepEqual(cgp.dates, [{ label: 'created', value: '2026-10-01' }]);
-  const now = Date.parse('2026-11-23');
-  for (const s of ['PROPOSED', 'DRAFT', 'on-chain active (Core Governor)', 'on-chain queued (Treasury Governor)']) assert.equal(statusBucket({ status: s, dates: [] }, now), 'active', s);
-  for (const s of ['EXECUTED', 'REJECTED', 'EXPIRED', 'WITHDRAWN', 'on-chain executed (Core Governor)', 'on-chain defeated (Core Governor)']) assert.equal(statusBucket({ status: s, dates: [] }, now), 'historical', s);
-});
-
 test('Arbitrum: governor ProposalCreated decoding, and forum/Snapshot/on-chain stages merged by title', () => {
   const desc = '# [Constitutional] AIP: Stylus Activation Contract\n\n## Abstract\n\nDeploy a contract that activates Stylus programs.';
   const enc = (n) => n.toString(16).padStart(64, '0');
@@ -316,5 +298,48 @@ test('Arbitrum: governor ProposalCreated decoding, and forum/Snapshot/on-chain s
   assert.equal(elara.target_upgrade, 'ArbOS 61 Elara'); assert.equal(elara.status, 'Approved & executed (per upgrades table)');
   assert.equal(statusBucket(elara, Date.parse('2026-11-23')), 'historical');
   assert.equal(sourceLabel(on.url), 'On-chain vote (Tally)'); assert.equal(sourceLabel(elara.url), 'Arbitrum forum');
-  assert.equal(sourceLabel('https://github.com/celo-org/governance/blob/main/CGPs/cgp-0254.md'), 'CGPs repo');
+});
+
+test('Sei: SIP metadata tables (ISO and US dates, pairs on one row), gov proposals and upgrade rows', async () => {
+  const { parseSip, sipDate, govRow, upgradeRow } = await import('../adapters/sei.js');
+  assert.equal(sipDate('2025-03-21'), '2025-03-21'); assert.equal(sipDate('05/07/2025'), '2025-05-07'); assert.equal(sipDate('31/12/2025'), null); assert.equal(sipDate('soon'), null);
+  const sip = parseSip('**SIP-6: Autobahn Upgrade**\n\n| SIP-Number | 6 |\n| :---- | :---- |\n| Title | Autobahn Upgrade |\n| Author | A | Type | Standard (Core) |\n| Created | 10/27/2026 |\n| Status | Draft |\n\n## **Abstract**\n\nThis SIP replaces the single proposer with multiple concurrent proposers.\n', 'sips/sip-6.md');
+  assertRow(sip);
+  assert.deepEqual([sip.id, sip.title, sip.status, sip.type, sip.dates[0].value], ['SIP-6', 'Autobahn Upgrade', 'Draft', 'SIP · Standard (Core)', '2026-10-27']);
+  assert.match(sip.abstract, /multiple concurrent proposers/);
+  const p = { proposal_id: '130', status: 'PROPOSAL_STATUS_PASSED', submit_time: '2026-11-17T22:13:50Z', voting_end_time: '2026-11-20T22:13:50Z', content: { '@type': '/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal', title: 'v6.8', description: 'https://github.com/sei-protocol/sei-chain/blob/main/CHANGELOG.md#v68', plan: { name: 'v6.8', height: '245131382' } } };
+  const g = govRow(p);
+  assertRow(g);
+  assert.deepEqual([g.id, g.status, g.abstract, g.type], ['Prop 130', 'on-chain passed', null, 'Sei governance · SoftwareUpgrade']);
+  assert.equal(statusBucket(g), 'historical');
+  assert.equal(statusBucket({ ...g, status: 'on-chain voting period' }), 'active');
+  const next = upgradeRow(p, '0', 'v6.8'), done = upgradeRow(p, '245131382', null), odd = upgradeRow(p, '0', 'v6.9');
+  assertRow(next);
+  assert.deepEqual([next.id, next.status, next.type, next.target_upgrade], ['Sei:v6.8', 'scheduled', 'network upgrade', 'v6.8']);
+  assert.equal(done.status, 'activated'); assert.equal(odd.status, 'passed; not applied per upgrade module');
+  assert.ok(!next.dates.some((d) => /activation/i.test(d.label)), 'no activation time is invented');
+});
+
+test('Hyperliquid: HIP index links and pages; no status or dates are invented', async () => {
+  const { parseHipIndex, hipRow } = await import('../adapters/hyperliquid.js');
+  const idx = parseHipIndex('# HIPs\n\n- [HIP-1: Native token standard](https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-1-native-token-standard.md)\n- [Frontend checks](https://x/frontend-checks.md)\n');
+  assert.deepEqual(idx, [{ n: '1', title: 'Native token standard', url: 'https://hyperliquid.gitbook.io/hyperliquid-docs/hyperliquid-improvement-proposals-hips/hip-1-native-token-standard' }]);
+  const r = hipRow(idx[0], '> For the complete documentation index, see llms.txt.\n\n# HIP-1: Native token standard\n\nHIP-1 is a capped supply fungible token standard.&#x20;\n');
+  assertRow(r);
+  assert.deepEqual([r.id, r.status, r.dates, r.abstract], ['HIP-1', null, [], 'HIP-1 is a capped supply fungible token standard.']);
+});
+
+test('one chain list: market-cap order, Ethereum first, every adapter and diff column listed once', async () => {
+  const { CHAINS } = await import('../site/chains.js');
+  const { COLUMNS } = await import('../lib/diffs.js');
+  const names = CHAINS.map((c) => c.name);
+  assert.equal(names[0], 'Ethereum');
+  assert.equal(new Set(names).size, names.length);
+  assert.deepEqual(COLUMNS, CHAINS.flatMap((c) => c.diff));
+  const adapters = await Promise.all((await readdir(new URL('../adapters/', import.meta.url))).filter((f) => f.endsWith('.js')).map(async (f) => (await import(`../adapters/${f}`)).default.chain));
+  assert.deepEqual([...adapters].sort(), [...names].sort());
+  assert.ok(!names.includes('Celo'));
+  for (const c of CHAINS) assert.ok(c.short && /^#[0-9A-F]{6}$/i.test(c.c) && c.logo, c.name);
+  const logos = await readdir(new URL('../site/logos/', import.meta.url));
+  for (const c of CHAINS) for (const f of c.themed ? [`${c.logo}-dark.svg`, `${c.logo}-light.svg`] : [`${c.logo}.svg`]) assert.ok(logos.includes(f), f);
 });

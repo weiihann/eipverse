@@ -1,4 +1,5 @@
 // eipverse page: one data.json, four views, all state in the URL.
+import { CHAINS as CHAIN_LIST } from './chains.js';
 import { sortNewestFirst, upgradesByChain, statusBucket, statedTime, targetsUpgrade, isUpgrade, sourceLabel, sourceList } from './derive.js';
 
 const $ = (id) => document.getElementById(id);
@@ -14,26 +15,14 @@ const icon = {
   moon: '<svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>',
 };
 
-const CHAINS = {
-  'Ethereum': { short: 'Ethereum', c: '#627EEA' },
-  'BNB Chain': { short: 'BNB', c: '#F0B90B' },
-  'Tempo': { short: 'Tempo', c: '#38BDF8' },
-  'Monad': { short: 'Monad', c: '#A855F7' },
-  'Arbitrum': { short: 'Arbitrum', c: '#28A0F0' },
-  'Optimism / OP Stack': { short: 'OP', c: '#FF0420' },
-  'Base': { short: 'Base', c: '#0052FF' },
-  'Polygon PoS': { short: 'Polygon', c: '#8247E5' },
-  'Avalanche C-Chain': { short: 'Avalanche', c: '#E84142' },
-  'Celo': { short: 'Celo', c: '#E3D33A' },
-  'Gnosis Chain': { short: 'Gnosis', c: '#4F8A6F' },
-};
-const ORDER = Object.keys(CHAINS);
-// Official marks vendored in site/logos/ (sources in site/logos/README.md). Tempo ships a light and a dark favicon.
-const LOGO = { 'Ethereum': 'ethereum', 'BNB Chain': 'bnb', 'Monad': 'monad', 'Arbitrum': 'arbitrum', 'Optimism / OP Stack': 'optimism', 'Base': 'base', 'Polygon PoS': 'polygon', 'Avalanche C-Chain': 'avalanche', 'Celo': 'celo', 'Gnosis Chain': 'gnosis' };
-const BACKED = new Set(['Ethereum', 'Celo']); // dark marks: light backing in dark mode
+// Chain order, colours and logos live in chains.js (one list; official marks in site/logos/, sources in site/logos/README.md).
+const CHAINS = Object.fromEntries(CHAIN_LIST.map((c) => [c.name, c]));
+const ORDER = CHAIN_LIST.map((c) => c.name);
 function logo(chain, cls = '') {
-  if (chain === 'Tempo') return `<img class="logo for-dark ${cls}" src="logos/tempo-dark.svg" alt="" aria-hidden="true"><img class="logo for-light ${cls}" src="logos/tempo-light.svg" alt="" aria-hidden="true">`;
-  return LOGO[chain] ? `<img class="logo ${BACKED.has(chain) ? 'bk ' : ''}${cls}" src="logos/${LOGO[chain]}.svg" alt="" aria-hidden="true">` : `<span class="dot" style="--c:${cc(chain)}"></span>`;
+  const c = CHAINS[chain];
+  if (!c?.logo) return `<span class="dot" style="--c:${cc(chain)}"></span>`;
+  if (c.themed) return `<img class="logo for-dark ${cls}" src="logos/${c.logo}-dark.svg" alt="" aria-hidden="true"><img class="logo for-light ${cls}" src="logos/${c.logo}-light.svg" alt="" aria-hidden="true">`;
+  return `<img class="logo ${c.backed ? 'bk ' : ''}${cls}" src="logos/${c.logo}.svg" alt="" aria-hidden="true">`;
 }
 const cc = (chain) => CHAINS[chain]?.c || '#888';
 const cs = (chain) => CHAINS[chain]?.short || chain;
@@ -267,7 +256,7 @@ function renderFilters() {
 }
 
 // ---------- shared forks ----------
-// A fork that ships another chain's proposals (Gnosis/Polygon on Ethereum, Celo on OP Stack) points at those rows.
+// A fork that ships another chain's proposals (Gnosis/Polygon on Ethereum) points at those rows.
 const sharedPill = (r) => `<span class="shared" title="Inherits ${esc(r.shared_with)} proposals; the drawer links them">${logo(r.shared_with)}shared with ${esc(cs(r.shared_with))}</span>`;
 // Ethereum hardfork meta EIPs are named for the combined fork; bor's config uses the execution-layer name.
 const EL_ALIAS = { Shanghai: 'Shapella', Cancun: 'Dencun', Prague: 'Pectra', Osaka: 'Fusaka', Amsterdam: 'Glamsterdam' };

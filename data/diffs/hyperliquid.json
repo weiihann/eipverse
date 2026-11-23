@@ -1,0 +1,237 @@
+{
+ "id": "hyperliquid",
+ "chain": "Hyperliquid",
+ "label": "HyperEVM",
+ "logo": "hyperliquid",
+ "role": "L1 (EVM beside HyperCore)",
+ "as_of": "2026-11-23",
+ "facts": {
+  "consensus.settlement": {
+   "mark": "=",
+   "value": "L1",
+   "note": "Hyperliquid is a layer one; HyperEVM blocks are built as part of its execution.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: About Hyperliquid (technical overview)",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/about-hyperliquid"
+    },
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    }
+   ]
+  },
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "HyperBFT (HotStuff variant), PoS",
+   "note": "Blocks produced by validators in proportion to staked HYPE; HyperEVM inherits HyperBFT security.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: HyperCore overview (Consensus)",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/overview"
+    },
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "One-block finality",
+   "note": "Docs state one-block finality for HyperCore; HyperEVM blocks are built inside the same HyperBFT execution.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: About Hyperliquid (technical overview)",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/about-hyperliquid"
+    },
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Active set = top 27 by stake",
+   "note": "Running a node is permissionless; the active set is the top 27 by stake. Info API validatorSummaries listed 35 validators, 27 active, on 2026-11-23.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: Running a validator",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/validators/running-a-validator"
+    },
+    {
+     "label": "Hyperliquid info API validatorSummaries (read 2026-11-23 14:31 UTC)",
+     "url": "https://api.hyperliquid.xyz/info"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "Dual blocks: 1 s small, 1 min large",
+   "note": "Two interleaved block types share one EVM block-number sequence.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: Dual-block architecture",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/dual-block-architecture"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "3M (small) / 30M (large)",
+   "note": "Large blocks carry big txs such as contract deploys (opt in via evmUserModify usingBigBlocks).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: Dual-block architecture",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/dual-block-architecture"
+    },
+    {
+     "label": "HyperEVM public RPC, eth_getBlockByNumber @ block 52,040,420 (gasLimit 3,000,000)",
+     "url": "https://rpc.hyperliquid.xyz/evm"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "HYPE",
+   "note": "HYPE is the native gas token on HyperEVM.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "=",
+   "value": "EIP-1559",
+   "note": "Docs: EIP-1559 is enabled, implemented \"in the standard way\"; parameters are not published.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Burned, priority fees too",
+   "note": "Base fees are burned; unlike most EVM chains, priority fees are burned as well (sent to the zero address).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Cancun, no blobs",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    },
+    {
+     "label": "Hyperliquid docs: How to use the HyperEVM (EVM version)",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/onboarding/how-to-use-the-hyperevm"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "HyperCore read precompiles (0x…0800+), CoreWriter 0x3333…3333",
+   "note": "Read precompiles return HyperCore state (positions, balances, oracle prices); cost 2000 + 65 × (input + output bytes). CoreWriter is a system contract that turns logs into HyperCore actions.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: Interacting with HyperCore",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "Not supported",
+   "note": "Cancun without blobs.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    },
+    {
+     "label": "Hyperliquid docs: How to use the HyperEVM (EVM version)",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/onboarding/how-to-use-the-hyperevm"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "hl-node (single client)",
+   "note": "Distributed as signed binaries managed by hl-visor; the repo holds setup docs, not node source.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "hyperliquid-dex/node README @405cc08",
+     "url": "https://github.com/hyperliquid-dex/node/blob/405cc08b17a727ee51b0f9128918955a84439915/README.md"
+    }
+   ],
+   "items": [
+    {
+     "name": "hl-node",
+     "status": "production",
+     "note": "Signed binaries via hl-visor; validator and non-validator modes.",
+     "sources": [
+      {
+       "label": "hyperliquid-dex/node README @405cc08",
+       "url": "https://github.com/hyperliquid-dex/node/blob/405cc08b17a727ee51b0f9128918955a84439915/README.md"
+      }
+     ]
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "HyperCore order books and tokens next to the EVM",
+   "note": "HyperEVM contracts read HyperCore via precompiles and act via CoreWriter; HYPE moves Core<->EVM via system address 0x2222…2222.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Hyperliquid docs: Interacting with HyperCore",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm/interacting-with-hypercore"
+    },
+    {
+     "label": "Hyperliquid docs: HyperEVM",
+     "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
+    }
+   ]
+  }
+ }
+}

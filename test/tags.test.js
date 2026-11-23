@@ -202,17 +202,13 @@ test('curated overrides: every entry is valid and has a reason', () => {
   }
 });
 
-test('audit: Polygon, Avalanche and Celo concepts', () => {
-  const cip = (title, abstract = '') => classify({ chain: 'Celo', id: 'CIP-999', title, abstract, type: 'CIP · Standards Track', kind: 'protocol' });
+test('audit: Polygon and Avalanche concepts', () => {
   assert.ok(has(tag('Change in SprintLength'), 'consensus', 'block-time'));
   assert.ok(has(tag('Increase BaseFeeChangeDenominator to 64'), 'fee-market', 'base-fee'));
   assert.ok(has(tag('Increase StateSync Confirmations'), 'interop-crosschain', 'messaging'));
   assert.ok(has(tag('Pectra EIPs'), 'governance-meta', 'hardfork-meta'));
   assert.ok(has(tag('MATIC to POL Migration'), 'native-assets', 'native-tokens'));
   assert.ok(has(tag('Update Membership of the Protocol Council'), 'governance-meta', 'council-treasury'));
-  assert.ok(has(cip('Round Change Timeout Formula Modification'), 'consensus', 'finality'));
-  assert.ok(has(cip('Remove Tobin Tax'), 'native-assets'));
-  assert.ok(has(cip('General Account Signer Authorization'), 'account-abstraction', 'keys-auth'));
   assert.ok(!tag('Launch Liquidity Mining program').tags.includes('consensus')); // liquidity mining is not PoW
 });
 
