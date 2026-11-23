@@ -36,6 +36,10 @@
     {
      "label": "BEP-619",
      "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-619.md"
+    },
+    {
+     "label": "BNB docs source: finality ~1.125 s",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/introduction.md#L51"
     }
    ]
   },
@@ -52,11 +56,15 @@
     },
     {
      "label": "BSCValidatorSet.sol @8464181 (21 cabinets)",
-     "url": "https://github.com/bnb-chain/bsc-genesis-contract/blob/84641812a013eda1593e058aeed4dc116c7746eb/contracts/BSCValidatorSet.sol"
+     "url": "https://github.com/bnb-chain/bsc-genesis-contract/blob/84641812a013eda1593e058aeed4dc116c7746eb/contracts/BSCValidatorSet.sol#L24"
     },
     {
-     "label": "StakeHub.sol @8464181 (maxElectedValidators)",
-     "url": "https://github.com/bnb-chain/bsc-genesis-contract/blob/84641812a013eda1593e058aeed4dc116c7746eb/contracts/BC_fusion/StakeHub.sol"
+     "label": "StakeHub.sol @8464181 (maxElectedValidators = 45)",
+     "url": "https://github.com/bnb-chain/bsc-genesis-contract/blob/84641812a013eda1593e058aeed4dc116c7746eb/contracts/StakeHub.sol#L272"
+    },
+    {
+     "label": "BNB docs source: 45 = 21 Cabinet + 24 Candidates",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/introduction.md#L8"
     }
    ]
   },
@@ -73,11 +81,15 @@
     },
     {
      "label": "BNB docs: BSC overview",
-     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/overview.md"
     },
     {
      "label": "BSC public RPC, eth_getBlockByNumber @ 135,254,932",
      "url": "https://bsc-rpc.publicnode.com"
+    },
+    {
+     "label": "BNB docs source: overview (0.45 s)",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/overview.md#L15"
     }
    ]
   },
@@ -94,7 +106,7 @@
     },
     {
      "label": "BNB docs: opBNB metrics",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/core-concepts/opbnb-metrics.md"
     }
    ]
   },
@@ -112,6 +124,10 @@
     {
      "label": "BEP-652",
      "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-652.md"
+    },
+    {
+     "label": "BNB docs source: Mendel (BEP-652 cap 2^24)",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/mendel-bsc.md#L16-L18"
     }
    ]
   },
@@ -124,7 +140,7 @@
    "sources": [
     {
      "label": "BNB docs: BSC overview",
-     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/overview.md"
     }
    ]
   },
@@ -141,7 +157,7 @@
     },
     {
      "label": "BNB docs: BSC overview",
-     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/overview.md"
     }
    ]
   },
@@ -154,15 +170,19 @@
    "sources": [
     {
      "label": "BNB docs: opBNB gas and fees",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/gas-and-fees/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/core-concepts/gas-and-fees.md"
     },
     {
      "label": "BNB docs: BSC overview",
-     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/overview.md"
     },
     {
      "label": "BSC public RPC, eth_getBlockByNumber @ 135,254,932",
      "url": "https://bsc-rpc.publicnode.com"
+    },
+    {
+     "label": "BNB docs source: gas-and-fees table",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/core-concepts/gas-and-fees.md#L20"
     }
    ]
   },
@@ -182,7 +202,7 @@
   "evm.baseline": {
    "mark": "~",
    "value": "Osaka, partial (7 of 13 Fusaka EIPs)",
-   "note": "Osaka/Mendel activated 2026-04-28. Rejected: EIP-7642, 7594, 7892, 7917, 7918, 7935. Pasteur (2026-08-25) added BSC-only changes. Next: Jenner (BEP-718) scheduled 2026-12-08 02:30 UTC.",
+   "note": "Osaka/Mendel activated 2026-04-28 02:30 UTC. Rejected: EIP-7642, 7594, 7892, 7917, 7918, 7935. Pasteur (2026-08-25) added BSC-only changes. Next: Jenner (meta BEP-718: BEP-702, 703, 706) scheduled for mainnet 2026-12-08 02:30 UTC; hard fork release v1.8.2 is out (the docs notice still says it is unpublished).",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
@@ -201,6 +221,14 @@
     {
      "label": "bsc v1.8.2 release (Jenner, BEP-718, 2026-12-08)",
      "url": "https://github.com/bnb-chain/bsc/releases/tag/v1.8.2"
+    },
+    {
+     "label": "BNB docs source: Mendel timeline",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/mendel-bsc.md#L10"
+    },
+    {
+     "label": "BNB docs source: Jenner timeline and BEPs",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/jenner-bsc.md#L11-L20"
     }
    ]
   },
@@ -410,7 +438,41 @@
    "sources": [
     {
      "label": "BNB docs: BSC overview",
-     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-smart-chain/overview.md"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "PREVRANDAO = difficulty (2 in-turn / 1 out-of-turn)",
+   "note": "Parlia headers carry difficulty 2 or 1, and the EVM only switches to mixDigest randomness when difficulty is 0, so PREVRANDAO returns 1 or 2.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bsc core/evm.go: random only when difficulty is 0",
+     "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/core/evm.go#L76-L77"
+    },
+    {
+     "label": "bsc parlia.go: in-turn / out-of-turn difficulty",
+     "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/consensus/parlia/parlia.go#L93-L94"
+    },
+    {
+     "label": "BSC public RPC, eth_call PREVRANDAO = 2 @ block 135,288,141",
+     "url": "https://bsc-rpc.publicnode.com"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "=",
+   "value": "0, 1, 2, 3, 4",
+   "note": "Same typed transactions as Ethereum; no BSC-specific type.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bsc core/types/transaction.go: tx types",
+     "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/core/types/transaction.go#L48-L52"
     }
    ]
   }

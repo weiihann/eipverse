@@ -232,6 +232,58 @@
      "url": "https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/hyperevm"
     }
    ]
+  },
+  "evm.opcodes_added": {
+   "mark": "-",
+   "value": "No CLZ (Cancun opcode set)",
+   "note": "CLZ returns NotActivated in eth_call.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "HyperEVM public RPC, eth_call CLZ \"NotActivated\" @ block 52,041,051",
+     "url": "https://rpc.hyperliquid.xyz/evm"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "PREVRANDAO = 0; COINBASE = 0x0",
+   "note": "Both return zero in eth_call at the head.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "HyperEVM public RPC, eth_call PREVRANDAO / COINBASE @ block 52,041,051",
+     "url": "https://rpc.hyperliquid.xyz/evm"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "=",
+   "value": "24,576 B code",
+   "note": "A 24,577-byte deploy fails with CreateContractSizeLimit.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "HyperEVM public RPC, eth_call create 24,576 ok / 24,577 fails @ block 52,041,051",
+     "url": "https://rpc.hyperliquid.xyz/evm"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "-",
+   "value": "BLS12-381 (0x0b-0x11) and P256 (0x100) missing",
+   "note": "Cancun set: 0x01-0x0a return expected outputs; BLS12-381 and P256 vectors return empty.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "HyperEVM public RPC, eth_call vectors for 0x01-0x11, 0x100 @ block 52,041,051",
+     "url": "https://rpc.hyperliquid.xyz/evm"
+    }
+   ]
   }
  }
 }

@@ -313,6 +313,125 @@
      "url": "https://docs.polygon.technology/pos/overview"
     }
    ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Sent to a burn address, not destroyed in-protocol",
+   "note": "Bor credits base fee x gas used to the configured \"burnt contract\" (0x3ef5…104f since block 83,756,500; the code comment calls it a dead address on mainnet).",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor state_transition.go: base fee to burnt contract",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/core/state_transition.go#L639-L649"
+    },
+    {
+     "label": "bor params/config.go: mainnet BurntContract",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/params/config.go#L499"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "COINBASE = 0x7Ee4…66B0 fee collector",
+   "note": "Since Rio (block 77,414,656) the EVM coinbase is a fixed address from config, not the block producer; PREVRANDAO reads difficulty (1 observed).",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor core/evm.go: post-Rio coinbase",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/core/evm.go#L54-L55"
+    },
+    {
+     "label": "bor params/config.go: mainnet Coinbase",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/params/config.go#L503"
+    },
+    {
+     "label": "Polygon PoS public RPC, eth_call COINBASE / PREVRANDAO @ block 97,826,102",
+     "url": "https://polygon-bor-rpc.publicnode.com"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "~",
+   "value": "32,768 B code (Ahmedabad); 49,152 B initcode",
+   "note": "Bor raised MaxCodeSize to 32 KB at Ahmedabad; initcode stays 2 x 24,576. eth_call: 32,768 ok, 32,769 fails.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor protocol_params.go",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/params/protocol_params.go#L156-L158"
+    },
+    {
+     "label": "bor core/vm/evm.go",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/core/vm/evm.go#L709"
+    },
+    {
+     "label": "Polygon PoS public RPC, eth_call create 32,768 ok / 32,769 fails @ block 97,825,991",
+     "url": "https://polygon-bor-rpc.publicnode.com"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "-",
+   "value": "KZG point evaluation (0x0a) removed",
+   "note": "The LisovoPro and Chicago precompile sets drop 0x0a; BLS12-381 and P256 remain. Confirmed: 0x0a returns empty.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor contracts.go: LisovoPro set",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/core/vm/contracts.go#L252"
+    },
+    {
+     "label": "bor contracts.go: Chicago set",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/core/vm/contracts.go#L274"
+    },
+    {
+     "label": "Polygon PoS public RPC, eth_call vectors for 0x0a-0x11, 0x100 @ block 97,825,892",
+     "url": "https://polygon-bor-rpc.publicnode.com"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "+",
+   "value": "0x7F state-sync (system)",
+   "note": "Types 0-4 plus StateSyncTxType 0x7F for L1 -> PoS state sync.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor core/types/transaction.go",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/core/types/transaction.go#L49-L54"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "Not accepted (no blob pool)",
+   "note": "Bor builds the tx pool without the blob subpool.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor eth/backend.go",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/eth/backend.go#L516"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "-",
+   "value": "No blob DA; L1 block data only",
+   "note": "No blob pool; KZG precompile removed.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor eth/backend.go",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/eth/backend.go#L516"
+    }
+   ]
   }
  },
  "as_of": "2026-11-23"

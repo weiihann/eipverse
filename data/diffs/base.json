@@ -391,6 +391,23 @@
      "url": "https://docs.base.org/specifications/base-protocol/proofs/overview"
     }
    ]
+  },
+  "evm.contract_size": {
+   "mark": "=",
+   "value": "24,576 B code / 49,152 B initcode",
+   "note": "No override in base-reth-node; revm EIP-170 default. A 24,577-byte deploy fails in eth_call.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base public RPC, eth_call create 24,576 ok / 24,577 fails @ block 61,270,471",
+     "url": "https://mainnet.base.org"
+    },
+    {
+     "label": "revm eip170.rs (revm-primitives 43.0.0, as in base Cargo.lock)",
+     "url": "https://github.com/bluealloy/revm/blob/61eb0f231227db0a89f9cd2cd976cc372b6e94d1/crates/primitives/src/eip170.rs#L8"
+    }
+   ]
   }
  },
  "as_of": "2026-11-23"

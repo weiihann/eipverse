@@ -371,7 +371,7 @@ function renderSources() {
 
 // ---------- chain diff ----------
 // Hand-curated per-chain facts (data/diffs/*.json -> diffs.json), loaded when the tab first opens. Ethereum is the
-// baseline; every other cell is a delta mark with a sourced, dated note, or an explicit "no source" blank.
+// baseline; every other cell is a delta mark with a sourced, dated note, or an explicit "unverified" blank.
 let DIFF = null, diffLoading = false, diffErr = '', shownCells = [];
 const MARK = { base: ['Ethereum baseline', 'base', '◆'], '+': ['adds to Ethereum', 'add', '+'], '-': ['missing vs Ethereum', 'miss', '−'], '~': ['changed vs Ethereum', 'chg', '~'], '=': ['same as Ethereum', 'same', '='] };
 const markPill = (m) => `<span class="mk mk-${MARK[m][1]}" title="${MARK[m][0]}">${MARK[m][2]}</span>`;
@@ -402,10 +402,8 @@ function renderDiff() {
     $('difft').innerHTML = `<tbody><tr><td class="d-load">${diffErr ? `<span class="b-error">Could not load diffs.json: ${esc(diffErr)}</span>` : 'Loading chain diff…'}</td></tr></tbody>`;
     return;
   }
-  const facts = DIFF.chains.reduce((n, c) => n + Object.keys(c.facts).length, 0);
-  const cellsN = DIFF.chains.length * DIFF.dimensions.length;
-  $('diff-head').innerHTML = `<div class="side-h"><h3>How each chain differs from Ethereum</h3><p>${DIFF.dimensions.length} dimensions × ${DIFF.chains.length} chains · ${fmtN(facts)} sourced facts, ${fmtN(cellsN - facts)} left blank because no source was found · as of ${esc(DIFF.chains.map((c) => c.as_of).sort().at(-1) || '')}</p></div>
-    <div class="legend">${['base', '+', '-', '~', '='].map((m) => `<span>${markPill(m)}${MARK[m][0]}</span>`).join('')}<span><span class="mk mk-none">·</span>no source (not guessed)</span><span><span class="obs">obs</span>read from a live RPC</span></div>`;
+  $('diff-head').innerHTML = `<div class="side-h"><h3>How each chain differs</h3></div>
+    <div class="legend">${['base', '+', '-', '~', '='].map((m) => `<span>${markPill(m)}${MARK[m][0]}</span>`).join('')}<span><span class="mk mk-none">·</span>unverified</span><span><span class="obs">obs</span>read from a live RPC</span></div>`;
 
 
   if (document.activeElement !== dq) dq.value = state.dq;
@@ -424,7 +422,7 @@ function renderDiff() {
     return head + `<tr><th class="d-dim" title="${esc(id)}">${esc(label)}</th>${cols.map((c) => {
       const f = c.facts[id];
       const key = `${c.id}|${id}`;
-      if (!f) return `<td class="t-blank"><button class="d-cell blank" data-cell="${esc(key)}" title="No source found for ${esc(c.label)}: left blank, not guessed"><span class="mk mk-none">·</span><span class="d-v">no source</span></button></td>`;
+      if (!f) return `<td class="t-blank"><button class="d-cell blank" data-cell="${esc(key)}" title="${esc(c.label)}: unverified, no spec, code or RPC read states this yet"><span class="mk mk-none">·</span><span class="d-v">unverified</span></button></td>`;
       shownCells.push(key);
       return `<td class="t-${MARK[f.mark][1]}"><button class="d-cell m-${MARK[f.mark][1]}${state.cell === key ? ' sel' : ''}" data-cell="${esc(key)}" title="${esc(c.label)} · ${esc(label)}: ${esc(MARK[f.mark][0])}">${markPill(f.mark)}<span class="d-v">${esc(f.value)}</span>${f.kind === 'observed' ? '<span class="obs">obs</span>' : ''}</button></td>`;
     }).join('')}</tr>`;
@@ -464,7 +462,7 @@ function renderDiffDrawer() {
       </dl>
       ${f.items ? `<div><div class="label">${f.items.length} listed</div><ul class="items">${f.items.map((it) => `<li><div class="it-h"><b>${esc(it.name)}</b>${it.status ? `<span class="it-s">${esc(it.status)}</span>` : ''}</div>${it.note ? `<p>${esc(it.note)}</p>` : ''}<div class="it-src">${it.sources.map((x) => `<a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)} ${icon.ext}</a>`).join('')}</div></li>`).join('')}</ul></div>` : ''}
       <div><div class="label">Sources</div>${srcList(f.sources)}</div>`
-    : `<h2><span class="none">No source</span></h2><p class="abs">No canonical spec, code or docs page found that states this for ${esc(c.label)}, so the cell is left blank instead of guessed.</p>
+    : `<h2><span class="none">Unverified</span></h2><p class="abs">No spec, client code, docs page or RPC read found that states this for ${esc(c.label)}, so the cell is left blank.</p>
       ${eth ? `<dl class="kv"><dt>Ethereum</dt><dd><button class="link" data-goto-cell="ethereum|${esc(dim)}">${esc(eth.value)}</button></dd></dl>` : ''}`}
     <div class="hint">Esc closes · j / k or ↑ / ↓ step through filled cells</div></div>`;
   for (const b of d.querySelectorAll('[data-goto-cell]')) b.onclick = () => set({ cell: b.dataset.gotoCell });
@@ -488,8 +486,8 @@ function renderDrawer() {
   const terms = (w) => (w[0] === 'curated' ? '<span class="cur">curated</span>' : `matched: ${w.map(esc).join(', ')}`);
   const tagsHtml = r.tags.length ? (r.curated ? `<div class="why-row curated-note"><span class="cur">curated</span><span class="terms">${esc(r.curated)}</span></div>` : '')
       + r.tags.map((t) => `<div class="why-row">${tagPill(t, '', r.curated ? 'curated' : 'derived')}<span class="terms">${terms(r.why[t])}</span></div>`
-      + `<div class="why-row why-sub"><span class="arrow">›</span>${r.subs[t] ? `<span class="tag" style="--t:${TAGS[t][1]}">${esc(subLabel(t, r.subs[t].sub))}</span><span class="terms">${terms(r.subs[t].why)}</span>` : '<span class="terms none">no subcategory matched (not guessed)</span>'}</div>`).join('')
-    : '<span class="none">No rule matched, so no tag (not guessed).</span>';
+      + `<div class="why-row why-sub"><span class="arrow">›</span>${r.subs[t] ? `<span class="tag" style="--t:${TAGS[t][1]}">${esc(subLabel(t, r.subs[t].sub))}</span><span class="terms">${terms(r.subs[t].why)}</span>` : '<span class="terms none">no subcategory matched</span>'}</div>`).join('')
+    : '<span class="none">No rule matched, so no tag.</span>';
   d.innerHTML = `<div class="dh" style="--c:${cc(r.chain)}"><span class="rid" title="${esc(r.id)}">${logo(r.chain)}<span class="rid-t">${esc(r.id)}</span></span><span class="sp"></span>
     ${i >= 0 ? `<span class="pos">${i + 1} / ${fmtN(shownList.length)}</span>` : ''}
     <button class="icon-btn" data-step="-1" aria-label="Previous (k)" title="Previous (k / ↑)">${icon.up}</button>

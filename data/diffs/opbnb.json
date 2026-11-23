@@ -27,7 +27,7 @@
    "sources": [
     {
      "label": "BNB docs: Fourier upgrade of opBNB",
-     "url": "https://docs.bnbchain.org/announce/fourier-opbnb/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/fourier-opbnb.md"
     },
     {
      "label": "opBNB public RPC, eth_getBlockByNumber @ 209,250,868",
@@ -48,7 +48,7 @@
    "sources": [
     {
      "label": "BNB docs: opBNB metrics",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/core-concepts/opbnb-metrics.md"
     },
     {
      "label": "opBNB public RPC, eth_getBlockByNumber @ 209,250,868",
@@ -65,40 +65,52 @@
    "sources": [
     {
      "label": "BNB docs: opBNB metrics",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/core-concepts/opbnb-metrics.md"
     }
    ]
   },
   "fees.eip1559": {
    "mark": "~",
-   "value": "Elasticity 2, denominator 8",
-   "note": "Same as Ethereum mainnet values, unlike OP Mainnet. Not verifiable from the header (pre-Holocene extraData).",
-   "kind": "doc",
+   "value": "Disabled since Wright: base fee fixed at 0",
+   "note": "The configured controller (elasticity 2, denominator 8) is bypassed: CalcBaseFee returns 0 for every post-Wright block.",
+   "kind": "code",
    "as_of": "2026-11-23",
    "sources": [
     {
-     "label": "bnb-chain/opbnb README",
-     "url": "https://github.com/bnb-chain/opbnb/blob/426567ebb32455b2bfb9c736ae8908f84a462ddf/README.md"
+     "label": "bnb-chain/op-geth eip1559.go",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/consensus/misc/eip1559/eip1559.go#L61-L62"
     },
     {
-     "label": "BNB docs: opBNB metrics",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+     "label": "bnb-chain/op-geth params/config.go: configured 2 / 8",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/params/config.go#L198-L200"
+    },
+    {
+     "label": "BNB docs source: Wright",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/wright-opbnb.md#L28"
     }
    ]
   },
   "fees.min_base_fee": {
    "mark": "~",
-   "value": "8 wei floor (docs)",
-   "note": "Docs list an 8 wei dynamic floor and 1001 wei minimum priority fee; observed baseFeePerGas at the head was 0.",
-   "kind": "doc",
+   "value": "0: base fee pinned to 0 (Wright)",
+   "note": "Since Wright (2024-08-27) CalcBaseFee returns OpBNBBaseFeeForGasLess = 0; observed baseFeePerGas 0. The gas-and-fees docs table still lists an 8 wei floor.",
+   "kind": "code",
    "as_of": "2026-11-23",
    "sources": [
     {
-     "label": "BNB docs: opBNB gas and fees",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/gas-and-fees/"
+     "label": "bnb-chain/op-geth eip1559.go: Wright base fee",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/consensus/misc/eip1559/eip1559.go#L61-L62"
     },
     {
-     "label": "opBNB public RPC, eth_getBlockByNumber @ 209,250,868",
+     "label": "bnb-chain/op-geth protocol_params.go",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/params/protocol_params.go#L139"
+    },
+    {
+     "label": "BNB docs source: Wright (base fee set to 0)",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/wright-opbnb.md#L28"
+    },
+    {
+     "label": "opBNB public RPC, eth_getBlockByNumber baseFeePerGas = 0 @ block 209,311,188",
      "url": "https://opbnb-rpc.publicnode.com"
     }
    ]
@@ -112,7 +124,7 @@
    "sources": [
     {
      "label": "BNB docs: opBNB gas and fees",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/gas-and-fees/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/core-concepts/gas-and-fees.md"
     }
    ]
   },
@@ -125,7 +137,7 @@
    "sources": [
     {
      "label": "BNB docs: Haber upgrade of opBNB",
-     "url": "https://docs.bnbchain.org/announce/haber-opbnb/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/haber-opbnb.md"
     }
    ]
   },
@@ -138,7 +150,7 @@
    "sources": [
     {
      "label": "BNB docs: Haber upgrade of opBNB",
-     "url": "https://docs.bnbchain.org/announce/haber-opbnb/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/haber-opbnb.md"
     }
    ]
   },
@@ -151,7 +163,7 @@
    "sources": [
     {
      "label": "BNB docs: Volta upgrade of opBNB",
-     "url": "https://docs.bnbchain.org/announce/volta-opbnb/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/volta-opbnb.md"
     },
     {
      "label": "bnb-chain/op-geth release v0.5.11 (2026-08-26)",
@@ -164,7 +176,7 @@
      "sources": [
       {
        "label": "BNB docs: Volta upgrade of opBNB",
-       "url": "https://docs.bnbchain.org/announce/volta-opbnb/"
+       "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/volta-opbnb.md"
       },
       {
        "label": "bnb-chain/op-geth release v0.5.11 (2026-08-26)",
@@ -185,7 +197,7 @@
    "sources": [
     {
      "label": "BNB docs: opBNB protocol FAQs",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/faq/protocol-faqs/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/faq/protocol-faqs.md"
     }
    ]
   },
@@ -198,7 +210,7 @@
    "sources": [
     {
      "label": "BNB docs: opBNB protocol FAQs",
-     "url": "https://docs.bnbchain.org/bnb-opbnb/faq/protocol-faqs/"
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/bnb-opbnb/faq/protocol-faqs.md"
     }
    ]
   },
@@ -212,6 +224,193 @@
     {
      "label": "bnb-chain/opbnb README",
      "url": "https://github.com/bnb-chain/opbnb/blob/426567ebb32455b2bfb9c736ae8908f84a462ddf/README.md"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Cancun (no Prague / Osaka)",
+   "note": "Mainnet config stops at Cancun/Ecotone, Haber, Wright and Fjord; the interpreter has no Prague table. BLS12-381 precompiles and CLZ are absent on-chain.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/op-geth params/config.go: opBNB mainnet forks",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/params/config.go#L206-L210"
+    },
+    {
+     "label": "bnb-chain/op-geth interpreter.go: newest jump table is Cancun",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/vm/interpreter.go#L65"
+    },
+    {
+     "label": "opBNB public RPC, eth_call CLZ invalid opcode @ block 209,311,179",
+     "url": "https://opbnb-rpc.publicnode.com"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "-",
+   "value": "No CLZ (Cancun opcode set)",
+   "note": "opcode 0x1e is undefined.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "opBNB public RPC, eth_call CLZ \"invalid opcode 0x1e\" @ block 209,311,179",
+     "url": "https://opbnb-rpc.publicnode.com"
+    },
+    {
+     "label": "bnb-chain/op-geth interpreter.go",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/vm/interpreter.go#L65"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "COINBASE = 0x4200…0011; PREVRANDAO = BSC mixDigest",
+   "note": "OP Stack rules: COINBASE is the SequencerFeeVault predeploy and PREVRANDAO comes from the L1 (BSC) origin block.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/opbnb attributes.go: PrevRandao from L1 block",
+     "url": "https://github.com/bnb-chain/opbnb/blob/5886d22b3c62d96af0ce7f2b8682244032d07a77/op-node/rollup/derive/attributes.go#L174"
+    },
+    {
+     "label": "opBNB public RPC, eth_call COINBASE / PREVRANDAO @ block 209,310,767",
+     "url": "https://opbnb-rpc.publicnode.com"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "=",
+   "value": "24,576 B code / 49,152 B initcode",
+   "note": "A 24,577-byte deploy fails in eth_call.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/op-geth protocol_params.go",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/params/protocol_params.go#L141-L142"
+    },
+    {
+     "label": "opBNB public RPC, eth_call create 24,576 ok / 24,577 fails @ block 209,310,098",
+     "url": "https://opbnb-rpc.publicnode.com"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "-",
+   "value": "BLS12-381 (0x0b-0x11) missing",
+   "note": "No Prague, so EIP-2537 calls return empty; 0x01-0x0a and P256 (0x100) work.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "opBNB public RPC, eth_call vectors for 0x0a-0x11, 0x100 @ block 209,309,500",
+     "url": "https://opbnb-rpc.publicnode.com"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Not burned: BaseFeeVault",
+   "note": "Base fee x gas used is credited to 0x4200…0019 (currently 0, since Wright pins the base fee to 0); the L1 fee goes to 0x4200…001A.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/op-geth state_transition.go",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/state_transition.go#L586"
+    },
+    {
+     "label": "bnb-chain/op-geth protocol_params.go: vault addresses",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/params/protocol_params.go#L27"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "~",
+   "value": "16,777,216 (pool + block packing, not consensus)",
+   "note": "op-geth v0.5.10 caps per-tx gas at 2^24 at tx pool admission and when packing blocks; no fork makes it a validity rule.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/op-geth flags.go: TxGasLimit default",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/cmd/utils/flags.go#L1802"
+    },
+    {
+     "label": "bnb-chain/op-geth protocol_params.go: MaxTxGas",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/params/protocol_params.go#L38"
+    },
+    {
+     "label": "bnb-chain/op-geth release v0.5.10",
+     "url": "https://github.com/bnb-chain/op-geth/releases/tag/v0.5.10"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "~",
+   "value": "0, 1, 2, 0x7E deposit; no type 4",
+   "note": "Deposit txs from BSC as 0x7E; the client has no EIP-7702 set-code type.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/op-geth transaction.go: tx types",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/types/transaction.go#L49-L52"
+    },
+    {
+     "label": "bnb-chain/op-geth deposit_tx.go",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/types/deposit_tx.go#L27"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "Not supported",
+   "note": "The tx pool rejects type-3 txs on OP Stack chains.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/op-geth txpool validation.go",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/txpool/validation.go#L85"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "-",
+   "value": "No (no Prague)",
+   "note": "No SetCodeTxType in the client and no Prague fork in the mainnet config.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/op-geth transaction.go: tx types",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/types/transaction.go#L49-L52"
+    },
+    {
+     "label": "bnb-chain/op-geth params/config.go: mainnet config",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/params/config.go#L177"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Gasless txs (zero base fee), bundles",
+   "note": "Wright sets the base fee to 0 and drops the L1 fee when gas price is 0, so a paymaster can sponsor txs; bundles are supported.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs source: Wright upgrade of opBNB",
+     "url": "https://github.com/bnb-chain/bnb-chain.github.io/blob/868cb623ca889ea46f4f76d5f8ee3b97d4c29caf/docs/announce/wright-opbnb.md#L24-L30"
+    },
+    {
+     "label": "bnb-chain/op-geth state_transition.go: zero L1 fee",
+     "url": "https://github.com/bnb-chain/op-geth/blob/9ee47798d0a675a4ecf1740a38eed9b235ad1123/core/state_transition.go#L254"
     }
    ]
   }

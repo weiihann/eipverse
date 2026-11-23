@@ -269,6 +269,142 @@
      "url": "https://build.avax.network/docs/primary-network/avalanche-consensus"
     }
    ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Burned: whole fee to blackhole 0x0100…0000",
+   "note": "The C-Chain credits the full fee, base fee and tip, to the blackhole coinbase 0x0100000000000000000000000000000000000000, so no producer receives it.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "avalanchego cparams/rules.go: credit base fee to blackhole coinbase",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/cparams/rules.go#L67-L73"
+    },
+    {
+     "label": "avalanchego blackhole.go: burn address",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/blackhole/blackhole.go#L10"
+    },
+    {
+     "label": "Avalanche C-Chain public RPC, eth_call COINBASE = 0x0100…0000 @ block 101,173,459",
+     "url": "https://api.avax.network/ext/bc/C/rpc"
+    }
+   ]
+  },
+  "fees.extra": {
+   "mark": "+",
+   "value": "Min charge: half the tx gas limit (ACP-194)",
+   "note": "Since Helicon a transaction is charged at least ceil(gasLimit / 2) gas (Lambda = 2), because blocks are accepted before they execute.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "avalanchego cparams/rules.go: MinimumGasConsumption",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/cparams/rules.go#L59"
+    },
+    {
+     "label": "avalanchego vms/evm/params: Lambda = 2",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/params/params.go#L15-L18"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "PREVRANDAO = 1; COINBASE = blackhole",
+   "note": "The EVM reads PREVRANDAO from the header difficulty, which block building fixes at 1; COINBASE is the blackhole address. Both confirmed by eth_call.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "avalanchego cchain libevm hooks: Random = Difficulty",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/libevm/vm/hooks.go#L52-L54"
+    },
+    {
+     "label": "avalanchego cchain hooks.go: header Coinbase and Difficulty",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/hooks.go#L388-L389"
+    },
+    {
+     "label": "Avalanche C-Chain public RPC, eth_call PREVRANDAO = 1 @ block 101,173,459",
+     "url": "https://api.avax.network/ext/bc/C/rpc"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "~",
+   "value": "No gas refunds (since Apricot Phase 1)",
+   "note": "ShouldRefundGas is false from Apricot Phase 1 on, so SSTORE clears and similar refunds are not paid out.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "avalanchego cparams/rules.go: ShouldRefundGas",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/cparams/rules.go#L55-L56"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "=",
+   "value": "24,576 B code / 49,152 B initcode",
+   "note": "No override: uses libevm (geth fork) MaxCodeSize. A 24,577-byte deploy fails in eth_call.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ava-labs/libevm protocol_params.go (pinned by avalanchego go.mod)",
+     "url": "https://github.com/ava-labs/libevm/blob/a335c2ecf4df9fbd8460ae09c615860a27504c40/params/protocol_params.go#L131-L132"
+    },
+    {
+     "label": "Avalanche C-Chain public RPC, eth_call create 24,576 ok / 24,577 fails @ block 101,173,267",
+     "url": "https://api.avax.network/ext/bc/C/rpc"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "-",
+   "value": "BLS12-381 (0x0b-0x11) missing",
+   "note": "No Prague, so EIP-2537 precompiles return empty; KZG point evaluation (0x0a) and P256 (0x100) work.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Avalanche C-Chain public RPC, eth_call vectors for 0x0a-0x11, 0x100 @ block 101,173,098",
+     "url": "https://api.avax.network/ext/bc/C/rpc"
+    },
+    {
+     "label": "avalanchego cparams/config.go: Etna = Cancun (no Prague fork listed)",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/cparams/config.go#L51"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "+",
+   "value": "Atomic import/export (outside EVM tx types)",
+   "note": "EVM txs are types 0-2; cross-chain Import/Export txs ride in the block body extData field, not as typed EVM transactions.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "avalanchego cchain README: cross-chain transactions",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/README.md#L101"
+    },
+    {
+     "label": "avalanchego cchain README: extData body field",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/README.md#L95"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "-",
+   "value": "No blob DA; L1 block data only",
+   "note": "Blob transactions are not allowed in the mempool or in blocks.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "avalanchego cparams/config.go: blob txs disabled",
+     "url": "https://github.com/ava-labs/avalanchego/blob/446915a29debcf35a67e026b1e187b4d74e0ecbc/vms/evm/imp/cchain/cparams/config.go#L53-L54"
+    }
+   ]
   }
  },
  "as_of": "2026-11-23"

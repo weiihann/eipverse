@@ -334,6 +334,70 @@
      "url": "https://docs.monad.xyz/monad-arch/consensus/monad-bft"
     }
    ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "=",
+   "value": "Burned",
+   "note": "Only the priority fee is credited (to the beneficiary, or to staking under MIP-11); the base fee is not credited anywhere.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "monad execute_transaction.cpp: reward = priority fee",
+     "url": "https://github.com/category-labs/monad/blob/33c5821a7be4ad2d0b59d79f95adbbfeefa6ae2c/category/execution/ethereum/execute_transaction.cpp#L400-L406"
+    },
+    {
+     "label": "monad transaction_gas.cpp: calculate_txn_award",
+     "url": "https://github.com/category-labs/monad/blob/33c5821a7be4ad2d0b59d79f95adbbfeefa6ae2c/category/execution/ethereum/transaction_gas.cpp#L217-L224"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "=",
+   "value": "CLZ (Osaka)",
+   "note": "EIP-7939 active from the Osaka revision; CLZ returns 255 for 1 on mainnet.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "monad traits.hpp: MONAD_NINE -> Osaka",
+     "url": "https://github.com/category-labs/monad/blob/33c5821a7be4ad2d0b59d79f95adbbfeefa6ae2c/category/vm/evm/traits.hpp#L424"
+    },
+    {
+     "label": "Monad public RPC, eth_call CLZ(1) = 255 @ block 124,744,574",
+     "url": "https://rpc.monad.xyz"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "=",
+   "value": "Full set 0x01-0x11 + 0x100",
+   "note": "All Ethereum precompiles resolve for the Prague/Osaka revisions; BLS12-381 and P256 vectors pass on mainnet. The public RPC errored on the 0x0a test call.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "monad precompiles.cpp: resolve_precompile",
+     "url": "https://github.com/category-labs/monad/blob/33c5821a7be4ad2d0b59d79f95adbbfeefa6ae2c/category/execution/ethereum/precompiles.cpp#L86-L115"
+    },
+    {
+     "label": "Monad public RPC, eth_call vectors for 0x0b-0x11, 0x100 @ block 124,743,207",
+     "url": "https://rpc.monad.xyz"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "-",
+   "value": "No blob DA; L1 block data only",
+   "note": "Type 3 blob transactions are not supported.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
   }
  },
  "as_of": "2026-11-23"

@@ -136,13 +136,17 @@
   "fees.base_fee_dest": {
    "mark": "~",
    "value": "Collected, not burned",
-   "note": "Base fee goes to EIP1559_FEE_COLLECTOR 0x6BBe...6A92.",
+   "note": "Base fee goes to EIP1559_FEE_COLLECTOR 0x6BBe...6A92. Since Pectra the blob fee also goes to the collector.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
     {
      "label": "gnosischain/specs London",
      "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/london.md"
+    },
+    {
+     "label": "gnosischain/specs pectra.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/pectra.md#L42"
     }
    ]
   },
@@ -209,10 +213,18 @@
   "da.layer": {
    "mark": "~",
    "value": "Native blobs, smaller",
-   "note": "Blob count cut for 5 s slots; blob fee burned, base fee collected.",
+   "note": "Blob count cut for 5 s slots (target 1, max 2). Since Pectra the blob fee is collected by the fee collector, not burned.",
    "kind": "doc",
    "as_of": "2026-11-23",
    "sources": [
+    {
+     "label": "gnosischain/specs pectra.md: blob fee collected",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/pectra.md#L42"
+    },
+    {
+     "label": "Nethermind chainspec gnosis.json: blobSchedule",
+     "url": "https://github.com/NethermindEth/nethermind/blob/05a665eab0e5bf51be7cc1d3f5fa312a36ee50e2/src/Nethermind/Chains/gnosis.json#L115-L121"
+    },
     {
      "label": "gnosischain/specs Dencun",
      "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/dencun.md"
@@ -301,6 +313,121 @@
     {
      "label": "Gnosis docs: Validators and the move to Gnosis EEZ",
      "url": "https://docs.gnosischain.com/validators/eez-transition"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "=",
+   "value": "No protocol floor",
+   "note": "The London spec lists the fee collector as the only EIP-1559 change; the chainspec sets no minimum base fee.",
+   "kind": "spec",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs london.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/london.md#L14-L22"
+    },
+    {
+     "label": "Nethermind chainspec gnosis.json: EIP-1559 params",
+     "url": "https://github.com/NethermindEth/nethermind/blob/05a665eab0e5bf51be7cc1d3f5fa312a36ee50e2/src/Nethermind/Chains/gnosis.json#L88-L92"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "=",
+   "value": "None",
+   "note": "Fork specs mark every opcode EIP \"Not modified\", incl. PREVRANDAO (EIP-4399).",
+   "kind": "spec",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs merge.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/merge.md#L11"
+    },
+    {
+     "label": "gnosischain/specs dencun.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/dencun.md#L10"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "=",
+   "value": "None",
+   "note": "Repricing EIPs (2929, 1884, 7883...) are marked \"Not modified\".",
+   "kind": "spec",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs berlin.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/berlin.md#L12"
+    },
+    {
+     "label": "gnosischain/specs fusaka.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/fusaka.md#L14"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "=",
+   "value": "24,576 B code",
+   "note": "maxCodeSize 0x6000 in the chainspec; 24,577-byte deploy fails.",
+   "kind": "code",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Nethermind chainspec gnosis.json",
+     "url": "https://github.com/NethermindEth/nethermind/blob/05a665eab0e5bf51be7cc1d3f5fa312a36ee50e2/src/Nethermind/Chains/gnosis.json#L52"
+    },
+    {
+     "label": "Gnosis public RPC, eth_call create 24,576 ok / 24,577 fails @ block 49,429,168",
+     "url": "https://rpc.gnosischain.com"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "=",
+   "value": "None beyond Ethereum",
+   "note": "P256 (0x100) arrived with Fusaka like Ethereum (EIP-7951 not modified).",
+   "kind": "spec",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs fusaka.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/fusaka.md#L22"
+    },
+    {
+     "label": "gnosischain/specs pectra.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/pectra.md#L10"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "=",
+   "value": "Full set 0x01-0x11 + 0x100",
+   "note": "KZG, BLS12-381 and P256 vectors all return the expected output.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Gnosis public RPC, eth_call vectors for 0x0a-0x11, 0x100 @ block 49,429,138",
+     "url": "https://rpc.gnosischain.com"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "=",
+   "value": "0, 1, 2, 3, 4",
+   "note": "Same transaction types; blob and set-code EIPs adopted (blob params modified).",
+   "kind": "spec",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs dencun.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/dencun.md#L12"
+    },
+    {
+     "label": "gnosischain/specs pectra.md",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/pectra.md#L18"
     }
    ]
   }

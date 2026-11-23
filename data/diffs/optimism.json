@@ -380,6 +380,36 @@
      "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
     }
    ]
+  },
+  "evm.contract_size": {
+   "mark": "=",
+   "value": "24,576 B code / 49,152 B initcode",
+   "note": "Same limits as Ethereum; a 24,577-byte deploy fails in eth_call.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP Mainnet public RPC, eth_call create 24,576 ok / 24,577 fails @ block 159,922,847",
+     "url": "https://mainnet.optimism.io"
+    },
+    {
+     "label": "op-geth protocol_params.go",
+     "url": "https://github.com/ethereum-optimism/op-geth/blob/79e9d244748a1201fe686ca8a882b5fe7e173348/params/protocol_params.go#L148-L149"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "=",
+   "value": "Osaka repricings via Karst",
+   "note": "Karst adopts EIP-7883 (MODEXP gas increase) and EIP-7823, and aligns the P256 precompile gas cost with EIP-7951.",
+   "kind": "spec",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Karst overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/karst/overview.md"
+    }
+   ]
   }
  },
  "as_of": "2026-11-23"
