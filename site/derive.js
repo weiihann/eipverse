@@ -98,6 +98,10 @@ const SOURCE_LABELS = [
   [/github\.com\/avalanche-foundation\/ACPs/, 'ACPs repo'],
   [/github\.com\/ava-labs\/avalanchego\//, 'avalanchego config'],
   [/github\.com\/celo-org\/celo-proposals/, 'CIPs repo'],
+  [/github\.com\/celo-org\/governance/, 'CGPs repo'],
+  [/forum\.arbitrum\.foundation/, 'Arbitrum forum'],
+  [/tally\.xyz\/gov\/[^/]+\/proposal\//, 'On-chain vote (Tally)'],
+  [/docs\.arbitrum\.foundation\/deployment-addresses/, 'Arbitrum governors'],
   [/github\.com\/gnosischain\/specs/, 'Gnosis specs'],
 ];
 export function sourceLabel(url = '') {

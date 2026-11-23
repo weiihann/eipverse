@@ -12,7 +12,7 @@ import { parsePip, parsePrc, parseBorForks, forkRow as polygonForkRow } from '..
 import { parseAcp, parseAvalancheMainnet, upgradeRow as avaxUpgradeRow } from '../adapters/avalanche.js';
 import { parseCip, parseL2Genesis, parseCgp } from '../adapters/celo.js';
 import { decodeProposalCreated, descTitle, linkUpgrades, onchainRow, forumRow as arbForumRow, mergeStages, titleKey } from '../adapters/arbitrum.js';
-import { statusBucket } from '../site/derive.js';
+import { statusBucket, sourceLabel } from '../site/derive.js';
 import { parseGnosisUpgrade, upgradeRow as gnosisUpgradeRow, gipRow, parseSpecDate } from '../adapters/gnosis.js';
 import { runAdapter } from '../build.js';
 import { statedTime, sortNewestFirst, upgradesByChain } from '../site/derive.js';
@@ -315,4 +315,6 @@ test('Arbitrum: governor ProposalCreated decoding, and forum/Snapshot/on-chain s
   linkUpgrades([elara], [{ name: 'ArbOS 61 Elara', governance: 'Approved & executed' }]);
   assert.equal(elara.target_upgrade, 'ArbOS 61 Elara'); assert.equal(elara.status, 'Approved & executed (per upgrades table)');
   assert.equal(statusBucket(elara, Date.parse('2026-11-23')), 'historical');
+  assert.equal(sourceLabel(on.url), 'On-chain vote (Tally)'); assert.equal(sourceLabel(elara.url), 'Arbitrum forum');
+  assert.equal(sourceLabel('https://github.com/celo-org/governance/blob/main/CGPs/cgp-0254.md'), 'CGPs repo');
 });
