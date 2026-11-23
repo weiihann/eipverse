@@ -1,0 +1,4 @@
+site/data.json
+*.png
+server.log
+node_modules/

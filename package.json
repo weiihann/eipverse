@@ -1,0 +1,12 @@
+{
+  "name": "forkwatch",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Static page aggregating protocol proposals and network upgrades across EVM chains.",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node --test test/*.test.js",
+    "serve": "cd site && python3 -m http.server 8787"
+  }
+}
