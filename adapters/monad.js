@@ -1,5 +1,5 @@
 // Monad: MIPs (Monad Improvement Proposals) in monad-crypto/MIPs/MIPs/*.md frontmatter.
-import { ghList, fetchText, raw, blob, tree, parseFrontmatter, pool, row, isoFromUnix, forkStatus } from '../lib/util.js';
+import { ghList, fetchText, raw, blob, tree, parseFrontmatter, pool, row, sectionText, isoFromUnix, forkStatus } from '../lib/util.js';
 
 const REPO = 'monad-crypto/MIPs', REF = 'main', CHAIN = 'Monad';
 const BFT = 'category-labs/monad-bft', BFT_REF = 'master', CFG = 'monad-chain-config/src/lib.rs';
@@ -25,7 +25,7 @@ export function parseMip(text, path) {
   if (!fm?.mip) return null;
   const mrc = /^MRCs\//.test(path);
   return row({
-    chain: CHAIN, id: `${mrc ? 'MRC' : 'MIP'}-${fm.mip}`, kind: mrc ? 'app standard' : 'protocol', title: fm.title, status: fm.status,
+    chain: CHAIN, id: `${mrc ? 'MRC' : 'MIP'}-${fm.mip}`, kind: mrc ? 'app standard' : 'protocol', abstract: fm.description || sectionText(text, ['abstract']), title: fm.title, status: fm.status,
     target_upgrade: fm['network-upgrade'] || fm.upgrade || fm.fork || null,
     type: [fm.type, fm.category].filter(Boolean).join(' / ') || 'MIP',
     dates: [{ label: 'created', value: fm.created }],

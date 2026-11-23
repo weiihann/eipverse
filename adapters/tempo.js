@@ -1,5 +1,5 @@
 // Tempo: TIPs (Tempo Improvement Proposals) in tempoxyz/tempo/tips/*.md frontmatter.
-import { ghList, fetchText, raw, blob, tree, parseFrontmatter, pool, row, isoFromUnix, forkStatus } from '../lib/util.js';
+import { ghList, fetchText, raw, blob, tree, parseFrontmatter, pool, row, sectionText, isoFromUnix, forkStatus } from '../lib/util.js';
 
 const REPO = 'tempoxyz/tempo', REF = 'main', CHAIN = 'Tempo';
 // presto = Tempo mainnet: crates/chainspec/src/spec.rs maps "mainnet" and chain id 4217 to PRESTO (built from this
@@ -18,7 +18,7 @@ export function parseTip(text, path) {
   const fm = parseFrontmatter(text);
   if (!fm?.id) return null;
   return row({
-    chain: CHAIN, id: fm.id, title: fm.title, status: fm.status,
+    chain: CHAIN, id: fm.id, title: fm.title, status: fm.status, abstract: fm.description || sectionText(text, ['abstract']),
     target_upgrade: fm.protocolversion && !/^(n\/?a|tbd)$/i.test(fm.protocolversion) ? `protocol version ${fm.protocolversion}` : null,
     dates: [{ label: 'created', value: fm.created }],
     url: blob(REPO, REF, path), type: 'TIP',

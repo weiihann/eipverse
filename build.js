@@ -1,11 +1,13 @@
 // Runs every adapter in ./adapters and writes site/data.json. Adding a chain = adding one adapter file.
 // Adapter contract: default export { chain, sources: [{label,url}], fetch(): Promise<{proposals, notes?, reason?}> }
 import { readdir, writeFile } from 'node:fs/promises';
+import { classify } from './lib/tags.js';
 
 export async function runAdapter(adapter, file) {
   const base = { chain: adapter.chain, adapter: `adapters/${file}`, sources: adapter.sources || [], fetched_at: new Date().toISOString() };
   try {
     const { proposals = [], notes = [], reason } = await adapter.fetch();
+    for (const p of proposals) Object.assign(p, classify(p));
     if (!proposals.length) return { ...base, status: 'empty', reason: reason || 'Canonical source returned no proposals.', notes, count: 0, proposals: [] };
     return { ...base, status: 'ok', reason: null, notes, count: proposals.length, proposals };
   } catch (e) {
@@ -22,7 +24,7 @@ async function main() {
     return r;
   }));
   const data = { generated_at: new Date().toISOString(), chains };
-  await writeFile(new URL('./site/data.json', import.meta.url), JSON.stringify(data, null, 1));
+  await writeFile(new URL('./site/data.json', import.meta.url), JSON.stringify(data));
   console.log(`wrote site/data.json (${chains.reduce((n, c) => n + c.count, 0)} rows)`);
 }
 

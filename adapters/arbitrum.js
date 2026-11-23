@@ -1,7 +1,7 @@
 // Arbitrum: network upgrades from the Arbitrum Foundation's official "Network upgrades" table
 // (ArbitrumFoundation/docs content/docs/network-upgrades.mdx, rendered at docs.arbitrum.foundation/network-upgrades)
 // and AIP votes on the Arbitrum DAO Snapshot space (arbitrumfoundation.eth, public GraphQL hub).
-import { fetchText, fetchJson, raw, blob, row } from '../lib/util.js';
+import { fetchText, fetchJson, raw, blob, row, sectionText, firstParagraph } from '../lib/util.js';
 
 const CHAIN = 'Arbitrum';
 const DOCS = 'ArbitrumFoundation/docs', DOCS_REF = 'main', PAGE = 'content/docs/network-upgrades.mdx';
@@ -51,6 +51,7 @@ export function snapshotRow(p, linked = new Map()) {
   return row({
     chain: CHAIN, id: `snapshot:${p.id.slice(0, 10)}`, title: p.title, status: `Snapshot ${p.state}`,
     target_upgrade: linked.get(p.id.toLowerCase()) || null,
+    abstract: sectionText(p.body, ['abstract', 'summary', 'executive summary', 'tl;dr', 'tldr']) || firstParagraph(p.body),
     type: 'AIP (Snapshot vote)', dates: [{ label: 'vote start', value: d(p.start) }, { label: 'vote end', value: d(p.end) }],
     url: `https://snapshot.box/#/s:${SPACE}/proposal/${p.id}`,
   });
@@ -65,7 +66,7 @@ export default {
   async fetch() {
     const ups = parseUpgradeTable(await fetchText(raw(DOCS, DOCS_REF, PAGE)));
     const linked = new Map(ups.filter((u) => /snapshot\.box/.test(u.stageUrl || '')).map((u) => [u.stageUrl.split('/proposal/')[1].toLowerCase(), u.name]));
-    const query = `{ proposals(first: 1000, where: {space: "${SPACE}"}, orderBy: "created", orderDirection: desc) { id title state start end } }`;
+    const query = `{ proposals(first: 1000, where: {space: "${SPACE}"}, orderBy: "created", orderDirection: desc) { id title state start end body } }`;
     const res = await fetchJson('https://hub.snapshot.org/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query }) });
     const aips = (res.data?.proposals || []).filter((p) => /\bAIP\b/i.test(p.title)).map((p) => snapshotRow(p, linked));
     return {

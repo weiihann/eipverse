@@ -1,6 +1,6 @@
 // BNB Chain: BEPs (bnb-chain/BEPs README index + per-BEP preamble) and hard fork
 // activation config from the BSC and opBNB clients (mainnet).
-import { fetchText, raw, blob, pool, row, isoFromUnix, forkStatus } from '../lib/util.js';
+import { fetchText, raw, blob, pool, row, sectionText, isoFromUnix, forkStatus } from '../lib/util.js';
 
 const CHAIN = 'BNB Chain';
 const BEPS = 'bnb-chain/BEPs', BEPS_REF = 'master';
@@ -77,6 +77,7 @@ export default {
     });
     const beps = index.map((b, i) => row({
       chain: CHAIN, id: b.id, title: b.title, status: b.status, type: `${b.id.slice(0, 3)} / ${b.type}`, kind: b.id.startsWith('BAP') ? 'app standard' : 'protocol', target_upgrade: (target.get(b.id) || []).join('; '),
+      abstract: parseBepPreamble(texts[i]).description || sectionText(texts[i], ['summary', 'abstract']),
       dates: [{ label: 'created', value: parseBepPreamble(texts[i]).created }], url: blob(BEPS, BEPS_REF, b.path),
     }));
     const bsc = parseGoForks(await fetchText(raw(BSC, BSC_REF, BSC_CFG)), 'BSCChainConfig = &ChainConfig{');

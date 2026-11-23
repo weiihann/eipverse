@@ -1,5 +1,5 @@
 // Ethereum: EIPs from ethereum/EIPs (frontmatter) + hardfork meta EIPs for target upgrades.
-import { ghList, fetchText, raw, blob, tree, parseFrontmatter, pool, row, isoFromUnix } from '../lib/util.js';
+import { ghList, fetchText, raw, blob, tree, parseFrontmatter, pool, row, isoFromUnix, sectionText } from '../lib/util.js';
 
 const REPO = 'ethereum/EIPs', REF = 'master', CHAIN = 'Ethereum';
 const ERCS = 'ethereum/ERCs', ERCS_REF = 'master';
@@ -40,7 +40,7 @@ export function parseErc(text, path) {
   const fm = parseFrontmatter(text);
   if (!fm?.eip) return null;
   return row({
-    chain: CHAIN, id: `ERC-${fm.eip}`, title: fm.title, status: fm.status, kind: 'app standard',
+    chain: CHAIN, id: `ERC-${fm.eip}`, title: fm.title, status: fm.status, kind: 'app standard', abstract: fm.description || sectionText(text, ['abstract', 'simple summary']),
     type: [fm.type, fm.category].filter(Boolean).join(' / ') || 'ERC',
     dates: [{ label: 'created', value: fm.created }, { label: 'last call deadline', value: fm['last-call-deadline'] }],
     url: blob(ERCS, ERCS_REF, path),
@@ -75,7 +75,7 @@ export default {
       if (/^moved$/i.test(fm.status || '')) { moved++; continue; }
       const meta = parseMetaEip(text);
       proposals.push(row({
-        chain: CHAIN, id: `EIP-${fm.eip}`, title: fm.title, status: fm.status,
+        chain: CHAIN, id: `EIP-${fm.eip}`, title: fm.title, status: fm.status, abstract: fm.description || sectionText(text, ['abstract', 'simple summary']),
         target_upgrade: meta ? meta.fork : (targets.get(fm.eip) || []).join('; '),
         type: meta ? 'network upgrade (meta EIP)' : [fm.type, fm.category].filter(Boolean).join(' / '),
         dates: [

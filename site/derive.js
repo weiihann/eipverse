@@ -21,12 +21,18 @@ const isUpgrade = (r) => /^network upgrade/.test(r.type || '');
 const activation = (r) => r.dates.find((d) => /activation/i.test(d.label));
 const DONE = /final|withdrawn|stagnant|living|skipped|sepolia[- ]only|activated/i;
 
+/** Does a proposal's stated target name this upgrade? ("Glamsterdam (Scheduled for Inclusion)", "Osaka/Mendel", "protocol version T14 ...") */
+export function targetsUpgrade(p, name) {
+  return !!name && (p.target_upgrade || '').split('; ')
+    .some((t) => t === name || name.startsWith(`${t} `) || t.startsWith(`${name} (`) || t.split('/').includes(name));
+}
+
 /** Proposals (non-upgrade rows) whose stated target names this upgrade. */
 function targeting(u, rows) {
-  return rows.filter((p) => !isUpgrade(p) && (p.target_upgrade || '').split('; ')
-    .some((t) => t === u.target_upgrade || u.target_upgrade.startsWith(`${t} `) || t.startsWith(`${u.target_upgrade} (`)
-      || t.split('/').includes(u.target_upgrade)));
+  return rows.filter((p) => !isUpgrade(p) && targetsUpgrade(p, u.target_upgrade));
 }
+
+export { isUpgrade };
 
 /** Per chain: next dated upgrade after `now`, latest dated upgrade at/before `now`,
  *  and in-progress upgrades with no stated date (non-null, non-terminal status). */
@@ -43,4 +49,19 @@ export function upgradesByChain(chains, now = Date.now()) {
         .map((u) => ({ row: u.r, date: null, proposals: targeting(u.r, c.proposals) })),
     };
   });
+}
+
+// Scope buckets. "active" = still moving or upcoming; "historical" = shipped, closed or abandoned.
+// The verbatim status is always what the page shows; the bucket only drives the default filter.
+const HISTORICAL = /^(final|stagnant|withdrawn|living|enabled|mainnet|cancelled|snapshot closed)\b|activated|executed|skipped|sepolia[- ]only|deprecated|final \(per title\)|later upgrades activated/i;
+const ACTIVE = /^(draft|review|last call|candidate|approved|backlog|idea|proposed|snapshot (active|pending))\b|scheduled|no (op )?mainnet time (set|in genesis)|draft \(per title\)/i;
+const RECENT_MS = 120 * 864e5;
+
+/** -> 'active' | 'historical'. Unknown statuses stay visible ('active') rather than being hidden. */
+export function statusBucket(r, now = Date.now()) {
+  const s = r.status || '';
+  if (/^forum post$/i.test(s)) return now - newest(r) <= RECENT_MS ? 'active' : 'historical';
+  if (HISTORICAL.test(s)) return 'historical';
+  if (ACTIVE.test(s)) return 'active';
+  return 'active';
 }

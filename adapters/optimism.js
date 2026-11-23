@@ -1,7 +1,7 @@
 // Optimism / OP Stack: protocol upgrades from ethereum-optimism/specs (SUMMARY "Protocol Upgrades"),
 // OP Mainnet activation times from superchain-registry configs/mainnet/op.toml, and governance
 // "Upgrade Proposal" topics from the official forum (gov.optimism.io, Discourse JSON API).
-import { fetchText, fetchJson, raw, blob, row, isoFromUnix, forkStatus } from '../lib/util.js';
+import { fetchText, fetchJson, raw, blob, row, isoFromUnix, forkStatus, pool, htmlToText, sectionText, firstParagraph } from '../lib/util.js';
 
 const CHAIN = 'Optimism / OP Stack';
 const SPECS = 'ethereum-optimism/specs', SPECS_REF = 'main';
@@ -34,11 +34,13 @@ export function parseSuperchainHardforks(toml) {
 
 /** Forum topic titles that are upgrade proposals; status only if the title states one, e.g. "[FINAL]",
  *  target upgrade only if the title names a spec'd upgrade, e.g. "Upgrade Proposal #10: Granite Network Upgrade". */
-export function forumRow(t, upgradeNames = []) {
+export function forumRow(t, upgradeNames = [], firstPostHtml = '') {
+  const body = htmlToText(firstPostHtml);
   const tag = /^\[([^\]]+)\]/.exec(t.title)?.[1];
   return row({
     chain: CHAIN, id: `forum:${t.id}`, title: t.title, status: tag ? `${tag} (per title)` : 'forum post',
     target_upgrade: upgradeNames.find((n) => new RegExp(`\\b${n}\\b`, 'i').test(t.title)),
+    abstract: sectionText(body, ['executive summary', 'summary', 'abstract', 'tl;dr', 'tldr', 'overview']) || firstParagraph(body),
     type: 'governance upgrade proposal (forum)', dates: [{ label: 'posted', value: t.created_at?.slice(0, 10) }],
     url: `${FORUM}/t/${t.slug}/${t.id}`,
   });
@@ -74,7 +76,10 @@ export default {
       if (!d.grouped_search_result?.more_full_page_results || !ts.length) break;
     }
     return {
-      proposals: [...forks, ...[...topics.values()].map((t) => forumRow(t, ups.map((u) => u.name)))],
+      proposals: [...forks, ...(await pool([...topics.values()], 6, async (t) => {
+        const first = await fetchJson(`${FORUM}/t/${t.id}.json`, { headers: { accept: 'application/json' } }).then((d) => d.post_stream?.posts?.[0]?.cooked).catch(() => '');
+        return forumRow(t, ups.map((u) => u.name), first);
+      }))],
       notes: ['Forum topics do not carry a vote outcome; final votes are on Agora (API key required, not used).', 'Hardfork status is activated/scheduled by comparing the registry timestamp with build time.'],
     };
   },

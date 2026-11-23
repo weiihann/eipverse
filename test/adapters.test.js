@@ -11,7 +11,7 @@ import { parseMip, parseMonadMainnet } from '../adapters/monad.js';
 import { runAdapter } from '../build.js';
 import { statedTime, sortNewestFirst, upgradesByChain } from '../site/derive.js';
 
-const ROW_KEYS = ['chain', 'dates', 'id', 'kind', 'network', 'status', 'target_upgrade', 'title', 'type', 'url'];
+const ROW_KEYS = ['abstract', 'chain', 'dates', 'id', 'kind', 'network', 'status', 'target_upgrade', 'title', 'type', 'url'];
 function assertRow(r) {
   assert.deepEqual(Object.keys(r).sort(), ROW_KEYS);
   assert.equal(typeof r.id, 'string');
@@ -153,7 +153,11 @@ test('built data.json rows all match the common shape', async (t) => {
   for (const c of data.chains) {
     assert.equal(c.count, c.proposals.length);
     assert.ok(c.fetched_at && c.sources.length);
-    c.proposals.forEach(assertRow);
+    for (const { tags, why, ...r } of c.proposals) {
+      assertRow(r);
+      assert.ok(tags.length <= 3 && tags.every((t) => why[t]?.length), r.id);
+      assert.ok(r.abstract === null || (r.abstract.length <= 261 && !/<\/?[a-z]+>/.test(r.abstract)), r.id);
+    }
   }
 });
 

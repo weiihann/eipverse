@@ -1,72 +1,76 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="data:,">
-<title>eipverse: improvement proposals across EVM chains</title>
-<style>
-  :root { --fg:#1b1f24; --muted:#5b6470; --line:#e3e6ea; --bg:#fafbfc; --ok:#1a7f37; --warn:#9a6700; --err:#cf222e; }
-  * { box-sizing: border-box; }
-  body { margin: 0; font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg); background: #fff; }
-  header, main { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
-  header { padding-top: 24px; }
-  h1 { margin: 0 0 4px; font-size: 22px; }
-  h2 { font-size: 16px; margin: 24px 0 10px; }
-  .muted { color: var(--muted); }
-  .chains { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 10px; }
-  .chain { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; background: var(--bg); }
-  .chain h3 { margin: 0; font-size: 14px; display: flex; justify-content: space-between; gap: 8px; }
-  .chain .count { font-variant-numeric: tabular-nums; }
-  .chain ul { margin: 6px 0 0; padding-left: 16px; font-size: 12px; }
-  .chain p { margin: 6px 0 0; font-size: 12px; }
-  .badge { font-size: 11px; padding: 1px 7px; border-radius: 10px; border: 1px solid currentColor; white-space: nowrap; }
-  .s-ok { color: var(--ok); } .s-empty { color: var(--warn); } .s-error { color: var(--err); }
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 8px 0 10px; }
-  select, input { font: inherit; padding: 5px 8px; border: 1px solid var(--line); border-radius: 6px; }
-  input[type=search] { min-width: 260px; flex: 1; max-width: 420px; }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { text-align: left; vertical-align: top; padding: 6px 8px; border-bottom: 1px solid var(--line); }
-  th { position: sticky; top: 0; background: #fff; font-size: 12px; color: var(--muted); font-weight: 600; }
-  td.id { white-space: nowrap; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
-  td.dates { font-size: 12px; color: var(--muted); min-width: 170px; }
-  td.type { font-size: 12px; color: var(--muted); min-width: 110px; }
-  .none { color: #9aa1a9; }
-  a { color: #0b62d6; text-decoration: none; } a:hover { text-decoration: underline; }
-  table.ups td { font-size: 13px; width: 25%; }
-  table.ups td:first-child { width: auto; font-weight: 600; white-space: nowrap; }
-  .up + .up { margin-top: 4px; }
-  .up .muted { font-size: 12px; }
-  footer { max-width: 1280px; margin: 24px auto; padding: 0 20px; font-size: 12px; color: var(--muted); }
-</style>
+<title>eipverse · improvement proposals across EVM chains</title>
+<meta name="description" content="EIPs, BEPs, TIPs, MIPs, AIPs and OP Stack upgrades side by side, tagged by protocol layer, read from each chain's canonical sources.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%23111418'/%3E%3Ccircle cx='8' cy='8' r='3.2' fill='%238B9DFF'/%3E%3C/svg%3E">
+<script>try { const t = localStorage.getItem('eipverse-theme'); if (t) document.documentElement.dataset.theme = t; } catch {}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<header>
-  <h1>eipverse</h1>
-  <div class="muted">Every EVM chain's improvement proposals side by side: EIPs, BEPs, TIPs, MIPs, AIPs, OP and Base upgrades, plus app standards. Read from each chain's canonical sources. <span id="generated"></span></div>
-</header>
-<main>
-  <h2>Upgrades</h2>
-  <table class="ups">
-    <thead><tr><th>Chain</th><th>Latest activated</th><th>Next scheduled</th><th>In progress, no date stated</th></tr></thead>
-    <tbody id="ups"></tbody>
-  </table>
-  <h2>Sources by chain</h2>
-  <div class="chains" id="chains"></div>
-  <h2>Proposals and upgrades <span class="muted" style="font-weight:400;font-size:13px">newest stated date first; undated last</span></h2>
-  <div class="filters">
-    <select id="f-chain" aria-label="Chain"><option value="">All chains</option></select>
-    <select id="f-status" aria-label="Status"><option value="">All statuses</option></select>
-    <select id="f-kind" aria-label="Kind"><option value="">All kinds</option><option>protocol</option><option>app standard</option></select>
-    <input id="f-q" type="search" placeholder="Search id, title, upgrade…" aria-label="Search">
-    <span class="muted" id="shown"></span>
+<header class="top">
+  <div class="top-in">
+    <a class="mark" href="./" aria-label="eipverse home"><span class="mark-dot"></span>eipverse</a>
+    <span class="sub">Protocol proposals across EVM chains, from canonical sources</span>
+    <nav class="tabs" id="tabs" aria-label="Views">
+      <button data-view="proposals">Proposals</button>
+      <button data-view="layers">Compare by layer</button>
+      <button data-view="upgrades">Upgrades</button>
+      <button data-view="sources">Sources</button>
+    </nav>
+    <span class="pill count-pill" id="count-pill">loading…</span>
+    <button class="icon-btn" id="theme" aria-label="Toggle light or dark theme" title="Toggle theme"></button>
   </div>
-  <table>
-    <thead><tr><th>Chain</th><th>ID</th><th>Title</th><th>Status</th><th>Target upgrade</th><th>Dates (as stated)</th><th>Kind / type</th></tr></thead>
-    <tbody id="rows"></tbody>
-  </table>
+</header>
+
+<section class="signals" id="signals" aria-label="Upcoming and in-progress upgrades"></section>
+
+<section class="filters" id="filters" aria-label="Filters">
+  <div class="frow">
+    <label class="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" type="search" placeholder="Search id, title, abstract, fork, tag" aria-label="Search" autocomplete="off" spellcheck="false">
+      <kbd>/</kbd>
+    </label>
+    <div class="seg" id="scope" role="group" aria-label="Scope">
+      <button data-v="active">Active &amp; upcoming</button><button data-v="all">All</button>
+    </div>
+    <div class="seg" id="kind" role="group" aria-label="Kind">
+      <button data-v="protocol">Protocol</button><button data-v="app standard">App standards</button><button data-v="">Both</button>
+    </div>
+    <select id="status" aria-label="Status (verbatim)"><option value="">Any status</option></select>
+  </div>
+  <div class="frow chips" id="chains" aria-label="Chains"></div>
+  <div class="frow chips" id="tags" aria-label="Protocol layer tags"></div>
+  <div class="summary" id="summary"></div>
+</section>
+
+<main id="main">
+  <section class="view" id="v-proposals">
+    <div class="list-head" aria-hidden="true"><span>ID</span><span>Proposal</span><span>Layers</span><span>Fork</span><span>Status</span><span class="r">Latest date</span></div>
+    <div class="list" id="list" role="list"></div>
+    <button class="more" id="more" hidden></button>
+  </section>
+  <section class="view" id="v-layers" hidden>
+    <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
+    <div id="side"></div>
+  </section>
+  <section class="view" id="v-upgrades" hidden><div class="ugrid" id="ugrid"></div></section>
+  <section class="view" id="v-sources" hidden><div class="sgrid" id="sgrid"></div></section>
 </main>
-<footer>Blank cells mean the source does not state that field. Nothing here is inferred, except "activated"/"scheduled", which compares a stated activation timestamp with the build time.</footer>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-label="Proposal detail" aria-hidden="true" tabindex="-1"></aside>
+
+<footer class="foot" id="foot">
+  Statuses, dates and targets are copied verbatim from each source. Two things are derived and labelled as such:
+  "activated / scheduled" (a stated activation time compared with the build time) and layer tags (keyword rules over the proposal's own title and abstract; the matched terms are shown).
+  <a href="https://github.com/weiihann/eipverse">Source on GitHub</a>
+</footer>
 <script type="module" src="app.js"></script>
 </body>
 </html>
