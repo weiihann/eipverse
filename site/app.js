@@ -22,13 +22,18 @@ const CHAINS = {
   'Arbitrum': { short: 'Arbitrum', c: '#28A0F0' },
   'Optimism / OP Stack': { short: 'OP', c: '#FF0420' },
   'Base': { short: 'Base', c: '#0052FF' },
+  'Polygon PoS': { short: 'Polygon', c: '#8247E5' },
+  'Avalanche C-Chain': { short: 'Avalanche', c: '#E84142' },
+  'Celo': { short: 'Celo', c: '#E3D33A' },
+  'Gnosis Chain': { short: 'Gnosis', c: '#4F8A6F' },
 };
 const ORDER = Object.keys(CHAINS);
 // Official marks vendored in site/logos/ (sources in site/logos/README.md). Tempo ships a light and a dark favicon.
-const LOGO = { 'Ethereum': 'ethereum', 'BNB Chain': 'bnb', 'Monad': 'monad', 'Arbitrum': 'arbitrum', 'Optimism / OP Stack': 'optimism', 'Base': 'base' };
+const LOGO = { 'Ethereum': 'ethereum', 'BNB Chain': 'bnb', 'Monad': 'monad', 'Arbitrum': 'arbitrum', 'Optimism / OP Stack': 'optimism', 'Base': 'base', 'Polygon PoS': 'polygon', 'Avalanche C-Chain': 'avalanche', 'Celo': 'celo', 'Gnosis Chain': 'gnosis' };
+const BACKED = new Set(['Ethereum', 'Celo']); // dark marks: light backing in dark mode
 function logo(chain, cls = '') {
   if (chain === 'Tempo') return `<img class="logo for-dark ${cls}" src="logos/tempo-dark.svg" alt="" aria-hidden="true"><img class="logo for-light ${cls}" src="logos/tempo-light.svg" alt="" aria-hidden="true">`;
-  return LOGO[chain] ? `<img class="logo ${chain === 'Ethereum' ? 'bk ' : ''}${cls}" src="logos/${LOGO[chain]}.svg" alt="" aria-hidden="true">` : `<span class="dot" style="--c:${cc(chain)}"></span>`;
+  return LOGO[chain] ? `<img class="logo ${BACKED.has(chain) ? 'bk ' : ''}${cls}" src="logos/${LOGO[chain]}.svg" alt="" aria-hidden="true">` : `<span class="dot" style="--c:${cc(chain)}"></span>`;
 }
 const cc = (chain) => CHAINS[chain]?.c || '#888';
 const cs = (chain) => CHAINS[chain]?.short || chain;
@@ -39,10 +44,10 @@ const TAGS = {
   'account-abstraction': ['Account abstraction', '#fb923c'], 'crypto-precompiles': ['Crypto & precompiles', '#c084fc'],
   'interop-crosschain': ['Interop & L2', '#22d3ee'], 'governance-meta': ['Governance', '#94a3b8'], 'app-standard': ['App standard', '#e879f9'],
 };
-const tagPill = (t, sub = '') => `<span class="tag" style="--t:${TAGS[t][1]}" title="${esc(TAGS[t][0])}${sub ? ` › ${esc(sub)}` : ''} (derived)"><span class="tdot"></span>${esc(TAGS[t][0])}${sub ? `<span class="tsub"> · ${esc(sub)}</span>` : ''}</span>`;
+const tagPill = (t, sub = '') => `<span class="tag" style="--t:${TAGS[t][1]}" title="${esc(TAGS[t][0])}${sub ? ` › ${esc(sub)}` : ''} (derived)"><span class="tdot"></span><span class="tname">${esc(TAGS[t][0])}</span>${sub ? `<span class="tsub">· ${esc(sub)}</span>` : ''}</span>`;
 
 const statusClass = (s = '') =>
-  /stagnant|withdrawn|cancel|closed|skipped|deprecated|sepolia/i.test(s) ? 'st-dead'
+  /stagnant|stale|withdrawn|superseded|abandoned|cancel|closed|skipped|deprecated|sepolia/i.test(s) ? 'st-dead'
     : /final|activated|enabled|^mainnet|executed|living/i.test(s) ? 'st-ok'
       : /scheduled|no .*time|last call/i.test(s) ? 'st-wait' : s ? 'st-live' : 'st-dead';
 const statusPill = (s) => `<span class="status ${statusClass(s || '')}" title="Status as stated by the source">${s ? esc(s) : '<span class="none">not stated</span>'}</span>`;
@@ -197,12 +202,33 @@ function renderFilters() {
   return shown;
 }
 
+// ---------- shared forks ----------
+// A fork that ships another chain's proposals (Gnosis/Polygon on Ethereum, Celo on OP Stack) points at those rows.
+const sharedPill = (r) => `<span class="shared" title="Inherits ${esc(r.shared_with)} proposals; the drawer links them">${logo(r.shared_with)}shared with ${esc(cs(r.shared_with))}</span>`;
+// Ethereum hardfork meta EIPs are named for the combined fork; bor's config uses the execution-layer name.
+const EL_ALIAS = { Shanghai: 'Shapella', Cancun: 'Dencun', Prague: 'Pectra', Osaka: 'Fusaka', Amsterdam: 'Glamsterdam' };
+function resolveRef(ref) {
+  if (ref.id) return byId.get(`${ref.chain}|${ref.id}`) || null;
+  const names = [ref.upgrade, EL_ALIAS[ref.upgrade]].filter(Boolean);
+  return ALL.find((x) => x.chain === ref.chain && isUpgrade(x) && names.includes(x.target_upgrade)) || null;
+}
+function refsHtml(r) {
+  if (!r.refs?.length) return '';
+  const items = r.refs.map((ref) => {
+    const hit = resolveRef(ref);
+    const label = ref.id || `${ref.upgrade} upgrade`;
+    return `<li>${hit ? `<button class="link ref" data-goto="${esc(hit._key)}">${logo(ref.chain)}${esc(hit.id)}</button><span class="ref-t">${esc(hit.title || '')}</span>`
+      : `<span class="ref">${logo(ref.chain)}${esc(label)}</span><span class="ref-t none">no ${esc(cs(ref.chain))} row for this here</span>`}${ref.note ? `<span class="ref-n">${esc(ref.note)}</span>` : ''}</li>`;
+  }).join('');
+  return `<div><div class="label">Shared with ${esc(r.shared_with || r.refs[0].chain)} · ${r.refs.length} linked ${r.refs.length === 1 ? 'row' : 'rows'}, not copied</div><ul class="refs">${items}</ul></div>`;
+}
+
 // ---------- proposals ----------
 function rowHtml(r) {
   const nd = newestDate(r);
   return `<button class="row${state.id === r._key ? ' sel' : ''}" role="listitem" data-key="${esc(r._key)}" style="--c:${cc(r.chain)}">
     <span class="rid" title="${esc(r.chain)}${r.network ? ` · ${esc(r.network)}` : ''}">${logo(r.chain)}${esc(r.id)}</span>
-    <span class="rmain"><div class="rtitle">${r.title ? esc(r.title) : '<span class="none">untitled in source</span>'}</div>${r.abstract ? `<div class="rabs">${esc(r.abstract)}</div>` : ''}</span>
+    <span class="rmain"><div class="rtitle">${r.title ? esc(r.title) : '<span class="none">untitled in source</span>'}${r.shared_with ? sharedPill(r) : ''}</div>${r.abstract ? `<div class="rabs">${esc(r.abstract)}</div>` : ''}</span>
     <span class="rtags">${r.tags.map((t, i) => tagPill(t, (state.tag ? t === state.tag : i === 0) && r.subs[t] ? subLabel(t, r.subs[t].sub) : '')).join('')}</span>
     <span class="rfork">${r.target_upgrade ? `<span class="fork" title="${esc(r.target_upgrade)}">${esc(shortTarget(r.target_upgrade))}</span>` : ''}</span>
     <span class="rstatus">${statusPill(r.status)}</span>
@@ -315,6 +341,7 @@ function renderDrawer() {
         <dt>Kind / type</dt><dd>${esc(r.kind)}${r.type ? ` · ${esc(r.type)}` : ''}</dd>
         ${r.dates.length ? r.dates.map((x) => `<dt>${esc(x.label)}</dt><dd class="mono" style="font-size:12px">${esc(x.value)}</dd>`).join('') : '<dt>Dates</dt><dd class="none">none stated</dd>'}
       </dl>
+      ${refsHtml(r)}
       <div><div class="label">Layer › subcategory · derived from the proposal's own text</div><div class="why">${tagsHtml}</div></div>
       <a class="cta" href="${esc(r.url)}" target="_blank" rel="noopener">Open canonical source ${icon.ext}</a>
       <div><div class="label">Sources</div><ul class="srcs">
@@ -326,6 +353,7 @@ function renderDrawer() {
   d.classList.add('open'); d.setAttribute('aria-hidden', 'false'); $('scrim').hidden = false;
   d.querySelector('[data-close]').onclick = () => set({ id: '' });
   for (const b of d.querySelectorAll('[data-step]')) b.onclick = () => step(+b.dataset.step);
+  for (const b of d.querySelectorAll('[data-goto]')) b.onclick = () => set({ id: b.dataset.goto });
 }
 function step(n) {
   if (!shownList.length) return;

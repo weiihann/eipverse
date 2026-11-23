@@ -8,10 +8,14 @@ import { parseSpecUpgrades, parseSuperchainHardforks, forumRow } from '../adapte
 import { parseUpgradeTable, upgradeRow, snapshotRow, parseTableDate } from '../adapters/arbitrum.js';
 import { parseTip, parseTempoForks } from '../adapters/tempo.js';
 import { parseMip, parseMonadMainnet } from '../adapters/monad.js';
+import { parsePip, parsePrc, parseBorForks, forkRow as polygonForkRow } from '../adapters/polygon.js';
+import { parseAcp, parseAvalancheMainnet, upgradeRow as avaxUpgradeRow } from '../adapters/avalanche.js';
+import { parseCip, parseL2Genesis } from '../adapters/celo.js';
+import { parseGnosisUpgrade, upgradeRow as gnosisUpgradeRow, gipRow, parseSpecDate } from '../adapters/gnosis.js';
 import { runAdapter } from '../build.js';
 import { statedTime, sortNewestFirst, upgradesByChain } from '../site/derive.js';
 
-const ROW_KEYS = ['abstract', 'chain', 'dates', 'id', 'kind', 'network', 'status', 'target_upgrade', 'title', 'type', 'url'];
+const ROW_KEYS = ['abstract', 'chain', 'dates', 'id', 'kind', 'network', 'refs', 'shared_with', 'status', 'target_upgrade', 'title', 'type', 'url'];
 function assertRow(r) {
   assert.deepEqual(Object.keys(r).sort(), ROW_KEYS);
   assert.equal(typeof r.id, 'string');
@@ -193,4 +197,64 @@ test('stated dates parse and sort newest-first with undated rows last', () => {
   assert.equal(statedTime('9,069,000'), null);
   const r = (id, ...vals) => ({ id, dates: vals.map((value) => ({ label: 'd', value })) });
   assert.deepEqual(sortNewestFirst([r('none'), r('old', '2017-01-01'), r('new', '2015-01-01', '2026-01-01'), r('mid', 'May 7, 2025')]).map((x) => x.id), ['new', 'mid', 'old', 'none']);
+});
+
+test('Polygon: PIP frontmatter (capitalized keys), PRC table, bor block forks vs chain head', () => {
+  const pip = parsePip('---\nPIP: 30\nTitle: Increase Max Code Size Limit to 32KB\nDescription: From 24KB to 32KB\nStatus: Final\nType: Core\nDate: 2023-11-29\n---\n\n## Abstract\n\nx', 'PIPs/PIP-30.md');
+  assertRow(pip);
+  assert.equal(pip.id, 'PIP-30'); assert.equal(pip.status, 'Final'); assert.equal(pip.type, 'PIP · Core'); assert.deepEqual(pip.dates, [{ label: 'created', value: '2023-11-29' }]);
+  const prc = parsePrc('| PIP | Title | Description | Status | Type | Category | Created |\n| --- | --- | --- | --- | --- | --- | --- |\n| 34 | Polygon Staking Hub | Staking layer | Draft | Standards Track | PRC | 2024-02-23 |\n', 'PIPs/PRC/PRC-34.md');
+  assert.equal(prc.id, 'PRC-34'); assert.equal(prc.status, 'Draft'); assert.equal(prc.dates[0].value, '2024-02-23');
+  const go = `\t\t\tHomesteadBlock: big.NewInt(0),\n\t\t\tDAOForkBlock: nil,\n\t\t\tLondonBlock: big.NewInt(23850000),\n\t\t\tBor: &params.BorConfig{\n\t\t\t\tJaipurBlock: big.NewInt(23850000),\n\t\t\t\tHampiBlock: nil, // unscheduled\n\t\t\t\tUburuBlock: big.NewInt(96787900),\n`;
+  const forks = parseBorForks(go);
+  assert.deepEqual(forks.map((f) => [f.name, f.block, f.scope]), [['London', '23850000', 'eth'], ['Jaipur', '23850000', 'bor'], ['Hampi', null, 'bor'], ['Uburu', '96787900', 'bor']]);
+  const head = 90_000_000;
+  const rows = forks.map((f) => polygonForkRow(f, head));
+  rows.forEach(assertRow);
+  assert.deepEqual(rows.map((r) => r.status), ['activated (block-based)', 'activated (block-based)', 'unscheduled (per source comment)', 'scheduled (block-based)']);
+  assert.ok(rows.every((r) => r.dates.length === 0), 'block-based forks get no invented dates');
+  assert.equal(rows[0].shared_with, 'Ethereum'); assert.deepEqual(rows[0].refs, [{ chain: 'Ethereum', upgrade: 'London' }]);
+  assert.equal(rows[1].shared_with, null);
+  assert.equal(polygonForkRow(forks[1], null).status, 'block-based (chain head not checked)');
+});
+
+test('Avalanche: ACP metadata table and avalanchego mainnet times', () => {
+  const acp = parseAcp('| ACP           | 77 |\n| :--- | :--- |\n| **Title**     | Reinventing Subnets |\n| **Status**    | Activated ([Discussion](https://github.com/avalanche-foundation/ACPs/discussions/78)) |\n| **Track**     | Standards |\n\n## Abstract\n\nOverhaul Subnet creation and management.\n', 'ACPs/77-reinventing-subnets/README.md');
+  assertRow(acp);
+  assert.equal(acp.id, 'ACP-77'); assert.equal(acp.status, 'Activated'); assert.equal(acp.title, 'Reinventing Subnets'); assert.deepEqual(acp.dates, []);
+  assert.equal(parseAcp('| ACP | 13 |\n| :--- | :--- |\n| **Status** | Stale |\n', 'x').status, 'Stale');
+  const go = 'Mainnet = Config{\n\t\tDurangoTime:               time.Date(2024, time.March, 6, 16, 0, 0, 0, time.UTC),\n\t\tGraniteEpochDuration:      5 * time.Minute,\n\t\tIglooTime:                 UnscheduledActivationTime,\n\t}\n\tFuji = Config{\n\t\tDurangoTime: time.Date(2024, time.February, 13, 16, 0, 0, 0, time.UTC),\n';
+  const ups = parseAvalancheMainnet(go);
+  assert.deepEqual(ups.map((u) => u.name), ['Durango', 'Igloo'], 'Fuji times are not read');
+  const [d, i] = ups.map(avaxUpgradeRow);
+  assert.equal(d.dates[0].value, '2024-03-06T16:00:00Z'); assert.equal(d.status, 'activated');
+  assert.equal(i.status, 'unscheduled (per source)'); assert.deepEqual(i.dates, []);
+});
+
+test('Celo: CIP frontmatter and L2 genesis time', () => {
+  const cip = parseCip('---\ncip: 64\ntitle: "New Transaction Type: Celo Dynamic Fee v2"\nstatus: Final\ntype: Standards Track\ncategory: Ring 0\ncreated: 2023-07-10\n---\n\n## Simple Summary\n\nA new tx type.', 'CIPs/cip-0064.md');
+  assertRow(cip);
+  assert.equal(cip.id, 'CIP-64'); assert.equal(cip.title, 'New Transaction Type: Celo Dynamic Fee v2'); assert.equal(cip.type, 'CIP · Standards Track · Ring 0');
+  assert.equal(parseL2Genesis('[hardforks]\n  isthmus_time = 1\n\n[genesis]\n  l2_time = 1742957258\n'), '1742957258');
+});
+
+test('Gnosis: spec fork pages become rows that point at Ethereum EIPs; GIPs only from "GIP-<n>" votes', () => {
+  assert.equal(parseSpecDate('| Mainnet | 19040000 | Nov-12-2021 09:46:20 PM +UTC  | 0x018479d3 |'), String(Date.UTC(2021, 10, 12, 21, 46, 20) / 1000));
+  assert.equal(parseSpecDate('| Mainnet | 1776168380   | Apr-14-2026, 12:06:20 +UTC |'), String(Date.UTC(2026, 3, 14, 12, 6, 20) / 1000));
+  assert.equal(parseSpecDate('| Mainnet | - | - |'), null);
+  const md = '# Pectra Upgrade Specification\n\n## Included EIPs\n\nThis hard fork activates all EIPs also activated on Ethereum mainnet, [hard-fork EIP](https://eips.ethereum.org/EIPS/eip-7600).\n\n| EIP | Scope |   |\n| - | - | - |\n| [EIP-2537](https://eips.ethereum.org/EIPS/eip-2537): BLS precompile | EL     | Not modified\n| [EIP-7691](https://eips.ethereum.org/EIPS/eip-7691): Blob throughput increase | Both | Constants modified\n| [EIP-4844-pectra](https://eips.ethereum.org/EIPS/eip-4844): Collect Blob Gas Fee | EL | Added\n\n## Upgrade Schedule\n\n| Network | Timestamp | Date & Time (UTC) |\n| Chiado  | 1741254220 | Mar-06-2025 09:43:40 +UTC |\n| Mainnet | 1746021820 | Apr-30-2025 14:03:40 +UTC |\n';
+  const u = parseGnosisUpgrade(md);
+  assert.equal(u.name, 'Pectra'); assert.equal(u.mainnet, '1746021820'); assert.equal(u.metaEip, '7600');
+  const r = gnosisUpgradeRow(u, 'network-upgrades/pectra.md');
+  assertRow(r);
+  assert.equal(r.shared_with, 'Ethereum');
+  assert.deepEqual(r.refs.map((x) => x.id), ['EIP-7600', 'EIP-2537', 'EIP-7691', 'EIP-4844']);
+  assert.equal(r.refs[3].note, 'Gnosis variant EIP-4844-pectra · EL · Added');
+  assert.equal(r.dates[0].value, '2025-04-30T14:03:40Z');
+  assert.match(r.abstract, /EIP-7691 \(Both · Constants modified\)/); assert.doesNotMatch(r.abstract, /EIP-2537/);
+  const own = gnosisUpgradeRow(parseGnosisUpgrade('# Balancer Upgrade Specification\n\n## Included changes\n\nAn irregular state change unique to Gnosis.\n\n| Mainnet | - | - |\n'), 'network-upgrades/balancer.md');
+  assert.equal(own.shared_with, null); assert.equal(own.status, 'no mainnet time in spec'); assert.deepEqual(own.dates, []);
+  const g = gipRow({ id: '0xabc', title: 'GIP-157: Should GnosisDAO withdraw assets?', state: 'active', start: 1794921464, end: 1795526264, body: '' });
+  assert.equal(g.id, 'GIP-157'); assert.equal(g.title, 'Should GnosisDAO withdraw assets?'); assert.equal(g.status, 'Snapshot active');
+  assert.equal(gipRow({ id: '0xdef', title: 'Signal Gnosis Guild to revive GIP-99?', state: 'closed', start: 1, end: 2, body: '' }), null);
 });

@@ -11,3 +11,7 @@ Official marks, vendored unmodified (except stripping inline `class`/`aria-label
 | `arbitrum.svg` | Arbitrum | Arbitrum Foundation docs repo: https://github.com/ArbitrumFoundation/docs/blob/main/public/img/logo.svg |
 | `optimism.svg` | Optimism / OP Stack | Optimism Collective governance forum app icon (SVG): https://europe1.discourse-cdn.com/bc41dd/optimized/2X/3/399c2cdab1be9e0c1ae7481c939f977574c28f5e_2_180x180.svg (linked as apple-touch-icon from https://gov.optimism.io/) |
 | `base.svg` | Base | Base brand kit, "The Square": https://github.com/base/brand-kit/blob/main/logo/TheSquare/Digital/Base_square_blue.svg |
+| `polygon.svg` | Polygon PoS | Polygon docs repo (0xPolygon org), `polygon-icon.svg`: https://github.com/0xPolygon/polygon-docs-old/blob/main/docs/img/home/polygon-icon.svg |
+| `avalanche.svg` | Avalanche C-Chain | Avalanche Builder Hub repo (ava-labs), `Avalanche_Logomark_Red.svg`: https://github.com/ava-labs/builders-hub/blob/master/public/common-images/Avalanche_Logomark_Red.svg |
+| `celo.svg` | Celo | Celo docs repo favicon (the Celo symbol): https://github.com/celo-org/docs/blob/main/favicon.svg. Black mark, so it gets a light backing in dark mode like Ethereum |
+| `gnosis.svg` | Gnosis Chain | Gnosis Chain documentation repo, brand folder `gnosis-owl-purple.svg`: https://github.com/gnosischain/documentation/blob/main/static/img/brand/gnosis-owl-purple.svg |

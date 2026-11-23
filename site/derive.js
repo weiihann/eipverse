@@ -53,7 +53,7 @@ export function upgradesByChain(chains, now = Date.now()) {
 
 // Scope buckets. "active" = still moving or upcoming; "historical" = shipped, closed or abandoned.
 // The verbatim status is always what the page shows; the bucket only drives the default filter.
-const HISTORICAL = /^(final|stagnant|withdrawn|living|enabled|mainnet|cancelled|snapshot closed)\b|activated|executed|skipped|sepolia[- ]only|deprecated|final \(per title\)|later upgrades activated/i;
+const HISTORICAL = /^(final|stagnant|stale|withdrawn|superseded|abandoned|living|continuous|enabled|mainnet|cancelled|snapshot closed)\b|activated|executed|skipped|sepolia[- ]only|deprecated|final \(per title\)|later upgrades activated/i;
 const ACTIVE = /^(draft|review|last call|candidate|approved|backlog|idea|proposed|snapshot (active|pending))\b|scheduled|no (op )?mainnet time (set|in genesis)|draft \(per title\)/i;
 const RECENT_MS = 120 * 864e5;
 
@@ -91,6 +91,13 @@ const SOURCE_LABELS = [
   [/gov\.optimism\.io\/search/, 'OP forum search'],
   [/gov\.optimism\.io/, 'OP forum'],
   [/github\.com\/base\/base/, 'chain config'],
+  [/github\.com\/0xPolygon\/Polygon-Improvement-Proposals\/(tree|blob)\/[^/]+\/PIPs\/PRC/, 'PRCs repo'],
+  [/github\.com\/0xPolygon\/Polygon-Improvement-Proposals/, 'PIPs repo'],
+  [/github\.com\/0xPolygon\/bor\//, 'bor chain config'],
+  [/github\.com\/avalanche-foundation\/ACPs/, 'ACPs repo'],
+  [/github\.com\/ava-labs\/avalanchego\//, 'avalanchego config'],
+  [/github\.com\/celo-org\/celo-proposals/, 'CIPs repo'],
+  [/github\.com\/gnosischain\/specs/, 'Gnosis specs'],
 ];
 export function sourceLabel(url = '') {
   for (const [re, label] of SOURCE_LABELS) if (re.test(url)) return label;

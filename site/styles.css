@@ -237,8 +237,12 @@ main { padding-bottom: 32px; }
 .subs { padding-left: 10px; border-left: 2px solid var(--line2); margin-left: 4px; }
 .subs-label { color: var(--i3); font-size: 12px; white-space: nowrap; }
 .chip.subchip { height: 24px; font-size: 12px; }
-.tag { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-.tsub { color: var(--i3); }
+.tag { max-width: 100%; }
+/* Grid so the pill's min-content is dot + layer name only: the sub column is minmax(0, max-content) and gives way first. */
+.tag:has(.tsub) { display: inline-grid; grid-template-columns: auto auto minmax(0, max-content); }
+/* The layer name never truncates; only the subcategory after it shrinks to an ellipsis. */
+.tname { flex: none; }
+.tsub { color: var(--i3); flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tag-sm { height: 18px; font-size: 10.5px; }
 .why-sub { padding-left: 14px; }
 .why-sub .arrow { color: var(--i4); }
@@ -278,5 +282,14 @@ main { padding-bottom: 32px; }
 }
 .rtags { flex-wrap: nowrap; }
 .rtags .tag { flex: none; }
-.rtags .tag:first-child { flex: 0 1 auto; min-width: 0; }
+.rtags .tag:first-child { flex: 0 1 auto; }
 @media (max-width: 760px) { .rtags { flex-wrap: wrap; } .rtags .tag:first-child { flex: none; max-width: 100%; } }
+
+/* Shared forks: marker on the row, linked rows in the drawer. */
+.shared { display: inline-flex; align-items: center; gap: 4px; margin-left: 8px; padding: 0 6px; height: 18px; border-radius: 5px; border: 1px dashed var(--line2, var(--line)); color: var(--i3); font-size: 10.5px; font-weight: 400; vertical-align: 1px; white-space: nowrap; }
+.shared .logo { width: 11px; height: 11px; vertical-align: 0; }
+.refs { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; max-height: 260px; overflow: auto; }
+.refs li { display: grid; grid-template-columns: auto 1fr; column-gap: 8px; align-items: baseline; font-size: 12px; }
+.refs .ref { display: inline-flex; align-items: center; gap: 5px; font: 12px var(--mono); white-space: nowrap; }
+.refs .ref-t { color: var(--i2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.refs .ref-n { grid-column: 2; color: var(--i3); font-size: 11px; }
