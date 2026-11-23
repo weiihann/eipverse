@@ -153,8 +153,9 @@ test('built data.json rows all match the common shape', async (t) => {
   for (const c of data.chains) {
     assert.equal(c.count, c.proposals.length);
     assert.ok(c.fetched_at && c.sources.length);
-    for (const { tags, why, ...r } of c.proposals) {
+    for (const { tags, why, subs, ...r } of c.proposals) {
       assertRow(r);
+      for (const [t, s] of Object.entries(subs)) assert.ok(tags.includes(t) && s.sub && s.why.length, r.id);
       assert.ok(tags.length <= 3 && tags.every((t) => why[t]?.length), r.id);
       assert.ok(r.abstract === null || (r.abstract.length <= 261 && !/<\/?[a-z]+>/.test(r.abstract)), r.id);
     }

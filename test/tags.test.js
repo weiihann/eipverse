@@ -57,3 +57,64 @@ test('status buckets: shipped/closed is historical, in-flight is active, unknown
   assert.equal(b('forum post', [{ label: 'posted', value: '2026-11-01' }]), 'active');
   assert.equal(b('forum post', [{ label: 'posted', value: '2024-01-01' }]), 'historical');
 });
+
+const app = (id, title, abstract = '') => classify({ id, title, abstract, kind: 'app standard', type: 'Standards Track / ERC' });
+const subOf = (r, t = 'app-standard') => r.subs[t]?.sub ?? null;
+
+test('app standard subs: the canonical ERCs land where an app developer expects', () => {
+  assert.equal(subOf(app('ERC-20', 'Token Standard')), 'fungible-tokens');
+  assert.equal(subOf(app('ERC-2612', 'Permit Extension for EIP-20 Signed Approvals')), 'fungible-tokens');
+  assert.equal(subOf(app('ERC-721', 'Non-Fungible Token Standard')), 'nfts');
+  assert.equal(subOf(app('ERC-2981', 'NFT Royalty Standard')), 'nfts');
+  assert.equal(subOf(app('ERC-1155', 'Multi Token Standard')), 'multi-token');
+  assert.equal(subOf(app('ERC-3525', 'Semi-Fungible Token')), 'multi-token');
+  assert.equal(subOf(app('ERC-7579', 'Minimal Modular Smart Accounts')), 'smart-accounts');
+  assert.equal(subOf(app('ERC-1271', 'Standard Signature Validation Method for Contracts')), 'wallets-signing');
+  assert.equal(subOf(app('ERC-4626', 'Tokenized Vaults')), 'defi-vaults');
+  assert.equal(subOf(app('ERC-137', 'Ethereum Domain Name Service - Specification')), 'identity-naming');
+  assert.equal(subOf(app('ERC-165', 'Standard Interface Detection')), 'metadata-introspection');
+  assert.equal(subOf(app('ERC-7683', 'Cross Chain Intents')), 'cross-chain');
+  assert.equal(subOf(app('ERC-1337', 'Subscriptions on the blockchain')), 'payments');
+  assert.equal(subOf(app('ERC-3643', 'T-REX - Token for Regulated EXchanges')), 'rwa-compliance');
+  assert.equal(subOf(app('ERC-1967', 'Proxy Storage Slots')), 'proxies');
+});
+
+test('app standard subs: near-misses do not trip the wrong bucket', () => {
+  assert.equal(subOf(app('ERC-3754', 'A Vanilla Non-Fungible Token Standard')), 'nfts'); // "Fungible" inside "Non-Fungible" is not fungible-tokens
+  assert.equal(subOf(app('ERC-8023', 'Multi-step Contract Ownership')), 'access-control'); // ownership is not DAO voting
+  assert.equal(subOf(app('EIP-8182', 'Private ETH and ERC-20 Transfers')), 'privacy');
+  assert.equal(subOf(app('ERC-5850', 'Complex Numbers stored in `bytes32` types')), null); // no cluster -> other, not guessed
+});
+
+test('protocol subs: one per layer, with the matched terms', () => {
+  const r = tag('PeerDAS - Peer Data Availability Sampling');
+  assert.equal(subOf(r, 'blobs-da'), 'peerdas');
+  assert.ok(r.subs['blobs-da'].why.length);
+  assert.equal(subOf(tag('Blob Parameter Only Hardforks'), 'blobs-da'), 'blob-params');
+  assert.equal(subOf(tag('State conversion to Verkle Tree'), 'state'), 'trees');
+  assert.equal(subOf(tag('Fork-choice enforced Inclusion Lists (FOCIL)'), 'consensus'), 'pbs-inclusion');
+  assert.equal(subOf(tag('Create eth_chainId method for JSON-RPC'), 'networking'), 'rpc');
+  assert.equal(subOf(tag('Increase the gas limit to 60M'), 'fee-market'), 'gas-limits');
+  assert.equal(subOf(tag('Set Code for EOAs'), 'account-abstraction'), 'eoa-delegation');
+  assert.equal(subOf(tag('EXTSLOAD opcode'), 'execution'), 'opcodes');
+});
+
+test('a layer can have no sub; subs only exist for kept layers', () => {
+  const r = tag('Simplify the EVM');
+  assert.deepEqual(r.tags, ['execution']);
+  assert.equal(r.subs.execution, undefined);
+  for (const t of Object.keys(r.subs)) assert.ok(r.tags.includes(t));
+});
+
+import { sourceLabel, sourceList } from '../site/derive.js';
+test('sources: one short human label per canonical URL', () => {
+  assert.equal(sourceLabel('https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7702.md'), 'EIPs repo');
+  assert.equal(sourceLabel('https://github.com/bnb-chain/BEPs/blob/master/README.md'), 'BEPs README');
+  assert.equal(sourceLabel('https://snapshot.box/#/s:arbitrumfoundation.eth/proposal/0xabc'), 'Snapshot vote');
+  assert.equal(sourceLabel('https://gov.optimism.io/t/upgrade-proposal-15/9804'), 'OP forum');
+  assert.equal(sourceLabel('https://github.com/ethereum-optimism/superchain-registry/blob/main/superchain/configs/mainnet/op.toml'), 'superchain-registry');
+  assert.equal(sourceLabel('https://github.com/base/base/blob/main/crates/common/chains/src/config.rs'), 'chain config');
+  assert.equal(sourceLabel('https://example.org/x'), 'example.org');
+  const l = sourceList([{ url: 'https://github.com/ethereum/EIPs/tree/master/EIPS' }, { url: 'https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7773.md' }]);
+  assert.deepEqual(l.map((x) => x.short), ['EIPs repo', 'EIP-7773']);
+});

@@ -46,12 +46,13 @@
   </div>
   <div class="frow chips" id="chains" aria-label="Chains"></div>
   <div class="frow chips" id="tags" aria-label="Protocol layer tags"></div>
+  <div class="frow chips subs" id="subs" aria-label="Subcategories" hidden></div>
   <div class="summary" id="summary"></div>
 </section>
 
 <main id="main">
   <section class="view" id="v-proposals">
-    <div class="list-head" aria-hidden="true"><span>ID</span><span>Proposal</span><span>Layers</span><span>Fork</span><span>Status</span><span class="r">Latest date</span></div>
+    <div class="list-head" aria-hidden="true"><span>ID</span><span>Proposal</span><span>Layers</span><span>Fork</span><span>Status</span><span class="r">Date · source</span></div>
     <div class="list" id="list" role="list"></div>
     <button class="more" id="more" hidden></button>
   </section>
@@ -67,9 +68,8 @@
 <aside class="drawer" id="drawer" aria-label="Proposal detail" aria-hidden="true" tabindex="-1"></aside>
 
 <footer class="foot" id="foot">
-  Statuses, dates and targets are copied verbatim from each source. Two things are derived and labelled as such:
-  "activated / scheduled" (a stated activation time compared with the build time) and layer tags (keyword rules over the proposal's own title and abstract; the matched terms are shown).
-  <a href="https://github.com/weiihann/eipverse">Source on GitHub</a>
+  Statuses, dates and targets are copied from each chain's canonical source. Derived, and labelled so: activated/scheduled (stated time vs build time) and layer tags (keyword rules; matched terms shown).
+  <a href="?view=sources">Sources</a> · <a href="https://github.com/weiihann/eipverse">GitHub</a>
 </footer>
 <script type="module" src="app.js"></script>
 </body>

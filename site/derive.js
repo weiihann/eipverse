@@ -65,3 +65,45 @@ export function statusBucket(r, now = Date.now()) {
   if (ACTIVE.test(s)) return 'active';
   return 'active';
 }
+
+// One short human label per canonical source URL, for rows and the sources list (the full link stays clickable).
+const SOURCE_LABELS = [
+  [/github\.com\/ethereum\/EIPs\/(tree|blob)\/[^/]+\/EIPS\/?$/, 'EIPs repo'],
+  [/github\.com\/ethereum\/EIPs/, 'EIPs repo'],
+  [/github\.com\/ethereum\/ERCs/, 'ERCs repo'],
+  [/github\.com\/bnb-chain\/BEPs\/blob\/[^/]+\/README\.md/, 'BEPs README'],
+  [/github\.com\/bnb-chain\/BEPs\/blob\/[^/]+\/BAPs\//, 'BAPs repo'],
+  [/github\.com\/bnb-chain\/BEPs/, 'BEPs repo'],
+  [/github\.com\/bnb-chain\/bsc\//, 'BSC chain config'],
+  [/github\.com\/bnb-chain\/opbnb\//, 'opBNB chain config'],
+  [/github\.com\/tempoxyz\/tempo\/(tree|blob)\/[^/]+\/tips/, 'TIPs repo'],
+  [/github\.com\/tempoxyz\/tempo\/blob\/[^/]+\/crates\/chainspec\/src\/spec\.rs/, 'chain spec'],
+  [/github\.com\/tempoxyz\/tempo\//, 'chain config'],
+  [/github\.com\/monad-crypto\/MIPs\/(tree|blob)\/[^/]+\/MRCs/, 'MRCs repo'],
+  [/github\.com\/monad-crypto\/MIPs/, 'MIPs repo'],
+  [/github\.com\/category-labs\/monad-bft/, 'chain config'],
+  [/github\.com\/ArbitrumFoundation\/docs|docs\.arbitrum\.foundation/, 'Arbitrum upgrades table'],
+  [/docs\.arbitrum\.io/, 'Arbitrum docs'],
+  [/snapshot\.(box|org)\/#\/s:[^/]+\/proposal\//, 'Snapshot vote'],
+  [/snapshot\.(box|org)/, 'Snapshot space'],
+  [/github\.com\/ethereum-optimism\/specs/, 'OP specs'],
+  [/github\.com\/ethereum-optimism\/superchain-registry/, 'superchain-registry'],
+  [/gov\.optimism\.io\/search/, 'OP forum search'],
+  [/gov\.optimism\.io/, 'OP forum'],
+  [/github\.com\/base\/base/, 'chain config'],
+];
+export function sourceLabel(url = '') {
+  for (const [re, label] of SOURCE_LABELS) if (re.test(url)) return label;
+  try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return 'source'; }
+}
+
+/** Chain-level sources with short labels; when two share a label, the file name tells them apart. */
+export function sourceList(sources = []) {
+  const labels = sources.map((s) => sourceLabel(s.url));
+  return sources.map((s, i) => {
+    if (labels.indexOf(labels[i]) === i) return { ...s, short: labels[i] };
+    const file = s.url.split(/[/#]/).filter(Boolean).pop();
+    const doc = /^([a-z]+)-(\d+)\.md$/i.exec(file);
+    return { ...s, short: doc ? `${doc[1].toUpperCase()}-${doc[2]}` : `${labels[i]} · ${file}` };
+  });
+}
