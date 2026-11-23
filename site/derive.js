@@ -53,8 +53,8 @@ export function upgradesByChain(chains, now = Date.now()) {
 
 // Scope buckets. "active" = still moving or upcoming; "historical" = shipped, closed or abandoned.
 // The verbatim status is always what the page shows; the bucket only drives the default filter.
-const HISTORICAL = /^(final|stagnant|stale|withdrawn|superseded|abandoned|living|continuous|enabled|mainnet|cancelled|snapshot closed)\b|activated|executed|skipped|sepolia[- ]only|deprecated|final \(per title\)|later upgrades activated/i;
-const ACTIVE = /^(draft|review|last call|candidate|approved|backlog|idea|proposed|snapshot (active|pending))\b|scheduled|no (op )?mainnet time (set|in genesis)|draft \(per title\)/i;
+const HISTORICAL = /^(final|stagnant|stale|withdrawn|superseded|abandoned|rejected|expired|living|continuous|enabled|mainnet|cancell?ed|snapshot closed|on-chain (canceled|defeated|expired|executed))\b|activated|executed|skipped|sepolia[- ]only|deprecated|final \(per title\)|later upgrades activated/i;
+const ACTIVE = /^(draft|review|last call|candidate|approved|backlog|idea|proposed|snapshot (active|pending)|on-chain (pending|active|succeeded|queued))\b|scheduled|no (op )?mainnet time (set|in genesis)|draft \(per title\)/i;
 const RECENT_MS = 120 * 864e5;
 
 /** -> 'active' | 'historical'. Unknown statuses stay visible ('active') rather than being hidden. */
