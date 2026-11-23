@@ -66,14 +66,26 @@ export default {
   async fetch() {
     const ups = parseUpgradeTable(await fetchText(raw(DOCS, DOCS_REF, PAGE)));
     const linked = new Map(ups.filter((u) => /snapshot\.box/.test(u.stageUrl || '')).map((u) => [u.stageUrl.split('/proposal/')[1].toLowerCase(), u.name]));
-    const query = `{ proposals(first: 1000, where: {space: "${SPACE}"}, orderBy: "created", orderDirection: desc) { id title state start end body } }`;
-    const res = await fetchJson('https://hub.snapshot.org/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query }) });
-    const aips = (res.data?.proposals || []).filter((p) => /\bAIP\b/i.test(p.title)).map((p) => snapshotRow(p, linked));
+    // Bodies are large: filter server-side on the title and page in 100s so the hub doesn't time out.
+    const votes = [], notes = [];
+    try {
+      for (let skip = 0; ; skip += 100) {
+        const query = `{ proposals(first: 100, skip: ${skip}, where: {space: "${SPACE}", title_contains: "AIP"}, orderBy: "created", orderDirection: desc) { id title state start end body } }`;
+        const res = await fetchJson('https://hub.snapshot.org/graphql', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ query }) });
+        const page = res.data?.proposals || [];
+        votes.push(...page);
+        if (page.length < 100) break;
+      }
+    } catch (e) {
+      notes.push(`Snapshot votes not included in this build: ${e.message}`);
+    }
+    const aips = votes.filter((p) => /\bAIP\b/i.test(p.title)).map((p) => snapshotRow(p, linked));
     return {
       proposals: [...ups.map(upgradeRow), ...aips],
       notes: [
         'Upgrade status and dates come from the official table; Snapshot votes get a target upgrade only when that table links the vote.',
         'On-chain AIP results (Tally) need an API key and are not included; Snapshot rows are off-chain temperature checks.',
+        ...notes,
       ],
     };
   },
