@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readdir, readFile } from 'node:fs/promises';
 import { parseMetaEip, parseErc } from '../adapters/ethereum.js';
 import { parseBepIndex, parseBepPreamble, parseBepMeta, parseGoForks } from '../adapters/bnb.js';
-import { parseBaseMainnet } from '../adapters/base.js';
+import { parseBaseMainnet, parseRss, isChainPost, blogRow } from '../adapters/base.js';
 import { parseSpecUpgrades, parseSuperchainHardforks, forumRow } from '../adapters/optimism.js';
 import { parseUpgradeTable, upgradeRow, snapshotRow, parseTableDate } from '../adapters/arbitrum.js';
 import { parseTip, parseTempoForks } from '../adapters/tempo.js';
@@ -257,4 +257,24 @@ test('Gnosis: spec fork pages become rows that point at Ethereum EIPs; GIPs only
   const g = gipRow({ id: '0xabc', title: 'GIP-157: Should GnosisDAO withdraw assets?', state: 'active', start: 1794921464, end: 1795526264, body: '' });
   assert.equal(g.id, 'GIP-157'); assert.equal(g.title, 'Should GnosisDAO withdraw assets?'); assert.equal(g.status, 'Snapshot active');
   assert.equal(gipRow({ id: '0xdef', title: 'Signal Gnosis Guild to revive GIP-99?', state: 'closed', start: 1, end: 2, body: '' }), null);
+});
+
+test('Base blog RSS: Engineering posts about the chain only; date from pubDate; target only for a configured upgrade name', () => {
+  const item = (title, link, cat, desc = '') => `<item><title>${title}</title><link>${link}</link><pubDate>Thu, 05 Nov 2026 00:00:00 GMT</pubDate><category>${cat}</category><description>${desc}</description></item>`;
+  const xml = `<rss><channel>${[
+    item('Introducing Base Denim', 'https://www.base.org/blog/denim', 'Engineering', 'The latest network upgrade, Denim, is now live on mainnet.'),
+    item('Flashblocks Deep Dive: How we made Base 10x faster', 'https://www.base.org/blog/flashblocks-deep-dive', 'Engineering'),
+    item('How Base Pay Delivers 1-Step Crypto Payments', 'https://www.base.org/blog/1-step-crypto-payments', 'Engineering', 'Base Pay checkout.'),
+    item('What&#39;s happening on Base: week of November 20', 'https://www.base.org/blog/weekly', 'Ecosystem', 'Scaling and gas news.'),
+    item('How Wintermute makes markets on Base', 'https://www.base.org/customers/wintermute', 'Customer Stories'),
+  ].join('')}</channel></rss>`;
+  const posts = parseRss(xml);
+  assert.equal(posts.length, 5);
+  assert.equal(posts[3].title, "What's happening on Base: week of November 20");
+  assert.deepEqual(posts.filter(isChainPost).map((p) => p.link.split('/').pop()), ['denim', 'flashblocks-deep-dive']);
+  const [denim, fb] = posts.filter(isChainPost).map((p) => blogRow(p, ['Cobalt', 'Denim']));
+  assertRow(denim);
+  assert.equal(denim.id, 'blog:denim'); assert.equal(denim.status, 'blog post'); assert.equal(denim.target_upgrade, 'Denim');
+  assert.deepEqual(denim.dates, [{ label: 'published', value: '2026-11-05' }]);
+  assert.equal(fb.target_upgrade, null);
 });

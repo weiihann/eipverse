@@ -60,7 +60,7 @@ const RECENT_MS = 120 * 864e5;
 /** -> 'active' | 'historical'. Unknown statuses stay visible ('active') rather than being hidden. */
 export function statusBucket(r, now = Date.now()) {
   const s = r.status || '';
-  if (/^forum post$/i.test(s)) return now - newest(r) <= RECENT_MS ? 'active' : 'historical';
+  if (/^(forum|blog) post$/i.test(s)) return now - newest(r) <= RECENT_MS ? 'active' : 'historical';
   if (HISTORICAL.test(s)) return 'historical';
   if (ACTIVE.test(s)) return 'active';
   return 'active';
@@ -91,6 +91,7 @@ const SOURCE_LABELS = [
   [/gov\.optimism\.io\/search/, 'OP forum search'],
   [/gov\.optimism\.io/, 'OP forum'],
   [/github\.com\/base\/base/, 'chain config'],
+  [/(www\.)?base\.org\/blog/, 'Base blog'],
   [/github\.com\/0xPolygon\/Polygon-Improvement-Proposals\/(tree|blob)\/[^/]+\/PIPs\/PRC/, 'PRCs repo'],
   [/github\.com\/0xPolygon\/Polygon-Improvement-Proposals/, 'PIPs repo'],
   [/github\.com\/0xPolygon\/bor\//, 'bor chain config'],

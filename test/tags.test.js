@@ -114,6 +114,7 @@ test('sources: one short human label per canonical URL', () => {
   assert.equal(sourceLabel('https://gov.optimism.io/t/upgrade-proposal-15/9804'), 'OP forum');
   assert.equal(sourceLabel('https://github.com/ethereum-optimism/superchain-registry/blob/main/superchain/configs/mainnet/op.toml'), 'superchain-registry');
   assert.equal(sourceLabel('https://github.com/base/base/blob/main/crates/common/chains/src/config.rs'), 'chain config');
+  assert.equal(sourceLabel('https://www.base.org/blog/denim'), 'Base blog');
   assert.equal(sourceLabel('https://example.org/x'), 'example.org');
   const l = sourceList([{ url: 'https://github.com/ethereum/EIPs/tree/master/EIPS' }, { url: 'https://github.com/ethereum/EIPs/blob/master/EIPS/eip-7773.md' }]);
   assert.deepEqual(l.map((x) => x.short), ['EIPs repo', 'EIP-7773']);
