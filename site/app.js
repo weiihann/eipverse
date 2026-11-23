@@ -571,8 +571,6 @@ fetch('data.json').then((r) => r.json()).then((data) => {
   }));
   for (const r of ALL) byId.set(r._key, r);
   UPS = upgradesByChain(data.chains, NOW);
-  $('count-pill').textContent = `${fmtN(ALL.length)} proposals · ${data.chains.length} chains`;
-  $('count-pill').title = `Built ${data.generated_at}`;
   readUrl();
   if (state.tag && TAX[state.tag]) expanded.add(state.tag);
   render();
