@@ -1,0 +1,259 @@
+{
+ "id": "base",
+ "chain": "Base",
+ "label": "Base",
+ "logo": "base",
+ "role": "L2 (Base Stack, OP Stack-derived)",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Sequencer on the Base Stack",
+   "note": "Base consolidated onto its own stack with Azul (May 2026), derived from the OP Stack.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    },
+    {
+     "label": "base/base chain config (config.rs)",
+     "url": "https://github.com/base/base/blob/76fa46dd3f64bb8806c749ddc510217696104a15/crates/common/chains/src/config.rs"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Safe on batch post, final with Ethereum",
+   "note": "A 200 ms block is safe once its batch is on Ethereum and final when Ethereum finalizes it. Multiproofs (TEE + ZK) finalize withdrawals since Azul.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Denim",
+     "url": "https://www.base.org/blog/denim"
+    },
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "200 ms native blocks",
+   "note": "Denim (Nov 2026) replaced 2 s blocks + Flashblocks with 200 ms canonical blocks; observed average 0.2 s. config.rs still carries block_time 2.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Denim",
+     "url": "https://www.base.org/blog/denim"
+    },
+    {
+     "label": "Base public RPC, eth_getBlockByNumber @ 61,196,363",
+     "url": "https://mainnet.base.org"
+    },
+    {
+     "label": "base/base chain config (config.rs)",
+     "url": "https://github.com/base/base/blob/76fa46dd3f64bb8806c749ddc510217696104a15/crates/common/chains/src/config.rs"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "40M gas (observed)",
+   "note": "Observed 40,000,000 per 200 ms block.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base public RPC, eth_getBlockByNumber @ 61,196,363",
+     "url": "https://mainnet.base.org"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "=",
+   "value": "~17M (EIP-7825)",
+   "note": "Adopted in Azul.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "=",
+   "value": "ETH",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Elasticity 5, denominator 1000 (live)",
+   "note": "Read from extraData at the head; config.rs genesis values are 6 / 250.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base public RPC, eth_getBlockByNumber @ 61,196,363",
+     "url": "https://mainnet.base.org"
+    },
+    {
+     "label": "base/base chain config (config.rs)",
+     "url": "https://github.com/base/base/blob/76fa46dd3f64bb8806c749ddc510217696104a15/crates/common/chains/src/config.rs"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "0.005 gwei",
+   "note": "Minimum base fee 5,000,000 wei in extraData; baseFeePerGas at the head equals it.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base public RPC, eth_getBlockByNumber @ 61,196,363",
+     "url": "https://mainnet.base.org"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Osaka EL (Azul)",
+   "note": "Azul adopted the Osaka execution-layer specs.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "=",
+   "value": "CLZ (Azul)",
+   "note": "EIP-7939 in Azul.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "TIMESTAMP shared by 5 blocks",
+   "note": "Timestamps stay in whole seconds, so 4 of every 5 blocks share one; block-count durations need x10. Millisecond time comes from the BaseTime predeploy.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Denim",
+     "url": "https://www.base.org/blog/denim"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "=",
+   "value": "Aligned with Ethereum",
+   "note": "Azul raised P256 verify cost to match Ethereum and adopted EIP-7883 / EIP-7823.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "B20 native token precompiles",
+   "note": "Beryl shipped Base's first custom precompiles: B20 tokens run natively in the node.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Beryl",
+     "url": "https://www.base.org/blog/introducing-base-beryl"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "+",
+   "value": "Deposits (L1 info, BaseTime)",
+   "note": "Every Denim block carries the L1 info deposit, then a BaseTime update at index 1.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Denim",
+     "url": "https://www.base.org/blog/denim"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "~",
+   "value": "Ethereum (batches to L1)",
+   "note": "Blocks become safe when their batch is posted to Ethereum.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Denim",
+     "url": "https://www.base.org/blog/denim"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "base-reth-node only",
+   "note": "Azul made base-reth-node the sole execution client.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "B20 tokens, Validity Transactions, BaseTime",
+   "note": "B20 (Beryl); conditional time-bound txs via base_sendRawTransactionValidity (Cobalt); millisecond clock predeploy 0x4200...0030 (Denim).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Beryl",
+     "url": "https://www.base.org/blog/introducing-base-beryl"
+    },
+    {
+     "label": "Base blog: Introducing Base Cobalt",
+     "url": "https://www.base.org/blog/cobalt"
+    },
+    {
+     "label": "Base blog: Introducing Base Denim",
+     "url": "https://www.base.org/blog/denim"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

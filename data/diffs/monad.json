@@ -1,0 +1,276 @@
+{
+ "id": "monad",
+ "chain": "Monad",
+ "label": "Monad",
+ "logo": "monad",
+ "role": "L1",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "MonadBFT (PoS)",
+   "note": "Pipelined leader-based BFT with tail-forking resistance; asynchronous execution.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: MonadBFT",
+     "url": "https://docs.monad.xyz/monad-arch/consensus/monad-bft"
+    },
+    {
+     "label": "Monad docs: Monad for developers",
+     "url": "https://docs.monad.xyz/introduction/monad-for-developers"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "600 ms (2 slots)",
+   "note": "Speculative finality after 1 slot (300 ms).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: MonadBFT",
+     "url": "https://docs.monad.xyz/monad-arch/consensus/monad-bft"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "300 ms",
+   "note": "Observed average 0.30 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    },
+    {
+     "label": "Monad docs: MonadBFT",
+     "url": "https://docs.monad.xyz/monad-arch/consensus/monad-bft"
+    },
+    {
+     "label": "Monad public RPC, eth_getBlockByNumber @ 124,694,963",
+     "url": "https://rpc.monad.xyz"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "150M gas",
+   "note": "Docs and observed head agree.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Gas pricing",
+     "url": "https://docs.monad.xyz/developer-essentials/gas-pricing"
+    },
+    {
+     "label": "Monad public RPC, eth_getBlockByNumber @ 124,694,963",
+     "url": "https://rpc.monad.xyz"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "~",
+   "value": "30M",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Gas pricing",
+     "url": "https://docs.monad.xyz/developer-essentials/gas-pricing"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "MON",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Gas pricing",
+     "url": "https://docs.monad.xyz/developer-essentials/gas-pricing"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Custom controller",
+   "note": "EIP-1559-compatible fields; controller rises slower and falls faster.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Gas pricing",
+     "url": "https://docs.monad.xyz/developer-essentials/gas-pricing"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "100 MON-gwei",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Gas pricing",
+     "url": "https://docs.monad.xyz/developer-essentials/gas-pricing"
+    },
+    {
+     "label": "Monad public RPC, eth_getBlockByNumber @ 124,694,963",
+     "url": "https://rpc.monad.xyz"
+    }
+   ]
+  },
+  "fees.extra": {
+   "mark": "~",
+   "value": "Charged on gas limit, not gas used",
+   "note": "Sender pays value + gas_bid x gas_limit (DoS protection for async execution).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    },
+    {
+     "label": "Monad docs: Gas pricing",
+     "url": "https://docs.monad.xyz/developer-essentials/gas-pricing"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "=",
+   "value": "Osaka (Fusaka)",
+   "note": "Bytecode-compatible with the Fusaka fork.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Monad for developers",
+     "url": "https://docs.monad.xyz/introduction/monad-for-developers"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "TIMESTAMP 1 s granularity; CREATE ban for delegated EOAs",
+   "note": "Several 300 ms blocks share a timestamp. CREATE/CREATE2 are banned when a 7702-delegated EOA runs as a contract.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "~",
+   "value": "Cold account 10100, cold storage 8100/page",
+   "note": "Storage warmed per 128-slot page; memory linear (8 MB cap); some precompiles repriced (e.g. ecRecover 6000).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Opcode pricing",
+     "url": "https://docs.monad.xyz/developer-essentials/opcode-pricing"
+    },
+    {
+     "label": "Monad docs: Precompiles",
+     "url": "https://docs.monad.xyz/developer-essentials/precompiles"
+    },
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "~",
+   "value": "128 KB code / 256 KB initcode",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "0x1000 staking, 0x1001 reserve balance",
+   "note": "P256 at 0x100 per EIP-7951.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Precompiles",
+     "url": "https://docs.monad.xyz/developer-essentials/precompiles"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "Not supported",
+   "note": "Type 3 transactions are not supported.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "~",
+   "value": "Yes, with reserve rule",
+   "note": "Delegated EOAs cannot drop below 10 MON.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "monad + monad-bft (Category Labs)",
+   "note": "Written from scratch in C++ and Rust.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Monad for developers",
+     "url": "https://docs.monad.xyz/introduction/monad-for-developers"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Reserve balance, local mempool, paged storage",
+   "note": "No global mempool; storage trie commits to 128-slot pages so eth_getProof is unsupported.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Monad docs: Differences from Ethereum",
+     "url": "https://docs.monad.xyz/developer-essentials/differences"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

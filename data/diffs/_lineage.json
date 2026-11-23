@@ -1,0 +1,193 @@
+{
+ "as_of": "2026-11-23",
+ "edges": [
+  {
+   "from": "ethereum",
+   "to": "optimism",
+   "rel": "settles",
+   "label": "OP Stack rollup",
+   "sources": [
+    {
+     "label": "superchain-registry op.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
+    }
+   ]
+  },
+  {
+   "from": "ethereum",
+   "to": "base",
+   "rel": "settles",
+   "label": "OP Stack, now Base Stack",
+   "sources": [
+    {
+     "label": "base/base chain config (config.rs)",
+     "url": "https://github.com/base/base/blob/76fa46dd3f64bb8806c749ddc510217696104a15/crates/common/chains/src/config.rs"
+    },
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  {
+   "from": "ethereum",
+   "to": "celo",
+   "rel": "settles",
+   "label": "OP Stack + EigenDA",
+   "sources": [
+    {
+     "label": "Celo docs: Celo L2 specification",
+     "url": "https://docs.celo.org/operate/specification/index"
+    },
+    {
+     "label": "superchain-registry celo.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/celo.toml"
+    }
+   ]
+  },
+  {
+   "from": "ethereum",
+   "to": "arbitrum",
+   "rel": "settles",
+   "label": "Nitro rollup",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Block gas limit, numbers and time",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/block-numbers-and-time"
+    }
+   ]
+  },
+  {
+   "from": "bsc",
+   "to": "opbnb",
+   "rel": "settles",
+   "label": "OP Stack (Bedrock) on BSC",
+   "sources": [
+    {
+     "label": "bnb-chain/opbnb README",
+     "url": "https://github.com/bnb-chain/opbnb/blob/426567ebb32455b2bfb9c736ae8908f84a462ddf/README.md"
+    }
+   ]
+  },
+  {
+   "from": "geth",
+   "to": "bsc",
+   "rel": "client",
+   "label": "go-ethereum fork",
+   "sources": [
+    {
+     "label": "bnb-chain/bsc repository description",
+     "url": "https://github.com/bnb-chain/bsc"
+    }
+   ]
+  },
+  {
+   "from": "geth",
+   "to": "polygon",
+   "rel": "client",
+   "label": "Bor is a geth fork",
+   "sources": [
+    {
+     "label": "0xPolygon/bor README",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/README.md"
+    }
+   ]
+  },
+  {
+   "from": "geth",
+   "to": "arbitrum",
+   "rel": "client",
+   "label": "Geth core inside Nitro",
+   "sources": [
+    {
+     "label": "OffchainLabs/nitro README",
+     "url": "https://github.com/OffchainLabs/nitro/blob/ccc5c828d9ea22f161efc784bac4d4a6559b7e59/README.md"
+    }
+   ]
+  },
+  {
+   "from": "op-geth",
+   "to": "celo",
+   "rel": "client",
+   "label": "celo-org/op-geth fork",
+   "sources": [
+    {
+     "label": "celo-org/op-geth (GitHub fork of ethereum-optimism/op-geth)",
+     "url": "https://github.com/celo-org/op-geth"
+    }
+   ]
+  },
+  {
+   "from": "op-geth",
+   "to": "opbnb",
+   "rel": "client",
+   "label": "bnb-chain op-geth",
+   "sources": [
+    {
+     "label": "BNB docs: Volta upgrade of opBNB",
+     "url": "https://docs.bnbchain.org/announce/volta-opbnb/"
+    }
+   ]
+  },
+  {
+   "from": "reth",
+   "to": "base",
+   "rel": "client",
+   "label": "base-reth-node",
+   "sources": [
+    {
+     "label": "Base blog: Introducing Base Azul",
+     "url": "https://www.base.org/blog/introducing-base-azul"
+    }
+   ]
+  },
+  {
+   "from": "reth",
+   "to": "tempo",
+   "rel": "client",
+   "label": "Reth SDK",
+   "sources": [
+    {
+     "label": "tempoxyz/tempo README",
+     "url": "https://github.com/tempoxyz/tempo/blob/15b1da2f34d5c581399206e6f916337deef2b2c7/README.md"
+    }
+   ]
+  },
+  {
+   "from": "eth-clients",
+   "to": "gnosis",
+   "rel": "client",
+   "label": "Ethereum clients, --network gnosis",
+   "sources": [
+    {
+     "label": "Gnosis docs: Run a node",
+     "url": "https://docs.gnosischain.com/node/"
+    }
+   ]
+  },
+  {
+   "from": "independent",
+   "to": "monad",
+   "rel": "client",
+   "label": "from scratch (C++/Rust)",
+   "sources": [
+    {
+     "label": "Monad docs: Monad for developers",
+     "url": "https://docs.monad.xyz/introduction/monad-for-developers"
+    }
+   ]
+  },
+  {
+   "from": "independent",
+   "to": "avalanche",
+   "rel": "client",
+   "label": "AvalancheGo VM",
+   "sources": [
+    {
+     "label": "Avalanche docs: Coreth architecture",
+     "url": "https://build.avax.network/docs/primary-network/coreth-architecture"
+    }
+   ]
+  }
+ ]
+}

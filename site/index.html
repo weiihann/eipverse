@@ -20,6 +20,7 @@
       <button data-view="proposals">Proposals</button>
       <button data-view="layers">Compare by layer</button>
       <button data-view="upgrades">Upgrades</button>
+      <button data-view="diff">Chain diff</button>
       <button data-view="sources">Sources</button>
     </nav>
     <span class="pill count-pill" id="count-pill">loading…</span>
@@ -61,6 +62,20 @@
     <div id="side"></div>
   </section>
   <section class="view" id="v-upgrades" hidden><div class="ugrid" id="ugrid"></div></section>
+  <section class="view" id="v-diff" hidden>
+    <div class="diff-head" id="diff-head"></div>
+    <div class="lineage" id="lineage" aria-label="Lineage"></div>
+    <div class="frow diff-ctl" id="diff-ctl">
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="dq" type="search" placeholder="Search dimensions and values" aria-label="Search the chain diff" autocomplete="off" spellcheck="false">
+      </label>
+      <div class="chips" id="dgroups" aria-label="Dimension groups"></div>
+      <button class="chip toggle" id="donly" aria-pressed="false" title="Hide rows where every chain matches Ethereum or has no source">Only differences</button>
+    </div>
+    <div class="diff-wrap"><table class="diff" id="difft"></table></div>
+    <p class="s-foot" id="diff-foot"></p>
+  </section>
   <section class="view" id="v-sources" hidden><div class="sgrid" id="sgrid"></div></section>
 </main>
 

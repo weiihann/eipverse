@@ -1,0 +1,207 @@
+{
+ "id": "avalanche",
+ "chain": "Avalanche C-Chain",
+ "label": "Avalanche C",
+ "logo": "avalanche",
+ "role": "L1 (Primary Network)",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Snowman++ (ProposerVM)",
+   "note": "Stake-weighted proposer list gates each 5 s window. Since Helicon, consensus accepts a block before it executes.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Avalanche docs: Coreth architecture",
+     "url": "https://build.avax.network/docs/primary-network/coreth-architecture"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "Dynamic minimum delay",
+   "note": "Validators vote the minimum block delay (ACP-226), with a millisecond header timestamp; observed average 0.91 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-226",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/226-dynamic-minimum-block-times/README.md"
+    },
+    {
+     "label": "Avalanche C-Chain public RPC, eth_getBlockByNumber @ 101,156,293",
+     "url": "https://api.avax.network/ext/bc/C/rpc"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "Dynamic (ACP-176); 80M observed",
+   "note": "Target gas/s adjusted by validator votes; header shows 80,000,000.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-176",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/176-dynamic-evm-gas-limit-and-price-discovery-updates/README.md"
+    },
+    {
+     "label": "Avalanche C-Chain public RPC, eth_getBlockByNumber @ 101,156,293",
+     "url": "https://api.avax.network/ext/bc/C/rpc"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "AVAX",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-125",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/125-basefee-reduction/README.md"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "ACP-176 dynamic fees",
+   "note": "ACP-103-style pricing against a per-second gas target instead of per-block EIP-1559. Since Helicon the header base fee is a worst-case upper bound.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-176",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/176-dynamic-evm-gas-limit-and-price-discovery-updates/README.md"
+    },
+    {
+     "label": "Avalanche docs: Coreth architecture",
+     "url": "https://build.avax.network/docs/primary-network/coreth-architecture"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "Validator-voted minimum",
+   "note": "ACP-283 makes the minimum gas price dynamic (ACP-176 had set 1 wei; ACP-125 earlier cut 25 -> 1 nAVAX).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-283",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/283-dynamic-minimum-gas-price/README.md"
+    },
+    {
+     "label": "ACP-125",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/125-basefee-reduction/README.md"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Cancun opcodes; no Prague/Osaka",
+   "note": "ACP-131 enabled the Cancun opcodes; EIP-7702 is only a Proposed ACP-209.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-131",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/131-cancun-eips/README.md"
+    },
+    {
+     "label": "ACP-209",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/209-eip7702-style-account-abstraction/README.md"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "~",
+   "value": "BLOBHASH/BLOBBASEFEE without blobs",
+   "note": "Opcodes enabled (ACP-131) while blob txs stay invalid.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-131",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/131-cancun-eips/README.md"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "Warp (0x0200...05), P256 (0x100)",
+   "note": "Avalanche Warp Messaging precompile (ACP-30); secp256r1 (ACP-204).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-30",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/30-avalanche-warp-x-evm/README.md"
+    },
+    {
+     "label": "ACP-204",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/204-precompile-secp256r1/README.md"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "Invalid",
+   "note": "Blocks containing blob txs are invalid.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-131",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/131-cancun-eips/README.md"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "-",
+   "value": "Not active",
+   "note": "ACP-209 (EIP-7702-style) is Proposed.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ACP-209",
+     "url": "https://github.com/avalanche-foundation/ACPs/blob/3e905589b97a070435ec63f0365141f92cbcf93f/ACPs/209-eip7702-style-account-abstraction/README.md"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "AvalancheGo Continuous Execution VM",
+   "note": "Replaced Coreth at Helicon (mainnet 2026-09-22).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Avalanche docs: Coreth architecture",
+     "url": "https://build.avax.network/docs/primary-network/coreth-architecture"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Atomic X/P-Chain transfers, Warp, async execution",
+   "note": "Import/export via shared UTXO memory; ACP-194 continuous execution decouples consensus from execution.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Avalanche docs: Coreth architecture",
+     "url": "https://build.avax.network/docs/primary-network/coreth-architecture"
+    },
+    {
+     "label": "Avalanche docs: Continuous Execution",
+     "url": "https://build.avax.network/docs/primary-network/continuous-execution"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

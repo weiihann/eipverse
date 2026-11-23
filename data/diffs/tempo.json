@@ -1,0 +1,284 @@
+{
+ "id": "tempo",
+ "chain": "Tempo",
+ "label": "Tempo",
+ "logo": "tempo",
+ "role": "L1 (payments)",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Simplex BFT (Commonware)",
+   "note": "VRF leader election; distributed validators rather than a sequencer.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Consensus and finality (Simplex BFT)",
+     "url": "https://tempo.com/developers/docs/protocol/blockspace/consensus"
+    },
+    {
+     "label": "tempoxyz/tempo README",
+     "url": "https://github.com/tempoxyz/tempo/blob/15b1da2f34d5c581399206e6f916337deef2b2c7/README.md"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Deterministic, sub-second",
+   "note": "Finalized blocks cannot reorg.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Consensus and finality (Simplex BFT)",
+     "url": "https://tempo.com/developers/docs/protocol/blockspace/consensus"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Permissioned set",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Consensus and finality (Simplex BFT)",
+     "url": "https://tempo.com/developers/docs/protocol/blockspace/consensus"
+    },
+    {
+     "label": "Tempo docs: EVM differences",
+     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "~0.5-0.6 s",
+   "note": "EVM differences page says ~0.5 s; consensus page says ~600 ms. Observed average 0.54 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: EVM differences",
+     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+    },
+    {
+     "label": "Tempo docs: Consensus and finality (Simplex BFT)",
+     "url": "https://tempo.com/developers/docs/protocol/blockspace/consensus"
+    },
+    {
+     "label": "Tempo public RPC, eth_getBlockByNumber @ 50,415,578",
+     "url": "https://rpc.tempo.xyz"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "500M gas (observed)",
+   "note": "",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo public RPC, eth_getBlockByNumber @ 50,415,578",
+     "url": "https://rpc.tempo.xyz"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "~",
+   "value": "30M",
+   "note": "vs 16,777,216 on Ethereum.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: EVM differences",
+     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "-",
+   "value": "No native token: USD stablecoins",
+   "note": "Fees paid in USD TIP-20 tokens through the Fee AMM.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: EVM differences",
+     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+    },
+    {
+     "label": "Tempo docs: Fee specification",
+     "url": "https://tempo.com/developers/docs/protocol/fees/spec-fee"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Bounded dynamic base fee in attodollars",
+   "note": "Cap 1.2e10, floor 6e8 attodollars per gas.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Fee specification",
+     "url": "https://tempo.com/developers/docs/protocol/fees/spec-fee"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "6e8 attodollars/gas",
+   "note": "Observed baseFeePerGas at the head equals the floor.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Fee specification",
+     "url": "https://tempo.com/developers/docs/protocol/fees/spec-fee"
+    },
+    {
+     "label": "Tempo public RPC, eth_getBlockByNumber @ 50,415,578",
+     "url": "https://rpc.tempo.xyz"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "To validators via FeeManager",
+   "note": "Converted to the validator's preferred token and accumulated for distributeFees.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Fee specification",
+     "url": "https://tempo.com/developers/docs/protocol/fees/spec-fee"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "=",
+   "value": "Osaka",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: EVM differences",
+     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "BALANCE, SELFBALANCE, CALLVALUE = 0",
+   "note": "No native token; eth_getBalance returns a sentinel huge value.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: EVM differences",
+     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "~",
+   "value": "New slot 250k, account 250k, code 1k/byte",
+   "note": "TIP-1000 state creation costs.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: EVM differences",
+     "url": "https://tempo.com/developers/docs/quickstart/evm-compatibility"
+    },
+    {
+     "label": "TIP-1000 (state creation costs)",
+     "url": "https://github.com/tempoxyz/tempo/blob/15b1da2f34d5c581399206e6f916337deef2b2c7/tips/tip-1000.md"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "TIP-20 factory, FeeManager, Stablecoin DEX, TIP-403, ...",
+   "note": "0x20fc.., 0xfeec.., 0xdec0.., 0x403c.., Signature Verifier 0x5165.., nonce precompile 0x4E4F4E4345...",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Predeployed contracts",
+     "url": "https://tempo.com/developers/docs/quickstart/predeployed-contracts"
+    },
+    {
+     "label": "Tempo docs: Tempo Transactions specification",
+     "url": "https://tempo.com/developers/docs/protocol/transactions/spec-tempo-transaction"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "+",
+   "value": "0x76 Tempo Transaction",
+   "note": "P256/WebAuthn signatures, fee sponsorship, batched calls, 2D nonces.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Tempo Transactions specification",
+     "url": "https://tempo.com/developers/docs/protocol/transactions/spec-tempo-transaction"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "~",
+   "value": "Extended 7702",
+   "note": "aa_authorization_list allows delegation signed with secp256k1, P256 or WebAuthn.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Tempo Transactions specification",
+     "url": "https://tempo.com/developers/docs/protocol/transactions/spec-tempo-transaction"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "tempo (Reth SDK)",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "tempoxyz/tempo README",
+     "url": "https://github.com/tempoxyz/tempo/blob/15b1da2f34d5c581399206e6f916337deef2b2c7/README.md"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Payment lanes, fee sponsorship, TIP-403 policies",
+   "note": "Reserved blockspace for payments; enshrined stablecoin DEX.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Tempo docs: Payment lane specification",
+     "url": "https://tempo.com/developers/docs/protocol/blockspace/payment-lane-specification"
+    },
+    {
+     "label": "Tempo docs: Fee specification",
+     "url": "https://tempo.com/developers/docs/protocol/fees/spec-fee"
+    },
+    {
+     "label": "Tempo docs: Predeployed contracts",
+     "url": "https://tempo.com/developers/docs/quickstart/predeployed-contracts"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

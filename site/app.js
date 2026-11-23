@@ -70,12 +70,13 @@ const forkName = (s) => String(s || '').replace(/^protocol version /, '');
 const shortTarget = (s) => forkName(s.split('; ')[0]).replace(/ \((Scheduled|Considered|Proposed|Declined)[^)]*\)$/i, '');
 
 // ---------- state <-> URL ----------
-const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '' };
+const VIEWS = ['proposals', 'layers', 'upgrades', 'diff', 'sources'];
+const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '', dg: '', dq: '', only: '', cell: '' };
 const state = { ...DEFAULTS };
 function readUrl() {
   const p = new URLSearchParams(location.search);
   for (const k of Object.keys(DEFAULTS)) state[k] = p.has(k) ? p.get(k) : DEFAULTS[k];
-  if (!['proposals', 'layers', 'upgrades', 'sources'].includes(state.view)) state.view = 'proposals';
+  if (!VIEWS.includes(state.view)) state.view = 'proposals';
 }
 function writeUrl() {
   const p = new URLSearchParams();
@@ -317,6 +318,140 @@ function renderSources() {
   </div>`).join('') + `</div><p class="s-foot">Each label links to the canonical file or API the build reads. Hover a label for the full description.</p>`;
 }
 
+// ---------- chain diff ----------
+// Hand-curated per-chain facts (data/diffs/*.json -> diffs.json), loaded when the tab first opens. Ethereum is the
+// baseline; every other cell is a delta mark with a sourced, dated note, or an explicit "no source" blank.
+let DIFF = null, diffLoading = false, diffErr = '', shownCells = [];
+const MARK = { base: ['Ethereum baseline', 'base', '◆'], '+': ['adds to Ethereum', 'add', '+'], '-': ['missing vs Ethereum', 'miss', '−'], '~': ['changed vs Ethereum', 'chg', '~'], '=': ['same as Ethereum', 'same', '='] };
+const markPill = (m) => `<span class="mk mk-${MARK[m][1]}" title="${MARK[m][0]}">${MARK[m][2]}</span>`;
+const ROOTS = { geth: 'go-ethereum', 'op-geth': 'op-geth', reth: 'Reth', 'eth-clients': 'Ethereum clients', independent: 'Own client' };
+const diffCol = (id) => DIFF.chains.find((c) => c.id === id);
+const diffName = (id) => diffCol(id)?.label || ROOTS[id] || id;
+const diffLogo = (id) => { const c = diffCol(id); return c ? logo(c.chain) : ''; };
+const loadDiff = () => {
+  if (DIFF || diffLoading) return;
+  diffLoading = true;
+  fetch('diffs.json').then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .then((d) => { DIFF = d; }).catch((e) => { diffErr = e.message; }).finally(() => { diffLoading = false; if (state.view === 'diff') render(); });
+};
+const dq = $('dq');
+let dqTimer;
+dq.addEventListener('input', () => { clearTimeout(dqTimer); dqTimer = setTimeout(() => set({ dq: dq.value.trim() }), 80); });
+$('donly').onclick = () => set({ only: state.only ? '' : '1' });
+
+function diffRows() {
+  const words = state.dq.toLowerCase().split(/\s+/).filter(Boolean);
+  return DIFF.dimensions.filter(([id, g, label]) => {
+    if (state.dg && g !== state.dg) return false;
+    const facts = DIFF.chains.map((c) => c.facts[id]).filter(Boolean);
+    if (state.only && !facts.some((f) => ['+', '-', '~'].includes(f.mark))) return false;
+    if (!words.length) return true;
+    const text = [id, label, ...DIFF.chains.flatMap((c) => (c.facts[id] ? [c.label, c.facts[id].value, c.facts[id].note] : []))].join(' ').toLowerCase();
+    return words.every((w) => text.includes(w));
+  });
+}
+
+function renderDiff() {
+  if (!DIFF) {
+    loadDiff();
+    $('difft').innerHTML = `<tbody><tr><td class="d-load">${diffErr ? `<span class="b-error">Could not load diffs.json: ${esc(diffErr)}</span>` : 'Loading chain diff…'}</td></tr></tbody>`;
+    return;
+  }
+  const facts = DIFF.chains.reduce((n, c) => n + Object.keys(c.facts).length, 0);
+  const cellsN = DIFF.chains.length * DIFF.dimensions.length;
+  $('diff-head').innerHTML = `<div class="side-h"><h3>How each chain differs from Ethereum</h3><p>${DIFF.dimensions.length} dimensions × ${DIFF.chains.length} chains · ${fmtN(facts)} sourced facts, ${fmtN(cellsN - facts)} left blank because no source was found · as of ${esc(DIFF.lineage.as_of || '')}</p></div>
+    <div class="legend">${['base', '+', '-', '~', '='].map((m) => `<span>${markPill(m)}${MARK[m][0]}</span>`).join('')}<span><span class="mk mk-none">·</span>no source (not guessed)</span><span><span class="obs">obs</span>read from a live RPC</span></div>`;
+
+  const by = (rel) => { const g = {}; for (const e of DIFF.lineage.edges.filter((x) => x.rel === rel)) (g[e.from] ||= []).push(e); return Object.entries(g); };
+  const kid = (e) => `<button class="lin-k" data-edge="${esc(`${e.from}>${e.to}`)}" title="${esc(e.label)} · click for sources">${diffLogo(e.to)}${esc(diffName(e.to))}</button>`;
+  const group = ([from, es], arrow) => `<span class="lin-g"><span class="lin-p">${diffLogo(from)}${esc(diffName(from))}</span><span class="lin-a">${arrow}</span>${es.map(kid).join('')}</span>`;
+  $('lineage').innerHTML = `<div class="lin-row"><span class="label">Settles on</span>${by('settles').map((g) => group(g, '←')).join('')}</div>
+    <div class="lin-row"><span class="label">Execution client</span>${by('client').map((g) => group(g, '→')).join('')}</div>`;
+  for (const b of $('lineage').querySelectorAll('[data-edge]')) b.onclick = () => set({ cell: `edge:${b.dataset.edge}` });
+
+  if (document.activeElement !== dq) dq.value = state.dq;
+  $('donly').setAttribute('aria-pressed', String(!!state.only));
+  const rows = diffRows();
+  const nIn = (g) => DIFF.dimensions.filter(([, x]) => x === g).length;
+  $('dgroups').innerHTML = `<button class="chip" data-g="" aria-pressed="${!state.dg}">All dimensions <span class="n">${DIFF.dimensions.length}</span></button>`
+    + DIFF.groups.map(([g, label]) => `<button class="chip" data-g="${g}" aria-pressed="${state.dg === g}">${esc(label)} <span class="n">${nIn(g)}</span></button>`).join('');
+  for (const b of $('dgroups').querySelectorAll('[data-g]')) b.onclick = () => set({ dg: state.dg === b.dataset.g ? '' : b.dataset.g });
+
+  const cols = DIFF.chains;
+  shownCells = [];
+  let lastG = '';
+  const body = rows.map(([id, g, label]) => {
+    const head = g !== lastG ? `<tr class="d-grp"><th>${esc(DIFF.groups.find(([x]) => x === g)[1])}</th><td colspan="${cols.length}"></td></tr>` : '';
+    lastG = g;
+    return head + `<tr><th class="d-dim" title="${esc(id)}">${esc(label)}</th>${cols.map((c) => {
+      const f = c.facts[id];
+      const key = `${c.id}|${id}`;
+      if (!f) return `<td class="t-blank"><button class="d-cell blank" data-cell="${esc(key)}" title="No source found for ${esc(c.label)}: left blank, not guessed"><span class="mk mk-none">·</span><span class="d-v">no source</span></button></td>`;
+      shownCells.push(key);
+      const dim = state.only && f.mark === '=';
+      return `<td class="t-${MARK[f.mark][1]}"><button class="d-cell m-${MARK[f.mark][1]}${dim ? ' dim' : ''}${state.cell === key ? ' sel' : ''}" data-cell="${esc(key)}" title="${esc(c.label)} · ${esc(label)}: ${esc(MARK[f.mark][0])}">${markPill(f.mark)}<span class="d-v">${esc(f.value)}</span>${f.kind === 'observed' ? '<span class="obs">obs</span>' : ''}</button></td>`;
+    }).join('')}</tr>`;
+  }).join('');
+  $('difft').innerHTML = `<thead><tr><th class="d-corner">Dimension</th>${cols.map((c) => `<th style="--c:${cc(c.chain)}"><span class="d-ch">${logo(c.chain)}<span><b>${esc(c.label)}</b><small>${esc(c.role)}</small></span></span></th>`).join('')}</tr></thead>
+    <tbody>${body || `<tr><td class="d-load" colspan="${cols.length + 1}">No dimension matches these filters.</td></tr>`}</tbody>`;
+  for (const b of $('difft').querySelectorAll('[data-cell]')) b.onclick = () => set({ cell: b.dataset.cell });
+  $('diff-foot').textContent = `Showing ${rows.length} of ${DIFF.dimensions.length} dimensions. Ethereum's column is the baseline; other columns show only how a chain departs from it. Every non-blank cell links to the spec, code (pinned to a commit) or docs page it came from, plus an as-of date; "obs" cells were read from a public RPC at the block named in the source. Click any cell for the full note.`;
+}
+
+function srcList(sources) {
+  return `<ul class="srcs">${sources.map((x) => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${esc(x.label)} ${icon.ext}</a></li>`).join('')}</ul>`;
+}
+function renderDiffDrawer() {
+  const d = $('drawer');
+  if (!DIFF) return;
+  const close = () => { d.querySelector('[data-close]').onclick = () => set({ cell: '' }); for (const b of d.querySelectorAll('[data-step]')) b.onclick = () => stepCell(+b.dataset.step); };
+  const open = () => { d.classList.add('open'); d.setAttribute('aria-hidden', 'false'); $('scrim').hidden = false; };
+  const bar = (title, pos = '') => `<div class="dh"><span class="rid">${title}</span><span class="sp"></span>${pos}
+    ${pos ? `<button class="icon-btn" data-step="-1" aria-label="Previous (k)" title="Previous (k / ↑)">${icon.up}</button><button class="icon-btn" data-step="1" aria-label="Next (j)" title="Next (j / ↓)">${icon.down}</button>` : ''}
+    <button class="icon-btn" data-close aria-label="Close (Esc)" title="Close (Esc)">${icon.x}</button></div>`;
+  if (state.cell.startsWith('edge:')) {
+    const [from, to] = state.cell.slice(5).split('>');
+    const e = DIFF.lineage.edges.find((x) => x.from === from && x.to === to);
+    if (!e) return set({ cell: '' });
+    d.innerHTML = bar(`${diffLogo(to)}<span class="rid-t">Lineage</span>`) + `<div class="db">
+      <h2>${esc(diffName(to))} ${e.rel === 'settles' ? 'settles on' : 'execution client:'} ${esc(diffName(from))}</h2>
+      <p class="abs">${esc(e.label)}</p>
+      <dl class="kv"><dt>Relation</dt><dd>${e.rel === 'settles' ? 'settlement / parent chain' : 'execution client lineage'}</dd><dt>As of</dt><dd class="mono" style="font-size:12px">${esc(DIFF.lineage.as_of)}</dd></dl>
+      <div><div class="label">Sources</div>${srcList(e.sources)}</div>
+      <p class="hint">Only edges with a source are drawn. Forks that are commonly claimed but that no canonical page states are left out.</p></div>`;
+    open(); close(); return;
+  }
+  const [cid, dim] = state.cell.split('|');
+  const c = diffCol(cid), meta = DIFF.dimensions.find(([id]) => id === dim);
+  if (!c || !meta) return set({ cell: '' });
+  const f = c.facts[dim], eth = diffCol('ethereum').facts[dim];
+  const i = shownCells.indexOf(state.cell);
+  d.innerHTML = bar(`${logo(c.chain)}<span class="rid-t">${esc(c.label)} · ${esc(meta[2])}</span>`, i >= 0 ? `<span class="pos">${i + 1} / ${shownCells.length}</span>` : '') + `<div class="db">
+    <div class="label">${esc(DIFF.groups.find(([g]) => g === meta[1])[1])} › ${esc(meta[2])}</div>
+    ${f ? `<h2>${markPill(f.mark)} ${esc(f.value)}</h2>
+      <p class="abs">${esc(f.note)}</p>
+      <dl class="kv">
+        <dt>Chain</dt><dd class="chain-dd">${logo(c.chain)} ${esc(c.label)} · ${esc(c.role)}</dd>
+        <dt>vs Ethereum</dt><dd>${esc(MARK[f.mark][0])}</dd>
+        ${cid !== 'ethereum' && eth ? `<dt>Ethereum</dt><dd><button class="link" data-goto-cell="ethereum|${esc(dim)}">${esc(eth.value)}</button></dd>` : ''}
+        <dt>Evidence</dt><dd>${f.kind === 'observed' ? 'observed on a live public RPC (see source for endpoint and block)' : f.kind === 'code' ? 'client code, pinned to a commit' : f.kind === 'spec' ? 'specification' : 'documentation / specification'}</dd>
+        <dt>As of</dt><dd class="mono" style="font-size:12px">${esc(f.as_of)}</dd>
+      </dl>
+      <div><div class="label">Sources</div>${srcList(f.sources)}</div>`
+    : `<h2><span class="none">No source</span></h2><p class="abs">No canonical spec, code or docs page found that states this for ${esc(c.label)}, so the cell is left blank instead of guessed.</p>
+      ${eth ? `<dl class="kv"><dt>Ethereum</dt><dd><button class="link" data-goto-cell="ethereum|${esc(dim)}">${esc(eth.value)}</button></dd></dl>` : ''}`}
+    <div class="hint">Esc closes · j / k or ↑ / ↓ step through filled cells</div></div>`;
+  for (const b of d.querySelectorAll('[data-goto-cell]')) b.onclick = () => set({ cell: b.dataset.gotoCell });
+  open(); close();
+}
+function stepCell(n) {
+  if (!shownCells.length || state.cell.startsWith('edge:')) return;
+  const i = shownCells.indexOf(state.cell);
+  const next = shownCells[Math.max(0, Math.min(shownCells.length - 1, i < 0 ? 0 : i + n))];
+  set({ cell: next });
+  document.querySelector(`[data-cell="${CSS.escape(next)}"]`)?.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
 // ---------- drawer ----------
 function renderDrawer() {
   const r = state.id && byId.get(state.id);
@@ -359,6 +494,7 @@ function renderDrawer() {
   for (const b of d.querySelectorAll('[data-goto]')) b.onclick = () => set({ id: b.dataset.goto });
 }
 function step(n) {
+  if (state.cell) return stepCell(n);
   if (!shownList.length) return;
   const i = shownList.findIndex((r) => r._key === state.id);
   const next = shownList[Math.max(0, Math.min(shownList.length - 1, i < 0 ? 0 : i + n))];
@@ -366,24 +502,25 @@ function step(n) {
   set({ id: next._key });
   document.querySelector(`[data-key="${CSS.escape(next._key)}"]`)?.scrollIntoView({ block: 'nearest' });
 }
-$('scrim').onclick = () => set({ id: '' });
+$('scrim').onclick = () => set({ id: '', cell: '' });
 document.addEventListener('keydown', (e) => {
   const typing = /INPUT|SELECT|TEXTAREA/.test(document.activeElement?.tagName || '');
-  if (e.key === '/' && !typing) { e.preventDefault(); q.focus(); q.select(); return; }
+  if (e.key === '/' && !typing) { e.preventDefault(); const box = state.view === 'diff' ? dq : q; box.focus(); box.select(); return; }
   if (e.key === 'Escape') {
-    if (state.id) return set({ id: '' });
+    if (state.id || state.cell) return set({ id: '', cell: '' });
     if (document.activeElement === q) { q.value = ''; q.blur(); return set({ q: '' }); }
+    if (document.activeElement === dq) { dq.value = ''; dq.blur(); return set({ dq: '' }); }
   }
   if (typing || e.metaKey || e.ctrlKey || e.altKey) return;
-  if (['j', 'ArrowDown'].includes(e.key) && (state.id || e.key === 'j')) { e.preventDefault(); step(1); }
-  if (['k', 'ArrowUp'].includes(e.key) && (state.id || e.key === 'k')) { e.preventDefault(); step(-1); }
+  if (['j', 'ArrowDown'].includes(e.key) && (state.id || state.cell || e.key === 'j')) { e.preventDefault(); step(1); }
+  if (['k', 'ArrowUp'].includes(e.key) && (state.id || state.cell || e.key === 'k')) { e.preventDefault(); step(-1); }
 });
 
 // ---------- render ----------
 let lastView;
 function render() {
   for (const b of $('tabs').querySelectorAll('button')) { if (b.dataset.view === state.view) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current'); }
-  for (const v of ['proposals', 'layers', 'upgrades', 'sources']) $(`v-${v}`).hidden = state.view !== v;
+  for (const v of VIEWS) $(`v-${v}`).hidden = state.view !== v;
   const filt = ['proposals', 'layers'].includes(state.view);
   $('filters').hidden = !filt;
   if (state.view !== lastView) { limit = 300; lastView = state.view; }
@@ -393,7 +530,8 @@ function render() {
   if (state.view === 'layers') renderLayers();
   if (state.view === 'upgrades') { renderUpgrades(); shownList = []; }
   if (state.view === 'sources') { renderSources(); shownList = []; }
-  renderDrawer();
+  if (state.view === 'diff') { renderDiff(); shownList = []; }
+  if (state.cell && state.view === 'diff') renderDiffDrawer(); else renderDrawer();
 }
 
 renderTheme();

@@ -1,0 +1,254 @@
+{
+ "id": "gnosis",
+ "chain": "Gnosis Chain",
+ "label": "Gnosis",
+ "logo": "gnosis",
+ "role": "L1 (Ethereum fork rules)",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "=",
+   "value": "Beacon chain PoS",
+   "note": "Same consensus spec family with Gnosis presets.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs consensus config",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/consensus/config/gnosis.yaml"
+    },
+    {
+     "label": "gnosischain/specs phase0 preset",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/consensus/preset/gnosis/phase0.yaml"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "~2 epochs (~160 s)",
+   "note": "Derived: 2 epochs x 16 slots x 5 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs consensus config",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/consensus/config/gnosis.yaml"
+    },
+    {
+     "label": "gnosischain/specs phase0 preset",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/consensus/preset/gnosis/phase0.yaml"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "Permissionless, 1 GNO",
+   "note": "Validators need 1 GNO instead of 32 ETH. An upcoming EEZ fork retires the validator set.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Gnosis docs: Run a node",
+     "url": "https://docs.gnosischain.com/node/"
+    },
+    {
+     "label": "Gnosis docs index (llms.txt)",
+     "url": "https://docs.gnosischain.com/llms.txt"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "5 s slots",
+   "note": "SECONDS_PER_SLOT 5, SLOTS_PER_EPOCH 16.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs consensus config",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/consensus/config/gnosis.yaml"
+    },
+    {
+     "label": "gnosischain/specs phase0 preset",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/consensus/preset/gnosis/phase0.yaml"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "17M gas (observed)",
+   "note": "Gnosis intends a gas limit different from EIP-7935 (TBD in spec).",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Gnosis Chain public RPC, eth_getBlockByNumber @ 49,426,250",
+     "url": "https://rpc.gnosischain.com"
+    },
+    {
+     "label": "gnosischain/specs Fusaka",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/fusaka.md"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "=",
+   "value": "EIP-7825 not modified",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs Fusaka",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/fusaka.md"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "xDAI",
+   "note": "Bridged DAI; must not be burned to keep 1:1 backing.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs London",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/london.md"
+    },
+    {
+     "label": "Gnosis docs index (llms.txt)",
+     "url": "https://docs.gnosischain.com/llms.txt"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "=",
+   "value": "Ethereum controller",
+   "note": "EIP-1559 adopted with the fee collector change only.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs London",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/london.md"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Collected, not burned",
+   "note": "Base fee goes to EIP1559_FEE_COLLECTOR 0x6BBe...6A92.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs London",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/london.md"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "=",
+   "value": "Osaka (Fusaka, Apr 14 2026)",
+   "note": "All Fusaka EIPs, with modified blob schedule and gas-limit constants.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs Fusaka",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/fusaka.md"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "=",
+   "value": "Same as Ethereum",
+   "note": "Fork specs mark opcode EIPs \"Not modified\".",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs Fusaka",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/fusaka.md"
+    },
+    {
+     "label": "gnosischain/specs Dencun",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/dencun.md"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "~",
+   "value": "Max 2 blobs, 1 gwei floor",
+   "note": "MAX_BLOBS_PER_BLOCK_ELECTRA 2, empty BPO schedule; MIN_BLOB_GASPRICE 1 gwei.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs consensus config",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/consensus/config/gnosis.yaml"
+    },
+    {
+     "label": "gnosischain/specs Dencun",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/dencun.md"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "=",
+   "value": "Yes (Pectra)",
+   "note": "EIP-7702 not modified.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs Pectra",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/pectra.md"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "~",
+   "value": "Native blobs, smaller",
+   "note": "Blob count cut for 5 s slots; blob fee burned, base fee collected.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs Dencun",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/network-upgrades/dencun.md"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "Nethermind, Erigon, Reth, Geth",
+   "note": "Ethereum clients run with a --network flag.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Gnosis docs: Run a node",
+     "url": "https://docs.gnosischain.com/node/"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "GNO withdrawals contract, Shutter",
+   "note": "Withdrawals call a contract that pays GNO; Shutter encrypted mempool spec.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "gnosischain/specs withdrawals",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/execution/withdrawals.md"
+    },
+    {
+     "label": "gnosischain/specs Shutter",
+     "url": "https://github.com/gnosischain/specs/blob/045d46d6db96a39b4d91485f9783474c13546ac9/shutter/high-level.md"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

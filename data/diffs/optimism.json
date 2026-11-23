@@ -1,0 +1,302 @@
+{
+ "id": "optimism",
+ "chain": "Optimism / OP Stack",
+ "label": "OP Mainnet",
+ "logo": "optimism",
+ "role": "L2 (OP Stack)",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Single sequencer, L1-derived",
+   "note": "No public mempool; the sequencer orders by priority fee. The chain is derived from L1 data.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP docs: Differences from Ethereum",
+     "url": "https://docs.optimism.io/stack/differences"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Unsafe / safe / finalized heads",
+   "note": "An L2 block is finalized once its L1 batch is finalized. Fault proofs only gate withdrawals.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP docs: Differences from Ethereum",
+     "url": "https://docs.optimism.io/stack/differences"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "2 s",
+   "note": "block_time = 2 in the registry; observed average 2.0 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "superchain-registry op.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
+    },
+    {
+     "label": "OP Mainnet public RPC, eth_getBlockByNumber @ 159,915,436",
+     "url": "https://mainnet.optimism.io"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "40M gas (observed)",
+   "note": "Observed 40,000,000; registry genesis value was 30M.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP Mainnet public RPC, eth_getBlockByNumber @ 159,915,436",
+     "url": "https://mainnet.optimism.io"
+    },
+    {
+     "label": "superchain-registry op.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "=",
+   "value": "EIP-7825 (Karst)",
+   "note": "Not applied to deposits, which already have a 20M gas limit.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Karst overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/karst/overview.md"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "=",
+   "value": "ETH",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP docs: Differences from Ethereum",
+     "url": "https://docs.optimism.io/stack/differences"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Elasticity 2, denominator 250 (live)",
+   "note": "Read from the Holocene extraData at the head. The registry still lists elasticity 6 / denominator 250 (Canyon).",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP Mainnet public RPC, eth_getBlockByNumber @ 159,915,436",
+     "url": "https://mainnet.optimism.io"
+    },
+    {
+     "label": "superchain-registry op.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "Configurable (Jovian), currently 0",
+   "note": "Jovian minimum base fee in extraData reads 0 wei at the head.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Jovian exec-engine",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/jovian/exec-engine.md"
+    },
+    {
+     "label": "OP Mainnet public RPC, eth_getBlockByNumber @ 159,915,436",
+     "url": "https://mainnet.optimism.io"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Not burned: BaseFeeVault",
+   "note": "Base fees accrue to the Base Fee Vault instead of being burned.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: exec-engine",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/exec-engine.md"
+    }
+   ]
+  },
+  "fees.extra": {
+   "mark": "+",
+   "value": "L1 data fee + operator fee",
+   "note": "L1 cost charged into the L1 Fee Vault; operator fee added in Isthmus.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: exec-engine",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/exec-engine.md"
+    },
+    {
+     "label": "OP specs: Isthmus overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/isthmus/overview.md"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Osaka EL (Karst, Jul 8 2026)",
+   "note": "Karst brings the Osaka execution EIPs. Lagoon is scheduled for 2027-01-11.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Karst overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/karst/overview.md"
+    },
+    {
+     "label": "superchain-registry op.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "=",
+   "value": "CLZ via Karst",
+   "note": "EIP-7939 adopted in Karst.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Karst overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/karst/overview.md"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "COINBASE, PREVRANDAO, BLOBBASEFEE, ORIGIN/CALLER",
+   "note": "COINBASE = sequencer fee wallet; PREVRANDAO = L1 RANDAO at the L1 origin block; BLOBBASEFEE always 1; ORIGIN/CALLER aliased for L1-contract deposits.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP docs: Differences from Ethereum",
+     "url": "https://docs.optimism.io/stack/differences"
+    },
+    {
+     "label": "OP specs: Ecotone disables blob txs",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/exec-engine.md#ecotone-disable-blob-transactions"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "=",
+   "value": "P256 since Fjord",
+   "note": "secp256r1 present since Fjord; Karst aligns its gas cost with EIP-7951.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Karst overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/karst/overview.md"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "~",
+   "value": "bn256Pairing input size reduced",
+   "note": "Karst restricts bn256Pairing precompile input size.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Karst overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/karst/overview.md"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "+",
+   "value": "0x7E deposit",
+   "note": "Deposited transactions derived from L1.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: deposits",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/deposits.md"
+    },
+    {
+     "label": "OP docs: Differences from Ethereum",
+     "url": "https://docs.optimism.io/stack/differences"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "Not supported",
+   "note": "Blob txs are rejected from the pool and make a block invalid (Ecotone).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Ecotone disables blob txs",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/exec-engine.md#ecotone-disable-blob-transactions"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "=",
+   "value": "Yes (Isthmus)",
+   "note": "EIP-7702 adopted in Isthmus.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP specs: Isthmus overview",
+     "url": "https://github.com/ethereum-optimism/specs/blob/f4b6735ea4191a0aaae1ec610381904aecc74af9/specs/protocol/isthmus/overview.md"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "~",
+   "value": "Ethereum (batches to L1)",
+   "note": "data_availability_type = eth-da.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "superchain-registry op.toml",
+     "url": "https://github.com/ethereum-optimism/superchain-registry/blob/c3944bfa1d25d38c60f8e0763d8a8af0ee815e37/superchain/configs/mainnet/op.toml"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Deposits and address aliasing",
+   "note": "L1 contracts calling L2 are aliased by +0x1111...1111.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OP docs: Differences from Ethereum",
+     "url": "https://docs.optimism.io/stack/differences"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

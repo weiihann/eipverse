@@ -1,0 +1,241 @@
+{
+ "id": "polygon",
+ "chain": "Polygon PoS",
+ "label": "Polygon PoS",
+ "logo": "polygon",
+ "role": "L1 (commit chain)",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Bor + Heimdall, elected block producer",
+   "note": "Tendermint-layer consensus (Heimdall) plus Bor; VEBloP designates one elected producer per span.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-11",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-11.md"
+    },
+    {
+     "label": "PIP-64",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-64.md"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Deterministic via milestones",
+   "note": "Milestones give deterministic finality with an execution-layer fork-choice rule.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-11",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-11.md"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "1 s consensus period",
+   "note": "PIP-75 set the consensus period to 1 s with a producer override; observed average 1.5 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-75",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-75.md"
+    },
+    {
+     "label": "Polygon PoS public RPC, eth_getBlockByNumber @ 97,816,120",
+     "url": "https://polygon-bor-rpc.publicnode.com"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "160M gas (observed)",
+   "note": "Observed 160,000,000; the latest gas-limit PIP found (PIP-71) set 60M.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Polygon PoS public RPC, eth_getBlockByNumber @ 97,816,120",
+     "url": "https://polygon-bor-rpc.publicnode.com"
+    },
+    {
+     "label": "PIP-71",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-71.md"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "=",
+   "value": "EIP-7825 (Madhugiri)",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-76",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-76.md"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "POL",
+   "note": "POL is the upgraded native token, replacing MATIC.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-17",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-17.md"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Denominator 64; configurable",
+   "note": "BaseFeeChangeDenominator 64 (PIP-58); bounded configurable params (PIP-79) embedded in headers (PIP-83).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-58",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-58.md"
+    },
+    {
+     "label": "PIP-81",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-81.md"
+    },
+    {
+     "label": "PIP-84",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-84.md"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "25 gwei",
+   "note": "Floor moved from the priority fee to the base fee.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-59",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-59.md"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Prague + selected Osaka EIPs",
+   "note": "Prague at block 73,440,256; EIP-7823/7825/7883 in Madhugiri, CLZ in Lisovo.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor mainnet chain config",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/internal/cli/server/chains/mainnet.go"
+    },
+    {
+     "label": "PIP-76",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-76.md"
+    },
+    {
+     "label": "PIP-81",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-81.md"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "=",
+   "value": "CLZ (Lisovo)",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-81",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-81.md"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "~",
+   "value": "Cold SLOAD 5460, cold SSTORE 2940",
+   "note": "PIP-88 (Chicago, 2026-05-21) also raises BN254/BLS12-381/blake2F precompile costs 1.5x-22x.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-88",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-88.md"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "=",
+   "value": "P256 at 0x100",
+   "note": "PIP-27; cost raised 3450 -> 6900 (PIP-80).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-27",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-27.md"
+    },
+    {
+     "label": "PIP-80",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-80.md"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "=",
+   "value": "Yes (Prague rules)",
+   "note": "Derived: bor enables Prague at block 73,440,256, and Prague includes EIP-7702.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bor mainnet chain config",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/internal/cli/server/chains/mainnet.go"
+    },
+    {
+     "label": "EIP-7600",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7600.md"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "Bor (geth fork) + Heimdall",
+   "note": "\"Bor ... is a fork of geth.\"",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "0xPolygon/bor README",
+     "url": "https://github.com/0xPolygon/bor/blob/cefbcfd4078e7a6cdb8e7642bc26e3589e05e7ab/README.md"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "StateSync txs in block bodies",
+   "note": "L1 -> PoS state sync included canonically since Madhugiri (PIP-74).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "PIP-76",
+     "url": "https://github.com/0xPolygon/Polygon-Improvement-Proposals/blob/c5947c19fa847ce1dbd4ae4cce4ce9f17f9026e1/PIPs/PIP-76.md"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

@@ -1,0 +1,160 @@
+{
+ "id": "opbnb",
+ "chain": "BNB Chain",
+ "label": "opBNB",
+ "logo": "bnb",
+ "role": "L2 on BSC",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "OP Stack (Bedrock) rollup on BSC",
+   "note": "Sequencer-ordered L2 that settles to BSC, not Ethereum.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/opbnb README",
+     "url": "https://github.com/bnb-chain/opbnb/blob/426567ebb32455b2bfb9c736ae8908f84a462ddf/README.md"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "0.25 s",
+   "note": "Fourier (mainnet 2026-01-07) cut blocks from 500 ms to 250 ms; observed average 0.25 s. The repo README still says 1 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: Fourier upgrade of opBNB",
+     "url": "https://docs.bnbchain.org/announce/fourier-opbnb/"
+    },
+    {
+     "label": "opBNB public RPC, eth_getBlockByNumber @ 209,250,868",
+     "url": "https://opbnb-rpc.publicnode.com"
+    },
+    {
+     "label": "bnb-chain/opbnb README",
+     "url": "https://github.com/bnb-chain/opbnb/blob/426567ebb32455b2bfb9c736ae8908f84a462ddf/README.md"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "100M gas",
+   "note": "Docs and observed head agree on 100,000,000. A second docs table says 50M.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: opBNB metrics",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+    },
+    {
+     "label": "opBNB public RPC, eth_getBlockByNumber @ 209,250,868",
+     "url": "https://opbnb-rpc.publicnode.com"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "BNB",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: opBNB metrics",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Elasticity 2, denominator 8",
+   "note": "Same as Ethereum mainnet values, unlike OP Mainnet. Not verifiable from the header (pre-Holocene extraData).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/opbnb README",
+     "url": "https://github.com/bnb-chain/opbnb/blob/426567ebb32455b2bfb9c736ae8908f84a462ddf/README.md"
+    },
+    {
+     "label": "BNB docs: opBNB metrics",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "8 wei floor (docs)",
+   "note": "Docs list an 8 wei dynamic floor and 1001 wei minimum priority fee; observed baseFeePerGas at the head was 0.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: opBNB gas and fees",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/gas-and-fees/"
+    },
+    {
+     "label": "opBNB public RPC, eth_getBlockByNumber @ 209,250,868",
+     "url": "https://opbnb-rpc.publicnode.com"
+    }
+   ]
+  },
+  "fees.extra": {
+   "mark": "+",
+   "value": "L1 (BSC) data fee",
+   "note": "Cost = L2 gas price x L2 gas + L1 gas price x L1 gas.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: opBNB gas and fees",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/gas-and-fees/"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "=",
+   "value": "P256 (EIP-7212) since Haber",
+   "note": "secp256r1 precompile added 2024-06-20.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: Haber upgrade of opBNB",
+     "url": "https://docs.bnbchain.org/announce/haber-opbnb/"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "~",
+   "value": "BSC blobs",
+   "note": "Since Haber, batches go to BSC as blobs (BEP-336).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: Haber upgrade of opBNB",
+     "url": "https://docs.bnbchain.org/announce/haber-opbnb/"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "op-geth (bnb-chain)",
+   "note": "Upgrades ship bnb-chain op-node and op-geth releases.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: Volta upgrade of opBNB",
+     "url": "https://docs.bnbchain.org/announce/volta-opbnb/"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

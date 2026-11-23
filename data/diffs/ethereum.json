@@ -1,0 +1,378 @@
+{
+ "id": "ethereum",
+ "chain": "Ethereum",
+ "label": "Ethereum",
+ "logo": "ethereum",
+ "role": "L1 baseline",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "base",
+   "value": "Gasper proof-of-stake",
+   "note": "Beacon chain PoS: LMD-GHOST fork choice plus Casper FFG finality gadget.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ethereum.org: Proof-of-stake",
+     "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "base",
+   "value": "~2 epochs (~12.8 min)",
+   "note": "A block is finalized when it sits under a supermajority link between two epoch checkpoints. 2 epochs x 32 slots x 12 s is about 12.8 minutes (derived from the spec constants).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ethereum.org: Proof-of-stake",
+     "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    },
+    {
+     "label": "consensus-specs mainnet config",
+     "url": "https://github.com/ethereum/consensus-specs/blob/d2021d2719235f0df4726a1d330502cb15aa8ea3/configs/mainnet.yaml"
+    },
+    {
+     "label": "consensus-specs phase0 preset",
+     "url": "https://github.com/ethereum/consensus-specs/blob/d2021d2719235f0df4726a1d330502cb15aa8ea3/presets/mainnet/phase0.yaml"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "base",
+   "value": "Permissionless, 32 ETH deposit",
+   "note": "Anyone can become a validator by depositing 32 ETH and running execution, consensus and validator clients.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ethereum.org: Proof-of-stake",
+     "url": "https://ethereum.org/en/developers/docs/consensus-mechanisms/pos/"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "base",
+   "value": "12 s slots",
+   "note": "SLOT_DURATION_MS = 12000, 32 slots per epoch.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "consensus-specs mainnet config",
+     "url": "https://github.com/ethereum/consensus-specs/blob/d2021d2719235f0df4726a1d330502cb15aa8ea3/configs/mainnet.yaml"
+    },
+    {
+     "label": "consensus-specs phase0 preset",
+     "url": "https://github.com/ethereum/consensus-specs/blob/d2021d2719235f0df4726a1d330502cb15aa8ea3/presets/mainnet/phase0.yaml"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "base",
+   "value": "60M gas",
+   "note": "Observed 60,000,000 at the head; EIP-7935 (Fusaka) set the client default to 60M. Validators vote the limit up or down.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Ethereum public RPC, eth_getBlockByNumber @ 26,477,232",
+     "url": "https://ethereum-rpc.publicnode.com"
+    },
+    {
+     "label": "EIP-7935",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7935.md"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "base",
+   "value": "16,777,216 gas (2^24)",
+   "note": "Per-transaction gas cap introduced in Fusaka.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7825",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7825.md"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "base",
+   "value": "ETH",
+   "note": "Native token pays all gas.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-1559",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-1559.md"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "base",
+   "value": "Elasticity 2, denominator 8",
+   "note": "Target = limit / 2; base fee moves at most 12.5% per block.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-1559",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-1559.md"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "base",
+   "value": "No protocol floor",
+   "note": "EIP-1559 sets no minimum base fee.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-1559",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-1559.md"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "base",
+   "value": "Burned",
+   "note": "The base fee is burned; only the priority fee goes to the block producer.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-1559",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-1559.md"
+    }
+   ]
+  },
+  "fees.extra": {
+   "mark": "base",
+   "value": "Separate blob gas market",
+   "note": "Blob gas has its own base fee (EIP-4844), bounded below by execution cost since Fusaka (EIP-7918).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-4844",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-4844.md"
+    },
+    {
+     "label": "EIP-7918",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7918.md"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "base",
+   "value": "Osaka (Fusaka, Dec 3 2025)",
+   "note": "Mainnet activation 2025-12-03 21:49 UTC. Glamsterdam is not scheduled.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7607",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7607.md"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "base",
+   "value": "Reference set incl. PUSH0, TSTORE, MCOPY, BLOBHASH, BLOBBASEFEE, CLZ",
+   "note": "CLZ (EIP-7939) is the newest opcode, added in Osaka.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7607",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7607.md"
+    },
+    {
+     "label": "EIP-7939",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7939.md"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "base",
+   "value": "PREVRANDAO = beacon RANDAO; SELFDESTRUCT only within creating tx",
+   "note": "DIFFICULTY became PREVRANDAO at the Merge (EIP-4399); SELFDESTRUCT only deletes in the same transaction (EIP-6780).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-4399",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-4399.md"
+    },
+    {
+     "label": "EIP-6780",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-6780.md"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "base",
+   "value": "Reference schedule",
+   "note": "Osaka raised MODEXP costs (EIP-7883) and bounded its inputs (EIP-7823).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7883",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7883.md"
+    },
+    {
+     "label": "EIP-7823",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7823.md"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "base",
+   "value": "24,576 B code / 49,152 B initcode",
+   "note": "EIP-170 code size limit; EIP-3860 initcode limit.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-170",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-170.md"
+    },
+    {
+     "label": "EIP-3860",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-3860.md"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "base",
+   "value": "0x01-0x11 + 0x100 (P256VERIFY)",
+   "note": "BLS12-381 (0x0b-0x11, EIP-2537) arrived in Prague, secp256r1 verify at 0x100 (EIP-7951) in Osaka.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-2537",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-2537.md"
+    },
+    {
+     "label": "EIP-7951",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7951.md"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "base",
+   "value": "Reference set",
+   "note": "Baseline for the other columns.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7607",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7607.md"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "base",
+   "value": "0, 1, 2, 3, 4",
+   "note": "Legacy, access list (EIP-2930), dynamic fee (EIP-1559), blob (EIP-4844), set code (EIP-7702).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-2718",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-2718.md"
+    },
+    {
+     "label": "EIP-4844",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-4844.md"
+    },
+    {
+     "label": "EIP-7702",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7702.md"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "base",
+   "value": "Yes: target 14 / max 21 blobs",
+   "note": "Blob parameters raised by the BPO2 fork (2026-01-07).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "go-ethereum mainnet chainspec (blobSchedule)",
+     "url": "https://github.com/ethereum/go-ethereum/blob/2a2cbe3b4ec21de8b00538f4ec51e1157d871175/params/chainspecs/mainnet.json"
+    },
+    {
+     "label": "EIP-7607",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7607.md"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "base",
+   "value": "Yes (Prague)",
+   "note": "EIP-7702 set-code transactions, type 4.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7702",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7702.md"
+    },
+    {
+     "label": "EIP-7600",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7600.md"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "base",
+   "value": "Native blobs with PeerDAS",
+   "note": "Blob data availability with peer sampling (EIP-7594) since Fusaka.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7594",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7594.md"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "base",
+   "value": "Geth, Nethermind, Besu, Erigon, Reth",
+   "note": "Multiple independent execution clients.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "ethereum.org: Nodes and clients",
+     "url": "https://ethereum.org/en/developers/docs/nodes-and-clients/"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "base",
+   "value": "EIP-7702 delegation",
+   "note": "No protocol-native smart accounts beyond EIP-7702 set-code EOAs.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "EIP-7702",
+     "url": "https://github.com/ethereum/EIPs/blob/e3e214423e3dcbbcfaf1186211ad02971eff98a8/EIPS/eip-7702.md"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

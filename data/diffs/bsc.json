@@ -1,0 +1,343 @@
+{
+ "id": "bsc",
+ "chain": "BNB Chain",
+ "label": "BSC",
+ "logo": "bnb",
+ "role": "L1",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Proof-of-Staked-Authority (PoSA)",
+   "note": "Validator set elected by stake; fast-finality votes per BEP-126.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs index (llms.txt)",
+     "url": "https://docs.bnbchain.org/llms.txt"
+    },
+    {
+     "label": "BEP-126",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP126.md"
+    }
+   ]
+  },
+  "consensus.finality": {
+   "mark": "~",
+   "value": "Fast finality, ~1.125 s",
+   "note": "A block is finalized once two consecutive blocks are justified by validator votes. BEP-619 puts finality at ~1.125 s with 0.45 s blocks.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-126",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP126.md"
+    },
+    {
+     "label": "BEP-619",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-619.md"
+    }
+   ]
+  },
+  "consensus.validators": {
+   "mark": "~",
+   "value": "21 (as used in BEP-619)",
+   "note": "BEP-619 computes natural finality with ValidatorSize = 21 and TurnLength = 16. Not a live count.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-619",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-619.md"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "0.45 s",
+   "note": "Cut from 3 s via Lorentz (1.5 s), Maxwell (0.75 s) and Fermi (0.45 s, 2026-01-14). Observed average 0.45 s over the last 1,000 blocks.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-619",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-619.md"
+    },
+    {
+     "label": "BNB docs: BSC overview",
+     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+    },
+    {
+     "label": "BSC public RPC, eth_getBlockByNumber @ 135,254,932",
+     "url": "https://bsc-rpc.publicnode.com"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "80M gas (observed)",
+   "note": "Observed 80,000,000 at the head. An older docs table says 55M.",
+   "kind": "observed",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BSC public RPC, eth_getBlockByNumber @ 135,254,932",
+     "url": "https://bsc-rpc.publicnode.com"
+    },
+    {
+     "label": "BNB docs: opBNB metrics",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/opbnb-metrics/"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "=",
+   "value": "EIP-7825 adopted",
+   "note": "BEP-652 in Osaka/Mendel.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    },
+    {
+     "label": "BEP-652",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-652.md"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "~",
+   "value": "BNB",
+   "note": "BNB pays transaction fees.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: BSC overview",
+     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Base fee pinned to 0",
+   "note": "BEP-658 rejects EIP-7918 because \"base fee in BSC is always 0\"; pricing is by gas price, with a 0.05 gwei network standard.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    },
+    {
+     "label": "BNB docs: BSC overview",
+     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "0 base fee; 0.05 gwei standard gas price",
+   "note": "Floor base price 0, standard 0.05 gwei per BNB docs; observed baseFeePerGas 0.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BNB docs: opBNB gas and fees",
+     "url": "https://docs.bnbchain.org/bnb-opbnb/core-concepts/gas-and-fees/"
+    },
+    {
+     "label": "BNB docs: BSC overview",
+     "url": "https://docs.bnbchain.org/bnb-smart-chain/overview/"
+    },
+    {
+     "label": "BSC public RPC, eth_getBlockByNumber @ 135,254,932",
+     "url": "https://bsc-rpc.publicnode.com"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Fees to validators, part burned",
+   "note": "A fixed, validator-governed ratio of collected gas fees is burned each block (BEP-95). Current ratio not stated in the BEP.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-95",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP95.md"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Osaka, partial (7 of 13 Fusaka EIPs)",
+   "note": "Osaka/Mendel activated 2026-04-28. Rejected: EIP-7642, 7594, 7892, 7917, 7918, 7935. Pasteur (2026-08-25) added BSC-only changes.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    },
+    {
+     "label": "BEP-673",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-673.md"
+    },
+    {
+     "label": "bsc params/config.go (fork times)",
+     "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/params/config.go"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "=",
+   "value": "CLZ adopted",
+   "note": "BEP-654 implements EIP-7939.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    },
+    {
+     "label": "BEP-654",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-654.md"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "=",
+   "value": "MODEXP repricing adopted",
+   "note": "BEP-653 (EIP-7883) and BEP-651 (EIP-7823).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "=",
+   "value": "24,576 B code / 49,152 B initcode",
+   "note": "MaxCodeSize and MaxInitCodeSize match Ethereum.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bsc params/protocol_params.go",
+     "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/params/protocol_params.go"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "0x66 BLS verify, 0x67 CometBFT light block, 0x68 double-sign evidence, 0x69 secp256k1 recover",
+   "note": "Cross-chain/consensus precompiles; 0x64/0x65 (Tendermint header, IAVL proof) deprecated since Pasteur. P256 at 0x100 since Haber (BEP-381). Jenner (scheduled 2026-12-08) adds 0x70 millisecond timestamp.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bsc core/vm/contracts.go",
+     "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/core/vm/contracts.go"
+    },
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "=",
+   "value": "Full Ethereum set 0x01-0x11",
+   "note": "Present in the Osaka precompile table.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bsc core/vm/contracts.go",
+     "url": "https://github.com/bnb-chain/bsc/blob/4bd1c73016e31038a0ce9fdadce24d19d7128e25/core/vm/contracts.go"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "=",
+   "value": "Yes",
+   "note": "BEP-336 implements EIP-4844 (6 blobs max, 3 target per its table). BEP-657 limits blob tx inclusion by block number.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-336",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-336.md"
+    },
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "=",
+   "value": "Yes",
+   "note": "BEP-441 implements EIP-7702 (Pascal).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-441",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-441.md"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "=",
+   "value": "Native blobs (no PeerDAS)",
+   "note": "Blobs per BEP-336; PeerDAS rejected in BEP-658.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-336",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-336.md"
+    },
+    {
+     "label": "BEP-658",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-658.md"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "bsc (go-ethereum fork)",
+   "note": "\"A BNB Smart Chain client based on the go-ethereum fork.\"",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "bnb-chain/bsc repository description",
+     "url": "https://github.com/bnb-chain/bsc"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Builder-proposed blocks",
+   "note": "BEP-675 (Pasteur) lets builders propose blocks that validators blind-sign.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "BEP-673",
+     "url": "https://github.com/bnb-chain/BEPs/blob/aad6b1bd65605ae2d6d268b176f009386862d6ca/BEPs/BEP-673.md"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

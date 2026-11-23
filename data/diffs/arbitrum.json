@@ -1,0 +1,348 @@
+{
+ "id": "arbitrum",
+ "chain": "Arbitrum",
+ "label": "Arbitrum One",
+ "logo": "arbitrum",
+ "role": "L2 (Nitro)",
+ "facts": {
+  "consensus.mechanism": {
+   "mark": "~",
+   "value": "Sequencer + delayed inbox",
+   "note": "Transactions reach the chain through the sequencer or the parent-chain delayed inbox.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Block gas limit, numbers and time",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/block-numbers-and-time"
+    }
+   ]
+  },
+  "blocks.time": {
+   "mark": "~",
+   "value": "Variable, 4-8 blocks/s under load",
+   "note": "Blocks close at the gas target, a calldata limit or the last PGA round; observed average 0.29 s.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Gas and fees",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/gas-fees"
+    },
+    {
+     "label": "Arbitrum One public RPC, eth_getBlockByNumber @ 526,778,416",
+     "url": "https://arb1.arbitrum.io/rpc"
+    }
+   ]
+  },
+  "blocks.gas_limit": {
+   "mark": "~",
+   "value": "32M execution (header shows 2^50)",
+   "note": "Header gasLimit is an artificial 1,125,899,906,842,624; execution is capped at 32M (64M effective under PGA).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Block gas limit, numbers and time",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/block-numbers-and-time"
+    },
+    {
+     "label": "Arbitrum docs: Gas and fees",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/gas-fees"
+    },
+    {
+     "label": "Arbitrum One public RPC, eth_getBlockByNumber @ 526,778,416",
+     "url": "https://arb1.arbitrum.io/rpc"
+    }
+   ]
+  },
+  "blocks.tx_gas_cap": {
+   "mark": "~",
+   "value": "32M",
+   "note": "EIP-7825 adopted in ArbOS 51 with a 32M cap for One/Nova.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 51 Dia",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos51"
+    }
+   ]
+  },
+  "fees.gas_token": {
+   "mark": "=",
+   "value": "ETH",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Differences overview",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/comparison-overview"
+    }
+   ]
+  },
+  "fees.eip1559": {
+   "mark": "~",
+   "value": "Multi-window gas-target pricing",
+   "note": "Base fee set by several gas targets each with its own adjustment window (e.g. 60 Mgas/s over 9 s), not the per-block EIP-1559 rule.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Gas and fees",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/gas-fees"
+    }
+   ]
+  },
+  "fees.min_base_fee": {
+   "mark": "~",
+   "value": "0.02 gwei",
+   "note": "Minimum L2 base fee set to 0.02 gwei; ArbOS 61 lets Offchain Labs move it within 0.01-0.10 gwei. Observed 0.020048 gwei.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 61 Elara",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos61"
+    },
+    {
+     "label": "Arbitrum One public RPC, eth_getBlockByNumber @ 526,778,416",
+     "url": "https://arb1.arbitrum.io/rpc"
+    }
+   ]
+  },
+  "fees.base_fee_dest": {
+   "mark": "~",
+   "value": "Network fee account, not burned",
+   "note": "L2 fees go to the network fee account; PGA tips are 97% DAO treasury, 3% Developer Guild.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Gas and fees",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/gas-fees"
+    }
+   ]
+  },
+  "fees.extra": {
+   "mark": "+",
+   "value": "Parent-chain data fee",
+   "note": "Brotli-compressed size x 16 data units x adaptive price, converted into L2 gas.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Gas and fees",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/gas-fees"
+    }
+   ]
+  },
+  "evm.baseline": {
+   "mark": "~",
+   "value": "Osaka EL (ArbOS 51 Dia, Jan 2026)",
+   "note": "ArbOS 51 brought the Fusaka EIPs; ArbOS 61 Elara (Aug 2026) is current.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 51 Dia",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos51"
+    },
+    {
+     "label": "Arbitrum docs: ArbOS 61 Elara",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos61"
+    }
+   ]
+  },
+  "evm.opcodes_added": {
+   "mark": "=",
+   "value": "PUSH0 (ArbOS 11), CLZ (ArbOS 51)",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Solidity support",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/solidity-support"
+    },
+    {
+     "label": "Arbitrum docs: ArbOS 51 Dia",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos51"
+    }
+   ]
+  },
+  "evm.opcodes_changed": {
+   "mark": "~",
+   "value": "BLOCKHASH, COINBASE, PREVRANDAO, NUMBER",
+   "note": "BLOCKHASH is pseudo-random; COINBASE = 0xA4b0...6572; DIFFICULTY/PREVRANDAO = 1; NUMBER = approx. L1 block.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Solidity support",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/solidity-support"
+    },
+    {
+     "label": "Arbitrum docs: Block gas limit, numbers and time",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/block-numbers-and-time"
+    }
+   ]
+  },
+  "evm.gas_repricing": {
+   "mark": "=",
+   "value": "Same opcode costs",
+   "note": "\"Every EVM instruction costs the same amount of gas as it would on Ethereum\"; L1 cost is charged separately.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Gas and fees",
+     "url": "https://docs.arbitrum.io/how-arbitrum-works/gas-fees"
+    }
+   ]
+  },
+  "evm.contract_size": {
+   "mark": "~",
+   "value": "24 KB EVM; Stylus up to 96 KB",
+   "note": "ArbOS 61 raises the Stylus limit to 96 KB; Solidity stays at 24 KB.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 61 Elara",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos61"
+    }
+   ]
+  },
+  "precompiles.added": {
+   "mark": "+",
+   "value": "ArbSys (0x64), ArbGasInfo, ArbRetryableTx, ...",
+   "note": "Arbitrum-specific precompiles; NodeInterface (0xc8) is RPC-only. P256 since ArbOS 31 (RIP-7212).",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: Precompiles overview",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/precompiles/overview"
+    },
+    {
+     "label": "Arbitrum docs: Differences overview",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/comparison-overview"
+    },
+    {
+     "label": "Arbitrum docs: ArbOS 51 Dia",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos51"
+    }
+   ]
+  },
+  "precompiles.missing": {
+   "mark": "~",
+   "value": "BLS12-381 late",
+   "note": "EIP-2537 was added but not properly enabled until ArbOS 51.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 40 Callisto",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos40"
+    },
+    {
+     "label": "Arbitrum docs: ArbOS 51 Dia",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos51"
+    }
+   ]
+  },
+  "tx.types_added": {
+   "mark": "+",
+   "value": "100-106 (deposit, retryable, internal...)",
+   "note": "ArbitrumDepositTx 100, Unsigned 101, Contract 102, Retry 104, SubmitRetryable 105, Internal 106.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: RPC methods",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/rpc-methods"
+    }
+   ]
+  },
+  "tx.blob": {
+   "mark": "-",
+   "value": "No blob intake",
+   "note": "ArbOS 20 posts batches to L1 as blobs but does not let an Arbitrum chain receive blob data.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 20 Atlas",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos20"
+    }
+   ]
+  },
+  "tx.setcode": {
+   "mark": "=",
+   "value": "Yes (ArbOS 40)",
+   "note": "",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 40 Callisto",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos40"
+    }
+   ]
+  },
+  "da.layer": {
+   "mark": "~",
+   "value": "Ethereum calldata/blobs",
+   "note": "Batch poster posts compressed batches to Ethereum.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: ArbOS 20 Atlas",
+     "url": "https://docs.arbitrum.io/run-a-node/arbos-releases/arbos20"
+    },
+    {
+     "label": "Arbitrum docs: Block gas limit, numbers and time",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/block-numbers-and-time"
+    }
+   ]
+  },
+  "clients.execution": {
+   "mark": "~",
+   "value": "Nitro (Geth core)",
+   "note": "Nitro compiles the core of Geth into Arbitrum.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "OffchainLabs/nitro README",
+     "url": "https://github.com/OffchainLabs/nitro/blob/ccc5c828d9ea22f161efc784bac4d4a6559b7e59/README.md"
+    },
+    {
+     "label": "Arbitrum docs: RPC methods",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/rpc-methods"
+    }
+   ]
+  },
+  "native.features": {
+   "mark": "+",
+   "value": "Stylus (WASM), retryable tickets",
+   "note": "Contracts in Rust/C/C++ compiled to WASM alongside the EVM.",
+   "kind": "doc",
+   "as_of": "2026-11-23",
+   "sources": [
+    {
+     "label": "Arbitrum docs: A gentle introduction to Stylus",
+     "url": "https://docs.arbitrum.io/stylus/gentle-introduction"
+    },
+    {
+     "label": "Arbitrum docs: RPC methods",
+     "url": "https://docs.arbitrum.io/build-decentralized-apps/arbitrum-vs-ethereum/rpc-methods"
+    }
+   ]
+  }
+ },
+ "as_of": "2026-11-23"
+}

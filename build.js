@@ -2,6 +2,7 @@
 // Adapter contract: default export { chain, sources: [{label,url}], fetch(): Promise<{proposals, notes?, reason?}> }
 import { readdir, writeFile } from 'node:fs/promises';
 import { classify, SUBS } from './lib/tags.js';
+import { loadDiffs, validateDiffs } from './lib/diffs.js';
 
 export async function runAdapter(adapter, file) {
   const base = { chain: adapter.chain, adapter: `adapters/${file}`, sources: adapter.sources || [], fetched_at: new Date().toISOString() };
@@ -15,7 +16,17 @@ export async function runAdapter(adapter, file) {
   }
 }
 
+// Chain diff tab: hand-curated facts, validated (every fact sourced and dated) before it is written.
+async function writeDiffs() {
+  const diffs = await loadDiffs();
+  const errs = validateDiffs(diffs);
+  if (errs.length) { console.error(errs.join('\n')); process.exit(1); }
+  await writeFile(new URL('./site/diffs.json', import.meta.url), JSON.stringify(diffs));
+  console.log(`wrote site/diffs.json (${diffs.chains.length} chains, ${diffs.chains.reduce((n, c) => n + Object.keys(c.facts).length, 0)} facts)`);
+}
+
 async function main() {
+  if (process.argv.includes('--diffs-only')) return writeDiffs();
   const files = (await readdir(new URL('./adapters/', import.meta.url))).filter((f) => f.endsWith('.js')).sort();
   const chains = await Promise.all(files.map(async (f) => {
     const t = Date.now();
@@ -26,6 +37,7 @@ async function main() {
   const taxonomy = Object.fromEntries(Object.entries(SUBS).map(([t, subs]) => [t, subs.map(([id, label]) => [id, label])]));
   const data = { generated_at: new Date().toISOString(), taxonomy, chains };
   await writeFile(new URL('./site/data.json', import.meta.url), JSON.stringify(data));
+  await writeDiffs();
   console.log(`wrote site/data.json (${chains.reduce((n, c) => n + c.count, 0)} rows)`);
 }
 
