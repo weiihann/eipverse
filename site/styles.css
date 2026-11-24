@@ -34,7 +34,7 @@ svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width:
 .top-in, .filters, main, .foot { max-width: 1320px; margin: 0 auto; padding-left: 24px; padding-right: 24px; }
 .top-in { display: flex; align-items: center; gap: 16px; height: 52px; }
 .mark { display: flex; align-items: center; gap: 8px; font: 600 15px/1 var(--mono); letter-spacing: -.02em; }
-.mark-dot { width: 10px; height: 10px; border-radius: 3px; background: conic-gradient(#627EEA 0 14%, #F0B90B 0 28%, #38BDF8 0 43%, #A855F7 0 57%, #28A0F0 0 71%, #FF0420 0 86%, #0052FF 0); }
+.mark-logo { width: 20px; height: 20px; flex: none; display: block; }
 .sub { color: var(--i3); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .tabs { display: flex; gap: 2px; margin-left: auto; background: var(--s1); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .tabs button { padding: 5px 11px; border-radius: 6px; color: var(--i3); font-weight: 500; white-space: nowrap; }
