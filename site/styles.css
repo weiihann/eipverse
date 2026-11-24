@@ -236,7 +236,6 @@ main { padding-bottom: 32px; }
 .sep { color: var(--i4); }
 .s-n { color: var(--i2); text-align: right; font-size: 12px; }
 .s-t { color: var(--i4); font-size: 11px; }
-.s-foot { color: var(--i4); font-size: 11.5px; margin: 10px 2px 0; }
 .sgrid { display: block; }
 @media (max-width: 760px) {
   .srow { grid-template-columns: 1fr auto auto; row-gap: 6px; }

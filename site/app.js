@@ -372,7 +372,7 @@ function renderSources() {
     <span class="s-n num">${fmtN(c.count)} rows</span>
     <span class="s-t num" title="fetched ${esc(c.fetched_at)}">${esc(c.fetched_at.slice(5, 16).replace('T', ' '))} UTC</span>
     ${c.status === 'ok' ? '' : `<span class="s-warn" role="status">${c.status === 'empty' ? 'No data from this source on the last build' : 'Source failed on the last build'}${c.reason ? `: ${esc(c.reason)}` : ''}</span>`}
-  </div>`).join('') + `</div><p class="s-foot">Each label links to the file or API the build reads. Rebuilt daily.</p>`;
+  </div>`).join('') + `</div>`;
 }
 
 // ---------- chain diff ----------
@@ -452,7 +452,6 @@ function renderDiff() {
   $('difft').innerHTML = `<thead><tr><th class="d-corner">Dimension</th>${cols.map((c) => `<th style="--c:${cc(c.chain)}"><span class="d-ch">${logo(c.chain)}<span><b>${esc(c.label)}</b><small>${esc(c.role)}</small></span></span></th>`).join('')}</tr></thead>
     <tbody>${body || `<tr><td class="d-load" colspan="${cols.length + 1}">No dimension matches these filters.</td></tr>`}</tbody>`;
   for (const b of $('difft').querySelectorAll('[data-cell]')) b.onclick = () => set({ cell: b.dataset.cell });
-  $('diff-foot').textContent = `Showing ${rows.length} of ${DIFF.dimensions.length} dimensions across ${n} chains. Marks always read against Ethereum; "differs" and "same" compare the chains on screen. Every non-blank cell links to the spec, code (pinned to a commit) or docs page it came from, plus an as-of date; "obs" cells were read from a public RPC at the block named in the source. Click any cell for the full note.`;
 }
 
 function srcList(sources) {
