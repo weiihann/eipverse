@@ -1,0 +1,42 @@
+name: Build and deploy eipverse
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '17 3 * * *' # daily, 03:17 UTC (11:17 MYT)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # No dependencies, so no npm ci.
+      - name: Fetch sources and build site/data.json
+        run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # raises the GitHub API rate limit for the adapters
+      - name: Test
+        run: npm test
+      - name: Deploy site/ to Cloudflare Workers (eipverse.com)
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 4b556fbec229911ef6b73f36da0e7ab3 # not a secret; identifies the account
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ]; then
+            echo "::notice::Skipping Cloudflare deploy: CLOUDFLARE_API_TOKEN secret not set yet"
+            exit 0
+          fi
+          npx --yes wrangler@4 deploy
