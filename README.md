@@ -25,17 +25,19 @@ Twelve chains, in the same order as the site (`site/chains.js`).
 
 ## Run locally
 
-No dependencies. Node 18 or later.
+No dependencies. Node 18 or later. Set `GITHUB_TOKEN` to raise the GitHub API rate limit.
 
 ```sh
-npm run build   # fetch live sources into site/data.json (set GITHUB_TOKEN to raise the GitHub API limit)
+npm run build   # fetch live sources into site/data.json
 npm test
 npm run serve   # http://127.0.0.1:8787
 ```
 
 ## Add a chain
 
-Add a file in `adapters/` and a row in `site/chains.js`. Each adapter's default export is `{ chain, sources: [{ label, url }], fetch() }`. `fetch()` returns `{ proposals, notes?, reason? }`. `build.js` runs every adapter in that folder.
+Add a file in `adapters/` and a row in `site/chains.js`. `build.js` runs every adapter in that folder.
+
+The default export is `{ chain, sources, fetch }`. `sources` is `[{ label, url }]`. `fetch()` returns `{ proposals, notes?, reason? }`.
 
 ## Deploy
 
