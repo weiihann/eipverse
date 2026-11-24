@@ -10,6 +10,8 @@ test('URL selection: known ids, page order, deduped, capped at 4, default when t
   assert.deepEqual(parseCols('tempo,base,arbitrum,avalanche,bsc', ids), ['bsc', 'avalanche', 'arbitrum', 'base']);
   assert.deepEqual(parseCols('base', ids), DEFAULT_COLS);
   assert.deepEqual(parseCols('', ids), DEFAULT_COLS);
+  assert.deepEqual(DEFAULT_COLS, ['ethereum', 'bsc', 'tempo']);
+  assert.equal(serializeCols(['ethereum', 'bsc', 'base'], ids), 'ethereum,bsc,base');
   assert.deepEqual(parseCols(null, ids), DEFAULT_COLS);
   assert.deepEqual(parseCols('ALL', ids), ids);
 });

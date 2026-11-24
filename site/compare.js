@@ -1,7 +1,7 @@
 // Chain diff compare: which columns are on screen, and whether a row reads the same across them. Pure functions so the
-// page and the tests share them. The selection lives in the URL as ?view=diff&c=ethereum,bsc,base (or c=all).
+// page and the tests share them. The selection lives in the URL as ?view=diff&c=ethereum,bsc,tempo (or c=all).
 
-export const DEFAULT_COLS = ['ethereum', 'bsc', 'base'];
+export const DEFAULT_COLS = ['ethereum', 'bsc', 'tempo'];
 export const MIN_COLS = 2, MAX_COLS = 4;
 
 // `param` is the raw `c` value; `ids` is every diff column id in page order. Returns the ids to show, in page order.
