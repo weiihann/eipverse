@@ -143,7 +143,6 @@ main { padding-bottom: 32px; }
 .card .rid { font-size: 11px; color: var(--i2); }
 .card .t { font-size: 12.5px; font-weight: 500; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .card .m { display: flex; gap: 8px; align-items: center; min-width: 0; }
-.col-empty { padding: 20px 12px; color: var(--i4); font-size: 12px; text-align: center; }
 
 /* upgrades + sources */
 .ugrid, .sgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; margin-top: 8px; }
@@ -185,7 +184,7 @@ main { padding-bottom: 32px; }
   .rtitle { white-space: normal; }
   .search { flex-basis: 100%; max-width: none; }
   .kv { grid-template-columns: 96px 1fr; }
-  .cols { grid-auto-columns: 82%; }
+  .cols { grid-auto-columns: minmax(82%, 1fr); }
   .matrix { min-width: 640px; }
 }
 .ui .v .link { justify-self: start; text-align: left; font-size: 12px; }

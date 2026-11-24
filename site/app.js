@@ -1,7 +1,7 @@
 // eipverse page: one data.json, four views, all state in the URL.
 import { CHAINS as CHAIN_LIST } from './chains.js';
 import { parseCols, serializeCols, toggleCol, rowState, MIN_COLS, MAX_COLS } from './compare.js';
-import { sortNewestFirst, upgradesByChain, statusBucket, statedTime, targetsUpgrade, isUpgrade, sourceLabel, sourceList } from './derive.js';
+import { sortNewestFirst, upgradesByChain, statusBucket, statedTime, targetsUpgrade, isUpgrade, sourceLabel, sourceList, presentChains } from './derive.js';
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -333,14 +333,19 @@ function renderLayers() {
 
   if (!state.tag) { $('side').innerHTML = `<div class="side-h"><h3>Pick a layer</h3><p>Click a row or cell to see that layer's proposals side by side, one column per chain. Use the arrow to open a layer's subcategories. Counts follow scope, kind, status and search above.</p></div>`; shownList = []; return; }
   const rows = base.filter((r) => (state.sub ? inSub(r, state.tag, state.sub) : has(r, state.tag)));
-  shownList = ORDER.flatMap((c) => rows.filter((r) => r.chain === c));
+  const cols = presentChains(ORDER, rows);
+  shownList = cols.flatMap((c) => rows.filter((r) => r.chain === c));
   const name = (state.tag === 'untagged' ? 'Untagged' : TAGS[state.tag][0]) + (state.sub ? ` › ${subLabel(state.tag, state.sub)}` : '');
   const subOf = (r) => (state.tag !== 'untagged' && !state.sub && r.subs[state.tag] ? `<span class="tag tag-sm" style="--t:${TAGS[state.tag][1]}">${esc(subLabel(state.tag, r.subs[state.tag].sub))}</span>` : '');
-  $('side').innerHTML = `<div class="side-h"><h3>${esc(name)} across chains</h3><p>${fmtN(rows.length)} proposals · newest stated date first · tags and subcategories are derived from each proposal's own title and abstract</p></div>
-    <div class="cols">${ORDER.map((c) => { const rs = rows.filter((r) => r.chain === c); return `<section class="col" data-chain="${esc(c)}" style="--c:${cc(c)}">
+  if (!cols.length) {
+    $('side').innerHTML = `<div class="side-h"><h3>${esc(name)} across chains</h3></div><div class="empty">None in this scope</div>`;
+    return;
+  }
+  $('side').innerHTML = `<div class="side-h"><h3>${esc(name)} across chains</h3></div>
+    <div class="cols">${cols.map((c) => { const rs = rows.filter((r) => r.chain === c); return `<section class="col" data-chain="${esc(c)}" style="--c:${cc(c)}">
       <div class="col-h">${logo(c)}${esc(cs(c))}<span class="n">${rs.length}</span></div>
-      <div class="col-b">${rs.length ? rs.map((r) => `<button class="card" data-key="${esc(r._key)}"><span class="rid" title="${esc(r.id)}"><span class="rid-t">${esc(r.id)}</span></span><span class="t">${esc(r.title || r.id)}</span>
-        <span class="m">${statusPill(r.status)}${subOf(r)}${r.target_upgrade ? `<span class="fork" title="${esc(r.target_upgrade)}">${esc(shortTarget(r.target_upgrade))}</span>` : ''}</span></button>`).join('') : '<div class="col-empty">None in this scope</div>'}</div></section>`; }).join('')}</div>`;
+      <div class="col-b">${rs.map((r) => `<button class="card" data-key="${esc(r._key)}"><span class="rid" title="${esc(r.id)}"><span class="rid-t">${esc(r.id)}</span></span><span class="t">${esc(r.title || r.id)}</span>
+        <span class="m">${statusPill(r.status)}${subOf(r)}${r.target_upgrade ? `<span class="fork" title="${esc(r.target_upgrade)}">${esc(shortTarget(r.target_upgrade))}</span>` : ''}</span></button>`).join('')}</div></section>`; }).join('')}</div>`;
   for (const b of $('side').querySelectorAll('.card')) b.onclick = () => set({ id: b.dataset.key });
 }
 

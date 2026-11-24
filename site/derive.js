@@ -122,3 +122,9 @@ export function sourceList(sources = []) {
     return { ...s, short: doc ? `${doc[1].toUpperCase()}-${doc[2]}` : `${labels[i]} · ${file}` };
   });
 }
+
+/** Chains from `order` that have at least one row, keeping that order. */
+export function presentChains(order, rows) {
+  const have = new Set(rows.map((r) => r.chain));
+  return order.filter((c) => have.has(c));
+}
