@@ -2,7 +2,7 @@
 
 An aggregator of improvement ideas across EVM chains: every chain's proposals (EIPs/ERCs, BEPs/BAPs, TIPs, MIPs/MRCs, AIPs, OP Stack upgrade proposals, PIPs/PRCs, ACPs, GIPs, HIPs, SIPs and Sei governance proposals) and network upgrades side by side in one static page, so you can see what each chain is proposing and shipping. Chains, in the page's order (native-token market cap, see `site/chains.js`): Ethereum, BNB Chain (BSC, opBNB), Hyperliquid (HyperEVM), Avalanche C-Chain, Arbitrum, Polygon PoS, Sei, Gnosis Chain, Optimism / OP Stack, Monad, Base, Tempo.
 
-Live: https://weiihann.github.io/eipverse/ Every row comes from the chain's own canonical source (GitHub proposal repos, client chain configs, official registries, governance APIs). Two things are derived, and the page labels them: "activated"/"scheduled" (a stated activation timestamp compared with the build time) and layer tags.
+Live: https://eipverse.com Every row comes from the chain's own canonical source (GitHub proposal repos, client chain configs, official registries, governance APIs). Two things are derived, and the page labels them: "activated"/"scheduled" (a stated activation timestamp compared with the build time) and layer tags.
 
 ## Layout
 
@@ -22,4 +22,4 @@ npm run serve   # http://127.0.0.1:8787
 
 ## Deploy
 
-`.github/workflows/pages.yml` builds, tests and deploys `site/` to GitHub Pages on every push to `main`, daily at 03:17 UTC, and on manual dispatch. It uses only the built-in `GITHUB_TOKEN`. In the repo, enable Settings → Pages → Source: GitHub Actions.
+The canonical site is [eipverse.com](https://eipverse.com), hosted on Cloudflare Workers Static Assets (free). Connecting the repo in Cloudflare rebuilds and deploys `site/` on every push to `main`. GitHub Pages at https://weiihann.github.io/eipverse/ is still deployed by `.github/workflows/pages.yml` on every push to `main`, daily at 03:17 UTC, and on manual dispatch. That workflow uses only the built-in `GITHUB_TOKEN`. In the repo, enable Settings → Pages → Source: GitHub Actions.
