@@ -60,7 +60,7 @@ const forkName = (s) => String(s || '').replace(/^protocol version /, '');
 const shortTarget = (s) => forkName(s.split('; ')[0]).replace(/ \((Scheduled|Considered|Proposed|Declined)[^)]*\)$/i, '');
 
 // ---------- state <-> URL ----------
-const VIEWS = ['proposals', 'layers', 'upgrades', 'diff', 'sources'];
+const VIEWS = ['proposals', 'layers', 'diff', 'upgrades', 'sources'];
 const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '', dg: '', dq: '', cell: '', c: '' };
 const state = { ...DEFAULTS };
 function readUrl() {
