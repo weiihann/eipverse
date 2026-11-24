@@ -352,7 +352,7 @@ function renderUpgrades() {
        <span class="d">${u.date ? `<span title="${esc(u.date)}">${human(statedTime(u.date))}</span>${extra}` : esc(u.row.status)}</span>${link(c, u)}`
     : '<span class="none">none stated</span>'}</span></div>`;
   $('ugrid').innerHTML = ORDER.map((name) => UPS.find((c) => c.chain === name)).filter(Boolean).map((c) => `<section class="uc" style="--c:${cc(c.chain)}">
-    <div class="uc-h">${logo(c.chain)}${esc(c.chain)}<span class="n">${fmtN(ALL.filter((r) => r.chain === c.chain).length)} rows</span></div>
+    <div class="uc-h">${logo(c.chain)}${esc(c.chain)}</div>
     <div class="ub">${item(c.chain, 'Latest', c.latest)}${item(c.chain, 'Next', c.next, c.next ? ` · <span class="cd">${countdown(statedTime(c.next.date), NOW)}</span>` : '')}
     ${c.undated.length ? c.undated.map((u, i) => item(c.chain, i ? '' : 'In progress', u)).join('') : item(c.chain, 'In progress', null)}</div></section>`).join('');
   for (const b of $('ugrid').querySelectorAll('[data-fork]')) b.onclick = () => set({ view: 'proposals', fork: b.dataset.fork, chain: b.dataset.chain, scope: 'all', kind: '', tag: '', sub: '', status: '', q: '' });
