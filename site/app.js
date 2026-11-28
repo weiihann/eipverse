@@ -1,5 +1,6 @@
-// eipverse page: one data.json, four views, all state in the URL.
+// eipverse page: data.json (plus diffs.json and changes.json on demand), six views, all state in the URL.
 import { CHAINS as CHAIN_LIST } from './chains.js';
+import { changeLabel } from './changes.js';
 import { parseCols, serializeCols, toggleCol, rowState, MIN_COLS, MAX_COLS } from './compare.js';
 import { sortNewestFirst, upgradesByChain, statusBucket, statedTime, targetsUpgrade, isUpgrade, sourceLabel, sourceList, presentChains } from './derive.js';
 
@@ -60,7 +61,7 @@ const forkName = (s) => String(s || '').replace(/^protocol version /, '');
 const shortTarget = (s) => forkName(s.split('; ')[0]).replace(/ \((Scheduled|Considered|Proposed|Declined)[^)]*\)$/i, '');
 
 // ---------- state <-> URL ----------
-const VIEWS = ['proposals', 'layers', 'diff', 'upgrades', 'sources'];
+const VIEWS = ['proposals', 'changes', 'layers', 'diff', 'upgrades', 'sources'];
 const DEFAULTS = { view: 'proposals', scope: 'active', kind: 'protocol', chain: '', tag: '', sub: '', status: '', fork: '', q: '', id: '', dg: '', dq: '', cell: '', c: '' };
 const state = { ...DEFAULTS };
 function readUrl() {
@@ -300,6 +301,55 @@ function renderProposals(shown) {
 }
 $('more').onclick = () => { limit += 300; renderProposals(shownList); };
 $('list').addEventListener('click', (e) => { const b = e.target.closest('.row'); if (b) set({ id: b.dataset.key }); });
+
+// ---------- changes ----------
+// changes.json is the build-to-build log (lib/changes.js), loaded when the tab first opens. Rows open the same drawer.
+let CHG = null, chgLoading = false, chgErr = '';
+const loadChanges = () => {
+  if (CHG || chgLoading) return;
+  chgLoading = true;
+  fetch('changes.json').then((r) => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json(); })
+    .then((d) => { CHG = d; }).catch((e) => { chgErr = e.message; }).finally(() => { chgLoading = false; if (state.view === 'changes') render(); });
+};
+const rssIcon = '<svg viewBox="0 0 24 24"><path d="M4 11a9 9 0 0 1 9 9"/><path d="M4 4a16 16 0 0 1 16 16"/><circle cx="5" cy="19" r="1"/></svg>';
+function changeRow(e) {
+  const key = `${e.chain}|${e.id}`, known = byId.has(key);
+  const detail = e.change === 'new' ? statusPill(e.to) : `<span class="chg-from">${e.from == null ? '<span class="none">not stated</span>' : esc(e.from)}</span><span class="arrow">→</span><span class="chg-to">${esc(e.to)}</span>`;
+  return `<div class="chg" style="--c:${cc(e.chain)}"><button class="chg-main${state.id === key ? ' sel' : ''}" data-key="${esc(key)}"${known ? '' : ' disabled'}>
+    <span class="rid" title="${esc(e.id)} · ${esc(e.chain)}">${logo(e.chain)}<span class="rid-t">${esc(e.id)}</span></span>
+    <span class="chg-body"><span class="rtitle">${e.title ? esc(e.title) : '<span class="none">untitled in source</span>'}</span>
+    <span class="chg-d"><span class="chg-k">${esc(changeLabel(e))}</span>${detail}${e.basis === 'created' ? '<span class="none" title="The source gives this created date; the build did not see it happen">· created</span>' : ''}</span></span>
+  </button><a class="chg-src" href="${esc(e.url)}" target="_blank" rel="noopener" title="Open ${esc(sourceLabel(e.url))}" aria-label="Open the source for ${esc(e.id)}">${icon.ext}</a></div>`;
+}
+function renderChanges() {
+  const el = $('chg');
+  if (!CHG) {
+    loadChanges();
+    el.innerHTML = `<div class="empty">${chgErr ? `<span class="b-error">Could not load changes.json: ${esc(chgErr)}</span>` : 'Loading changes…'}</div>`;
+    return;
+  }
+  const sel = chainSel();
+  const chip = (c) => `<button class="cchip" data-chain="${esc(c)}" aria-pressed="${sel.includes(c)}" style="--c:${cc(c)}">${logo(c)}<span>${esc(cs(c))}</span></button>`;
+  const rows = CHG.entries.filter((e) => (!state.kind || e.kind === state.kind) && (!sel.length || sel.includes(e.chain)));
+  const days = [];
+  for (const e of rows) { const d = e.at.slice(0, 10); if (days.at(-1)?.[0] !== d) days.push([d, []]); days.at(-1)[1].push(e); }
+  const none = !CHG.entries.length
+    ? `Tracking started ${human(Date.parse(CHG.tracking_started))}. Changes appear after the next daily build.`
+    : `No changes match these filters. <button class="link" id="chg-all">Show all</button>`;
+  el.innerHTML = `<div class="chg-head">
+      <div class="cmp-pick" role="group" aria-label="Chains">${ORDER.map(chip).join('')}</div>
+      <div class="chg-tools">
+        <div class="seg seg-sm" role="group" aria-label="Kind">${[['protocol', 'Protocol'], ['app standard', 'App standards'], ['', 'Both']].map(([v, l]) => `<button data-kind="${v}" aria-pressed="${state.kind === v}">${l}</button>`).join('')}</div>
+        <a class="rss" href="feed.xml" type="application/rss+xml">${rssIcon}RSS</a>
+      </div></div>`
+    + (rows.length ? days.map(([d, es]) => `<section class="chg-day"><h3>${human(Date.parse(d))}</h3>${es.map(changeRow).join('')}</section>`).join('') : `<div class="empty">${none}</div>`)
+    + (CHG.entries.length ? `<div class="chg-since hint">Tracking since ${human(Date.parse(CHG.tracking_started))} · ${fmtN(rows.length)} ${rows.length === 1 ? 'change' : 'changes'}</div>` : '');
+  for (const b of el.querySelectorAll('[data-chain]')) b.onclick = () => POP_ACT.chain({ act: 'toggle', v: b.dataset.chain });
+  for (const b of el.querySelectorAll('[data-kind]')) b.onclick = () => set({ kind: b.dataset.kind });
+  $('chg-all')?.addEventListener('click', () => set({ chain: '', kind: '' }));
+  shownList = [...new Set(rows.map((e) => byId.get(`${e.chain}|${e.id}`)).filter(Boolean))];
+}
+$('chg').addEventListener('click', (e) => { const b = e.target.closest('.chg-main[data-key]'); if (b) set({ id: b.dataset.key }); });
 
 // ---------- layers ----------
 const expanded = new Set();
@@ -573,6 +623,7 @@ function render() {
   if (openPop && !(filt || (state.view === 'diff' && openPop === 'dg'))) closePop();
   const shown = filt ? renderFilters() : [];
   if (state.view === 'proposals') renderProposals(shown);
+  if (state.view === 'changes') renderChanges();
   if (state.view === 'layers') renderLayers();
   if (state.view === 'upgrades') { renderUpgrades(); shownList = []; }
   if (state.view === 'sources') { renderSources(); shownList = []; }

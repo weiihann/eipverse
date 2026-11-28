@@ -6,6 +6,8 @@ Track how each EVM chain evolves side by side.
 
 Machine-readable data is at [eipverse.com/data.json](https://eipverse.com/data.json). [llms.txt](https://eipverse.com/llms.txt) lists the views, schema, and per-chain endpoints.
 
+The Changes tab and [feed.xml](https://eipverse.com/feed.xml) list what changed between daily builds ([changes.json](https://eipverse.com/changes.json)). Each build diffs against the live `data.json` and appends to the live `changes.json`, so nothing is stored outside the site.
+
 ## Chains
 
 Twelve chains, in the same order as the site (`site/chains.js`).

@@ -1,9 +1,10 @@
-// Runs every adapter in ./adapters and writes site/data.json. Adding a chain = adding one adapter file.
+// Runs every adapter in ./adapters and writes site/data.json, then the agent files and the changes feed. Adding a chain = adding one adapter file.
 // Adapter contract: default export { chain, sources: [{label,url}], fetch(): Promise<{proposals, notes?, reason?}> }
 import { readdir, writeFile } from 'node:fs/promises';
 import { classify, SUBS } from './lib/tags.js';
 import { loadDiffs, validateDiffs } from './lib/diffs.js';
 import { writeAgentFiles } from './lib/agent-files.js';
+import { writeChanges } from './lib/changes.js';
 
 export async function runAdapter(adapter, file) {
   const base = { chain: adapter.chain, adapter: `adapters/${file}`, sources: adapter.sources || [], fetched_at: new Date().toISOString() };
@@ -42,6 +43,10 @@ async function main() {
   const n = await writeAgentFiles(data);
   console.log(`wrote site/data.json (${chains.reduce((n, c) => n + c.count, 0)} rows)`);
   console.log(`wrote site/llms.txt and site/api/*.json (${n} chains)`);
+  if (!process.argv.includes('--no-changes')) { // offline builds: npm run build -- --no-changes
+    const c = await writeChanges(data);
+    console.log(`wrote site/changes.json and site/feed.xml (${c.total} entries, ${c.added} new this build)`);
+  }
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) main();

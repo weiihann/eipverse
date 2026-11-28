@@ -51,6 +51,7 @@ test('sitemap.xml lists the real view URLs', async () => {
   assert.deepEqual(locs, [
     `${ORIGIN}/`,
     `${ORIGIN}/?view=proposals`,
+    `${ORIGIN}/?view=changes`,
     `${ORIGIN}/?view=layers`,
     `${ORIGIN}/?view=diff`,
     `${ORIGIN}/?view=upgrades`,
@@ -61,6 +62,7 @@ test('sitemap.xml lists the real view URLs', async () => {
 test('_headers allows cross-origin reads of static assets', async () => {
   const text = await readFile(new URL('site/_headers', root), 'utf8');
   assert.match(text, /^\/\*\n\s+Access-Control-Allow-Origin: \*$/m);
+  assert.match(text, /^\/feed\.xml\n\s+Content-Type: application\/rss\+xml/m);
 });
 
 test('index.html has a noscript summary and points at llms.txt and data.json', async () => {
@@ -97,7 +99,7 @@ test('renderLlmsTxt follows the llms.txt convention and describes the real schem
   assert.match(text, /rebuilt daily from the canonical sources/);
   assert.match(text, /2026-11-28T00:00:00.000Z/);
   assert.match(text, /all 2 chains and 10 proposals/);
-  for (const view of ['proposals', 'layers', 'diff', 'upgrades', 'sources']) {
+  for (const view of ['proposals', 'changes', 'layers', 'diff', 'upgrades', 'sources']) {
     assert.match(text, new RegExp(`${ORIGIN.replace(/[./]/g, '\\$&')}/\\?view=${view}`));
   }
   for (const field of [
@@ -105,6 +107,7 @@ test('renderLlmsTxt follows the llms.txt convention and describes the real schem
     'reason', 'notes', 'count', 'proposals', 'target_upgrade', 'dates', 'kind',
     'network', 'abstract', 'shared_with', 'refs', 'tags', 'why', 'subs', 'curated',
     'groups', 'dimensions', 'columns', 'marks', 'facts', 'as_of', 'items',
+    'tracking_started', 'entries', 'at', 'change', 'field', 'from', 'to', 'basis',
   ]) {
     assert.match(text, new RegExp(`\`${field}\``), field);
   }
@@ -143,6 +146,9 @@ test('build outputs parse when present', async (t) => {
     assert.equal(body.count, c.count);
     assert.ok(Array.isArray(body.proposals));
   }
+  const changes = JSON.parse(await readFile(new URL('site/changes.json', root), 'utf8'));
+  assert.ok(changes.tracking_started && Array.isArray(changes.entries));
+  assert.match(await readFile(new URL('site/feed.xml', root), 'utf8'), /^<\?xml[^>]*\?>\n<rss version="2.0"/);
   const diffs = JSON.parse(await readFile(new URL('site/diffs.json', root), 'utf8'));
   assert.ok(Array.isArray(diffs.chains) && Array.isArray(diffs.dimensions));
 });

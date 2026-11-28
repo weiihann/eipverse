@@ -7,3 +7,5 @@ node_modules/
 site/diffs.json
 site/llms.txt
 site/api/
+site/changes.json
+site/feed.xml

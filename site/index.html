@@ -7,6 +7,7 @@
 <meta name="description" content="Improvement proposals across EVM chains, side by side, tagged by protocol layer and read from each chain's canonical sources.">
 <link rel="describedby" href="llms.txt">
 <link rel="alternate" type="application/json" href="data.json" title="All proposals as JSON">
+<link rel="alternate" type="application/rss+xml" href="feed.xml" title="eipverse: what changed">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
@@ -17,7 +18,7 @@
 </head>
 <body>
 <noscript>
-  <p>eipverse tracks improvement proposals across EVM chains, side by side, tagged by protocol layer and read from each chain's canonical sources. The interactive views need JavaScript. Machine-readable data is in <a href="data.json">data.json</a>; <a href="llms.txt">llms.txt</a> describes the views, schema, and endpoints.</p>
+  <p>eipverse tracks improvement proposals across EVM chains, side by side, tagged by protocol layer and read from each chain's canonical sources. The interactive views need JavaScript. Machine-readable data is in <a href="data.json">data.json</a>, recent changes in <a href="changes.json">changes.json</a> and <a href="feed.xml">feed.xml</a>; <a href="llms.txt">llms.txt</a> describes the views, schema, and endpoints.</p>
 </noscript>
 <header class="top">
   <div class="top-in">
@@ -25,6 +26,7 @@
     <span class="sub">Track how each EVM chain evolves side by side</span>
     <nav class="tabs" id="tabs" aria-label="Views">
       <button data-view="proposals">Proposals</button>
+      <button data-view="changes">Changes</button>
       <button data-view="layers">By layer</button>
       <button data-view="diff">Chain diff</button>
       <button data-view="upgrades">Upgrades</button>
@@ -57,6 +59,7 @@
     <div class="list" id="list" role="list"></div>
     <button class="more" id="more" hidden></button>
   </section>
+  <section class="view" id="v-changes" hidden><div id="chg"></div></section>
   <section class="view" id="v-layers" hidden>
     <div class="matrix-wrap"><table class="matrix" id="matrix"></table></div>
     <div id="side"></div>
