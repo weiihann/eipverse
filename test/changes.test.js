@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { diffSnapshots, seedEntries, mergeLog, updateChanges, renderFeed, getJson, MAX_ENTRIES, MAX_PER_CHAIN } from '../lib/changes.js';
-import { changeText } from '../site/changes.js';
+import { changeText, weekStartUtc, weekRangeLabel, groupByWeek } from '../site/changes.js';
 
 const NOW = new Date('2026-11-28T10:00:00.000Z');
 const row = (chain, id, o = {}) => ({ chain, id, title: `${id} title`, status: 'Draft', target_upgrade: null, dates: [], url: `https://example.com/${id}`, kind: 'protocol', ...o });
@@ -188,4 +188,35 @@ test('changeText reads as a sentence for every change kind', () => {
   assert.equal(changeText({ ...b, change: 'status', from: 'Draft', to: 'Final' }), 'Status: Draft → Final');
   assert.equal(changeText({ ...b, change: 'target', from: null, to: 'T8' }), 'Target upgrade: not stated → T8');
   assert.equal(changeText({ ...b, change: 'date', field: 'vote end', from: '1', to: '2' }), 'vote end: 1 → 2');
+});
+
+test('weeks start on Monday 00:00 UTC and a Sunday evening stays in the previous week', () => {
+  const mon = weekStartUtc('2026-11-23T00:00:00.000Z');
+  assert.equal(mon, Date.parse('2026-11-23T00:00:00.000Z'));
+  assert.equal(weekStartUtc('2026-11-22T23:59:59.999Z'), Date.parse('2026-11-16T00:00:00.000Z'));
+  assert.equal(weekStartUtc('2026-11-23T00:00:00.001Z'), mon);
+  assert.equal(weekStartUtc('2026-11-29T23:59:59.999Z'), mon);
+  assert.equal(weekRangeLabel(mon), 'Nov 23 – 29, 2026');
+});
+
+test('week labels cover a range that crosses a month or a year', () => {
+  assert.equal(weekRangeLabel(weekStartUtc('2026-11-30T12:00:00.000Z')), 'Nov 30 – Dec 6, 2026');
+  assert.equal(weekRangeLabel(weekStartUtc('2026-12-28T00:00:00.000Z')), 'Dec 28, 2026 – Jan 3, 2027');
+});
+
+test('groupByWeek is newest week first, newest entry first within a week, and does not mutate the input', () => {
+  const entries = [
+    { at: '2026-11-16T10:00:00.000Z', id: 'old-week' },
+    { at: '2026-11-23T08:00:00.000Z', id: 'earlier-in-week' },
+    { at: '2026-11-29T12:00:00.000Z', id: 'later-in-week' },
+    { at: '2026-12-01T00:00:00.000Z', id: 'next-month' },
+  ];
+  const copy = entries.map((e) => ({ ...e }));
+  const weeks = groupByWeek(entries);
+  assert.deepEqual(entries, copy);
+  assert.deepEqual(weeks.map((w) => [w.label, w.entries.map((e) => e.id)]), [
+    ['Nov 30 – Dec 6, 2026', ['next-month']],
+    ['Nov 23 – 29, 2026', ['later-in-week', 'earlier-in-week']],
+    ['Nov 16 – 22, 2026', ['old-week']],
+  ]);
 });

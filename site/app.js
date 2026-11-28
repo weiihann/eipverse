@@ -1,6 +1,6 @@
 // eipverse page: data.json (plus diffs.json and changes.json on demand), six views, all state in the URL.
 import { CHAINS as CHAIN_LIST } from './chains.js';
-import { changeLabel } from './changes.js';
+import { changeLabel, groupByWeek } from './changes.js';
 import { parseCols, serializeCols, toggleCol, rowState, MIN_COLS, MAX_COLS } from './compare.js';
 import { sortNewestFirst, upgradesByChain, statusBucket, statedTime, targetsUpgrade, isUpgrade, sourceLabel, sourceList, presentChains } from './derive.js';
 
@@ -319,6 +319,7 @@ function changeRow(e) {
     <span class="rid" title="${esc(e.id)} · ${esc(e.chain)}">${logo(e.chain)}<span class="rid-t">${esc(e.id)}</span></span>
     <span class="chg-body"><span class="rtitle">${e.title ? esc(e.title) : '<span class="none">untitled in source</span>'}</span>
     <span class="chg-d"><span class="chg-k">${esc(changeLabel(e))}</span>${detail}${e.basis === 'created' ? '<span class="none" title="The source gives this created date; the build did not see it happen">· created</span>' : ''}</span></span>
+    <span class="chg-when" title="${esc(e.at)}">${human(Date.parse(e.at), false)}</span>
   </button><a class="chg-src" href="${esc(e.url)}" target="_blank" rel="noopener" title="Open ${esc(sourceLabel(e.url))}" aria-label="Open the source for ${esc(e.id)}">${icon.ext}</a></div>`;
 }
 function renderChanges() {
@@ -331,8 +332,7 @@ function renderChanges() {
   const sel = chainSel();
   const chip = (c) => `<button class="cchip" data-chain="${esc(c)}" aria-pressed="${sel.includes(c)}" style="--c:${cc(c)}">${logo(c)}<span>${esc(cs(c))}</span></button>`;
   const rows = CHG.entries.filter((e) => (!state.kind || e.kind === state.kind) && (!sel.length || sel.includes(e.chain)));
-  const days = [];
-  for (const e of rows) { const d = e.at.slice(0, 10); if (days.at(-1)?.[0] !== d) days.push([d, []]); days.at(-1)[1].push(e); }
+  const weeks = groupByWeek(rows);
   const none = !CHG.entries.length
     ? `Tracking started ${human(Date.parse(CHG.tracking_started))}. Changes appear after the next daily build.`
     : `No changes match these filters. <button class="link" id="chg-all">Show all</button>`;
@@ -342,7 +342,7 @@ function renderChanges() {
         <div class="seg seg-sm" role="group" aria-label="Kind">${[['protocol', 'Protocol'], ['app standard', 'App standards'], ['', 'Both']].map(([v, l]) => `<button data-kind="${v}" aria-pressed="${state.kind === v}">${l}</button>`).join('')}</div>
         <a class="rss" href="feed.xml" type="application/rss+xml">${rssIcon}RSS</a>
       </div></div>`
-    + (rows.length ? days.map(([d, es]) => `<section class="chg-day"><h3>${human(Date.parse(d))}</h3>${es.map(changeRow).join('')}</section>`).join('') : `<div class="empty">${none}</div>`)
+    + (rows.length ? weeks.map((w) => `<section class="chg-week"><h3>${esc(w.label)}<span class="n">${fmtN(w.entries.length)}</span></h3>${w.entries.map(changeRow).join('')}</section>`).join('') : `<div class="empty">${none}</div>`)
     + (CHG.entries.length ? `<div class="chg-since hint">Tracking since ${human(Date.parse(CHG.tracking_started))} · ${fmtN(rows.length)} ${rows.length === 1 ? 'change' : 'changes'}</div>` : '');
   for (const b of el.querySelectorAll('[data-chain]')) b.onclick = () => POP_ACT.chain({ act: 'toggle', v: b.dataset.chain });
   for (const b of el.querySelectorAll('[data-kind]')) b.onclick = () => set({ kind: b.dataset.kind });
