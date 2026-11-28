@@ -4,6 +4,8 @@ Track how each EVM chain evolves side by side.
 
 [eipverse.com](https://eipverse.com) is a static page of improvement proposals and network upgrades, read from each chain's own sources.
 
+Machine-readable data is at [eipverse.com/data.json](https://eipverse.com/data.json). [llms.txt](https://eipverse.com/llms.txt) lists the views, schema, and per-chain endpoints.
+
 ## Chains
 
 Twelve chains, in the same order as the site (`site/chains.js`).

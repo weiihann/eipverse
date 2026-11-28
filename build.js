@@ -3,6 +3,7 @@
 import { readdir, writeFile } from 'node:fs/promises';
 import { classify, SUBS } from './lib/tags.js';
 import { loadDiffs, validateDiffs } from './lib/diffs.js';
+import { writeAgentFiles } from './lib/agent-files.js';
 
 export async function runAdapter(adapter, file) {
   const base = { chain: adapter.chain, adapter: `adapters/${file}`, sources: adapter.sources || [], fetched_at: new Date().toISOString() };
@@ -38,7 +39,9 @@ async function main() {
   const data = { generated_at: new Date().toISOString(), taxonomy, chains };
   await writeFile(new URL('./site/data.json', import.meta.url), JSON.stringify(data));
   await writeDiffs();
+  const n = await writeAgentFiles(data);
   console.log(`wrote site/data.json (${chains.reduce((n, c) => n + c.count, 0)} rows)`);
+  console.log(`wrote site/llms.txt and site/api/*.json (${n} chains)`);
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) main();
